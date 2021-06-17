@@ -230,7 +230,7 @@ table > thead > tr > th{
 	var detail_all_shift_3 = [];
 	var detail_hadir = [];
 	var detail_tidak_hadir = [];
-	var detail_off = [];
+	// var detail_off = [];
 	var detail_cuti = [];
 	var detail_sakit = [];
 	var detail_izin = [];
@@ -344,10 +344,10 @@ table > thead > tr > th{
 				var sakit_shift_3 = 0;
 				var sakit_presentase = 0;
 
-				var off_shift_1 = 0;
-				var off_shift_2 = 0;
-				var off_shift_3 = 0;
-				var off_presentase = 0;
+				// var off_shift_1 = 0;
+				// var off_shift_2 = 0;
+				// var off_shift_3 = 0;
+				// var off_presentase = 0;
 
 				var sakit_shift_1 = 0;
 				var sakit_shift_2 = 0;
@@ -374,7 +374,7 @@ table > thead > tr > th{
 				detail_all_shift_3 = [];
 				detail_hadir = [];
 				detail_tidak_hadir = [];
-				detail_off = [];
+				// detail_off = [];
 				detail_cuti = [];
 				detail_sakit = [];
 				detail_izin = [];
@@ -383,68 +383,68 @@ table > thead > tr > th{
 				for(var i = 0; i < result.absenceResume.length; i++){
 
 					if(result.absenceResume[i].shiftdaily_code.match(/OFF/gi)){
-						if (result.absenceResume[i].shiftdaily_code.match(/Shift_1/gi)) {
-							off_shift_1++;
-							off_presentase++;
-							all_shift_1++;
-							detail_all_shift_1.push({
-								employee_id: result.absenceResume[i].employee_id,
-								name:result.absenceResume[i].name,
-								dept: result.absenceResume[i].department_shortname,
-								shift: result.absenceResume[i].shiftdaily_code,
-								attend_code:result.absenceResume[i].attend_code,
-								time_in:result.absenceResume[i].time_in,
-								section:result.absenceResume[i].section,
-								group:result.absenceResume[i].group});
-						}else if(result.absenceResume[i].shiftdaily_code.match(/Shift_2/gi)){
-							off_shift_2++;
-							off_presentase++;
-							all_shift_2++;
-							detail_all_shift_2.push({
-								employee_id: result.absenceResume[i].employee_id,
-								name:result.absenceResume[i].name,
-								dept: result.absenceResume[i].department_shortname,
-								shift: result.absenceResume[i].shiftdaily_code,
-								attend_code:result.absenceResume[i].attend_code,
-								time_in:result.absenceResume[i].time_in,
-								section:result.absenceResume[i].section,
-								group:result.absenceResume[i].group});
-						}else if(result.absenceResume[i].shiftdaily_code.match(/Shift_3/gi)){
-							off_shift_3++;
-							off_presentase++;
-							all_shift_3++;
-							detail_all_shift_3.push({
-								employee_id: result.absenceResume[i].employee_id,
-								name:result.absenceResume[i].name,
-								dept: result.absenceResume[i].department_shortname,
-								shift: result.absenceResume[i].shiftdaily_code,
-								attend_code:result.absenceResume[i].attend_code,
-								time_in:result.absenceResume[i].time_in,
-								section:result.absenceResume[i].section,
-								group:result.absenceResume[i].group});
-						}else{
-							off_shift_1++;
-							off_presentase++;
-							all_shift_1++;
-							detail_all_shift_1.push({
-								employee_id: result.absenceResume[i].employee_id,
-								name:result.absenceResume[i].name,
-								dept: result.absenceResume[i].department_shortname,
-								shift: result.absenceResume[i].shiftdaily_code,
-								attend_code:result.absenceResume[i].attend_code,
-								time_in:result.absenceResume[i].time_in,
-								section:result.absenceResume[i].section,
-								group:result.absenceResume[i].group});
-						}
-						detail_off.push({
-							employee_id: result.absenceResume[i].employee_id,
-							name:result.absenceResume[i].name,
-							dept: result.absenceResume[i].department_shortname,
-							shift: result.absenceResume[i].shiftdaily_code,
-							attend_code:result.absenceResume[i].attend_code,
-							time_in:result.absenceResume[i].time_in,
-							section:result.absenceResume[i].section,
-							group:result.absenceResume[i].group});
+						// if (result.absenceResume[i].shiftdaily_code.match(/Shift_1/gi)) {
+						// 	off_shift_1++;
+						// 	off_presentase++;
+						// 	all_shift_1++;
+						// 	detail_all_shift_1.push({
+						// 		employee_id: result.absenceResume[i].employee_id,
+						// 		name:result.absenceResume[i].name,
+						// 		dept: result.absenceResume[i].department_shortname,
+						// 		shift: result.absenceResume[i].shiftdaily_code,
+						// 		attend_code:result.absenceResume[i].attend_code,
+						// 		time_in:result.absenceResume[i].time_in,
+						// 		section:result.absenceResume[i].section,
+						// 		group:result.absenceResume[i].group});
+						// }else if(result.absenceResume[i].shiftdaily_code.match(/Shift_2/gi)){
+						// 	off_shift_2++;
+						// 	off_presentase++;
+						// 	all_shift_2++;
+						// 	detail_all_shift_2.push({
+						// 		employee_id: result.absenceResume[i].employee_id,
+						// 		name:result.absenceResume[i].name,
+						// 		dept: result.absenceResume[i].department_shortname,
+						// 		shift: result.absenceResume[i].shiftdaily_code,
+						// 		attend_code:result.absenceResume[i].attend_code,
+						// 		time_in:result.absenceResume[i].time_in,
+						// 		section:result.absenceResume[i].section,
+						// 		group:result.absenceResume[i].group});
+						// }else if(result.absenceResume[i].shiftdaily_code.match(/Shift_3/gi)){
+						// 	off_shift_3++;
+						// 	off_presentase++;
+						// 	all_shift_3++;
+						// 	detail_all_shift_3.push({
+						// 		employee_id: result.absenceResume[i].employee_id,
+						// 		name:result.absenceResume[i].name,
+						// 		dept: result.absenceResume[i].department_shortname,
+						// 		shift: result.absenceResume[i].shiftdaily_code,
+						// 		attend_code:result.absenceResume[i].attend_code,
+						// 		time_in:result.absenceResume[i].time_in,
+						// 		section:result.absenceResume[i].section,
+						// 		group:result.absenceResume[i].group});
+						// }else{
+						// 	off_shift_1++;
+						// 	off_presentase++;
+						// 	all_shift_1++;
+						// 	detail_all_shift_1.push({
+						// 		employee_id: result.absenceResume[i].employee_id,
+						// 		name:result.absenceResume[i].name,
+						// 		dept: result.absenceResume[i].department_shortname,
+						// 		shift: result.absenceResume[i].shiftdaily_code,
+						// 		attend_code:result.absenceResume[i].attend_code,
+						// 		time_in:result.absenceResume[i].time_in,
+						// 		section:result.absenceResume[i].section,
+						// 		group:result.absenceResume[i].group});
+						// }
+						// detail_off.push({
+						// 	employee_id: result.absenceResume[i].employee_id,
+						// 	name:result.absenceResume[i].name,
+						// 	dept: result.absenceResume[i].department_shortname,
+						// 	shift: result.absenceResume[i].shiftdaily_code,
+						// 	attend_code:result.absenceResume[i].attend_code,
+						// 	time_in:result.absenceResume[i].time_in,
+						// 	section:result.absenceResume[i].section,
+						// 	group:result.absenceResume[i].group});
 					}else{
 						if (result.absenceResume[i].shiftdaily_code.match(/Shift_1/gi)) {
 							all_shift_1++;
@@ -457,36 +457,23 @@ table > thead > tr > th{
 								time_in:result.absenceResume[i].time_in,
 								section:result.absenceResume[i].section,
 								group:result.absenceResume[i].group});
-							if (result.absenceResume[i].time_in != null) {
-								hadir_shift_1++;
-								hadir_presentase++;
-								detail_hadir.push({
-									employee_id: result.absenceResume[i].employee_id,
-									name:result.absenceResume[i].name,
-									dept: result.absenceResume[i].department_shortname,
-									shift: result.absenceResume[i].shiftdaily_code,
-									attend_code:result.absenceResume[i].attend_code,
-									time_in:result.absenceResume[i].time_in,
-									section:result.absenceResume[i].section,
-									group:result.absenceResume[i].group});
-							}else{
-								tidak_hadir_shift_1++;
-								tidak_hadir_presentase++;
-								detail_tidak_hadir.push({
-									employee_id: result.absenceResume[i].employee_id,
-									name:result.absenceResume[i].name,
-									dept: result.absenceResume[i].department_shortname,
-									shift: result.absenceResume[i].shiftdaily_code,
-									attend_code:result.absenceResume[i].attend_code,
-									time_in:result.absenceResume[i].time_in,
-									section:result.absenceResume[i].section,
-									group:result.absenceResume[i].group});
-							}
 							if (result.absenceResume[i].attend_code != null) {
 								if (result.absenceResume[i].attend_code.match(/SAKIT/gi)) {
 									sakit_shift_1++;
 									sakit_presentase++;
 									detail_sakit.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_1++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -508,11 +495,47 @@ table > thead > tr > th{
 										time_in:result.absenceResume[i].time_in,
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_1++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
 								}
 								if (result.absenceResume[i].attend_code.match(/ABS/gi)) {
 									alpa_shift_1++;
 									alpa_presentase++;
 									detail_alpa.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_1++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
+								}else{
+									hadir_shift_1++;
+									hadir_presentase++;
+									detail_hadir.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -534,6 +557,18 @@ table > thead > tr > th{
 										time_in:result.absenceResume[i].time_in,
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_1++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
 								}
 								if (result.absenceResume[i].attend_code.match(/CK/gi)) {
 									cuti_shift_1++;
@@ -547,7 +582,44 @@ table > thead > tr > th{
 										time_in:result.absenceResume[i].time_in,
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_1++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
 								}
+							}
+							else{
+								tidak_hadir_shift_1++;
+								tidak_hadir_presentase++;
+								detail_tidak_hadir.push({
+									employee_id: result.absenceResume[i].employee_id,
+									name:result.absenceResume[i].name,
+									dept: result.absenceResume[i].department_shortname,
+									shift: result.absenceResume[i].shiftdaily_code,
+									attend_code:result.absenceResume[i].attend_code,
+									time_in:result.absenceResume[i].time_in,
+									section:result.absenceResume[i].section,
+									group:result.absenceResume[i].group});
+
+								alpa_shift_1++;
+								alpa_presentase++;
+								detail_alpa.push({
+									employee_id: result.absenceResume[i].employee_id,
+									name:result.absenceResume[i].name,
+									dept: result.absenceResume[i].department_shortname,
+									shift: result.absenceResume[i].shiftdaily_code,
+									attend_code:result.absenceResume[i].attend_code,
+									time_in:result.absenceResume[i].time_in,
+									section:result.absenceResume[i].section,
+									group:result.absenceResume[i].group});
 							}
 						}else if (result.absenceResume[i].shiftdaily_code.match(/Shift_2/gi)) {
 							all_shift_2++;
@@ -560,36 +632,23 @@ table > thead > tr > th{
 								time_in:result.absenceResume[i].time_in,
 								section:result.absenceResume[i].section,
 								group:result.absenceResume[i].group});
-							if (result.absenceResume[i].time_in != null) {
-								hadir_shift_2++;
-								hadir_presentase++;
-								detail_hadir.push({
-									employee_id: result.absenceResume[i].employee_id,
-									name:result.absenceResume[i].name,
-									dept: result.absenceResume[i].department_shortname,
-									shift: result.absenceResume[i].shiftdaily_code,
-									attend_code:result.absenceResume[i].attend_code,
-									time_in:result.absenceResume[i].time_in,
-									section:result.absenceResume[i].section,
-									group:result.absenceResume[i].group});
-							}else{
-								tidak_hadir_shift_2++;
-								tidak_hadir_presentase++;
-								detail_tidak_hadir.push({
-									employee_id: result.absenceResume[i].employee_id,
-									name:result.absenceResume[i].name,
-									dept: result.absenceResume[i].department_shortname,
-									shift: result.absenceResume[i].shiftdaily_code,
-									attend_code:result.absenceResume[i].attend_code,
-									time_in:result.absenceResume[i].time_in,
-									section:result.absenceResume[i].section,
-									group:result.absenceResume[i].group});
-							}
 							if (result.absenceResume[i].attend_code != null) {
 								if (result.absenceResume[i].attend_code.match(/SAKIT/gi)) {
 									sakit_shift_2++;
 									sakit_presentase++;
 									detail_sakit.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_2++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -611,11 +670,47 @@ table > thead > tr > th{
 										time_in:result.absenceResume[i].time_in,
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_2++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
 								}
 								if (result.absenceResume[i].attend_code.match(/ABS/gi)) {
 									alpa_shift_2++;
 									alpa_presentase++;
 									detail_alpa.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_2++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
+								}else{
+									hadir_shift_2++;
+									hadir_presentase++;
+									detail_hadir.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -637,6 +732,18 @@ table > thead > tr > th{
 										time_in:result.absenceResume[i].time_in,
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_2++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
 								}
 								if (result.absenceResume[i].attend_code.match(/CK/gi)) {
 									cuti_shift_2++;
@@ -650,7 +757,44 @@ table > thead > tr > th{
 										time_in:result.absenceResume[i].time_in,
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_2++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
 								}
+							}
+							else{
+								tidak_hadir_shift_2++;
+								tidak_hadir_presentase++;
+								detail_tidak_hadir.push({
+									employee_id: result.absenceResume[i].employee_id,
+									name:result.absenceResume[i].name,
+									dept: result.absenceResume[i].department_shortname,
+									shift: result.absenceResume[i].shiftdaily_code,
+									attend_code:result.absenceResume[i].attend_code,
+									time_in:result.absenceResume[i].time_in,
+									section:result.absenceResume[i].section,
+									group:result.absenceResume[i].group});
+
+								alpa_shift_2++;
+								alpa_presentase++;
+								detail_alpa.push({
+									employee_id: result.absenceResume[i].employee_id,
+									name:result.absenceResume[i].name,
+									dept: result.absenceResume[i].department_shortname,
+									shift: result.absenceResume[i].shiftdaily_code,
+									attend_code:result.absenceResume[i].attend_code,
+									time_in:result.absenceResume[i].time_in,
+									section:result.absenceResume[i].section,
+									group:result.absenceResume[i].group});
 							}
 						}else if (result.absenceResume[i].shiftdaily_code.match(/Shift_3/gi)){
 							all_shift_3++;
@@ -663,36 +807,23 @@ table > thead > tr > th{
 								time_in:result.absenceResume[i].time_in,
 								section:result.absenceResume[i].section,
 								group:result.absenceResume[i].group});
-							if (result.absenceResume[i].time_in != null) {
-								hadir_shift_3++;
-								hadir_presentase++;
-								detail_hadir.push({
-									employee_id: result.absenceResume[i].employee_id,
-									name:result.absenceResume[i].name,
-									dept: result.absenceResume[i].department_shortname,
-									shift: result.absenceResume[i].shiftdaily_code,
-									attend_code:result.absenceResume[i].attend_code,
-									time_in:result.absenceResume[i].time_in,
-									section:result.absenceResume[i].section,
-									group:result.absenceResume[i].group});
-							}else{
-								tidak_hadir_shift_3++;
-								tidak_hadir_presentase++;
-								detail_tidak_hadir.push({
-									employee_id: result.absenceResume[i].employee_id,
-									name:result.absenceResume[i].name,
-									dept: result.absenceResume[i].department_shortname,
-									shift: result.absenceResume[i].shiftdaily_code,
-									attend_code:result.absenceResume[i].attend_code,
-									time_in:result.absenceResume[i].time_in,
-									section:result.absenceResume[i].section,
-									group:result.absenceResume[i].group});
-							}
 							if (result.absenceResume[i].attend_code != null) {
 								if (result.absenceResume[i].attend_code.match(/SAKIT/gi)) {
 									sakit_shift_3++;
 									sakit_presentase++;
 									detail_sakit.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_3++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -714,11 +845,47 @@ table > thead > tr > th{
 										time_in:result.absenceResume[i].time_in,
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_3++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
 								}
 								if (result.absenceResume[i].attend_code.match(/ABS/gi)) {
 									alpa_shift_3++;
 									alpa_presentase++;
 									detail_alpa.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_3++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
+								}else{
+									hadir_shift_3++;
+									hadir_presentase++;
+									detail_hadir.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -740,6 +907,18 @@ table > thead > tr > th{
 										time_in:result.absenceResume[i].time_in,
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_3++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
 								}
 								if (result.absenceResume[i].attend_code.match(/CK/gi)) {
 									cuti_shift_3++;
@@ -753,7 +932,44 @@ table > thead > tr > th{
 										time_in:result.absenceResume[i].time_in,
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
+
+									tidak_hadir_shift_3++;
+									tidak_hadir_presentase++;
+									detail_tidak_hadir.push({
+										employee_id: result.absenceResume[i].employee_id,
+										name:result.absenceResume[i].name,
+										dept: result.absenceResume[i].department_shortname,
+										shift: result.absenceResume[i].shiftdaily_code,
+										attend_code:result.absenceResume[i].attend_code,
+										time_in:result.absenceResume[i].time_in,
+										section:result.absenceResume[i].section,
+										group:result.absenceResume[i].group});
 								}
+							}
+							else{
+								tidak_hadir_shift_3++;
+								tidak_hadir_presentase++;
+								detail_tidak_hadir.push({
+									employee_id: result.absenceResume[i].employee_id,
+									name:result.absenceResume[i].name,
+									dept: result.absenceResume[i].department_shortname,
+									shift: result.absenceResume[i].shiftdaily_code,
+									attend_code:result.absenceResume[i].attend_code,
+									time_in:result.absenceResume[i].time_in,
+									section:result.absenceResume[i].section,
+									group:result.absenceResume[i].group});
+
+								alpa_shift_3++;
+								alpa_presentase++;
+								detail_alpa.push({
+									employee_id: result.absenceResume[i].employee_id,
+									name:result.absenceResume[i].name,
+									dept: result.absenceResume[i].department_shortname,
+									shift: result.absenceResume[i].shiftdaily_code,
+									attend_code:result.absenceResume[i].attend_code,
+									time_in:result.absenceResume[i].time_in,
+									section:result.absenceResume[i].section,
+									group:result.absenceResume[i].group});
 							}
 						}
 					}
@@ -816,15 +1032,15 @@ table > thead > tr > th{
 						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+((parseInt(tidak_hadir_presentase) / parseInt(all_total))*100).toFixed(2)+' %</td>';
 					tableResume += '</tr>';
 
-					tableResume += '<tr>';
-					type = 'off';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">OFF</td>';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+off_shift_1+'</td>';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+off_shift_2+'</td>';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+off_shift_3+'</td>';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_1+'\')">'+off_presentase+'</td>';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+((parseInt(off_presentase) / parseInt(all_total))*100).toFixed(2)+' %</td>';
-					tableResume += '</tr>';
+					// tableResume += '<tr>';
+					// type = 'off';
+					// 	tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">OFF</td>';
+					// 	tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+off_shift_1+'</td>';
+					// 	tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+off_shift_2+'</td>';
+					// 	tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+off_shift_3+'</td>';
+					// 	tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_1+'\')">'+off_presentase+'</td>';
+					// 	tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+((parseInt(off_presentase) / parseInt(all_total))*100).toFixed(2)+' %</td>';
+					// tableResume += '</tr>';
 
 					tableResume += '<tr>';
 					type = 'all';
@@ -904,6 +1120,9 @@ table > thead > tr > th{
 		$("#body_detail").empty();
 		body = "";
 		if (type == 'all') {
+			var shifts = shift.split('_');
+			var ss = shifts[0]+' '+shifts[1];
+			var condition = 'All Employee '+ss;
 			if (shift === 'Shift_1'){
 				$.each(detail_all_shift_1, function(index, value){
 					body += "<tr>";
@@ -945,26 +1164,36 @@ table > thead > tr > th{
 				});
 			}
 		}else if (type == 'hadir') {
+			var shifts = shift.split('_');
+			var ss = shifts[0]+' '+shifts[1];
+			var condition = 'Present Employee '+ss;
 			$.each(detail_hadir, function(index, value){
 				var shifts = new RegExp(shift, 'g');
 				if (value.shift.match(/OFF/gi)) {
 
 				}else{
-					if (value.shift.match(shifts) && value.time_in != null){
-						body += "<tr>";
-						body += "<td>"+value.employee_id+"</td>";
-						body += "<td>"+value.name+"</td>";
-						body += "<td>"+(value.dept || "")+"</td>";
-						body += "<td>"+(value.section || "")+"</td>";
-						body += "<td>"+(value.group || "")+"</td>";
-						body += "<td>"+value.shift+"</td>";
-						body += "<td>"+(value.attend_code || "")+"</td>";
-						body += "<td>"+(value.time_in || "")+"</td>";
-						body += "</tr>";
+					if (value.shift.match(shifts)){
+						if (value.attend_code.match(/ABS/gi)) {
+
+						}else{
+							body += "<tr>";
+							body += "<td>"+value.employee_id+"</td>";
+							body += "<td>"+value.name+"</td>";
+							body += "<td>"+(value.dept || "")+"</td>";
+							body += "<td>"+(value.section || "")+"</td>";
+							body += "<td>"+(value.group || "")+"</td>";
+							body += "<td>"+value.shift+"</td>";
+							body += "<td>"+(value.attend_code || "")+"</td>";
+							body += "<td>"+(value.time_in || "")+"</td>";
+							body += "</tr>";
+						}
 					}
 				}
 			});
 		}else if (type == 'tidak_hadir') {
+			var shifts = shift.split('_');
+			var ss = shifts[0]+' '+shifts[1];
+			var condition = 'Absence Employee '+ss;
 			$.each(detail_tidak_hadir, function(index, value){
 				var shifts = new RegExp(shift, 'g');
 				if (value.shift.match(/OFF/gi)) {
@@ -984,20 +1213,25 @@ table > thead > tr > th{
 					}
 				}
 			});
-		}else if (type == 'off') {
-			$.each(detail_off, function(index, value){
-				body += "<tr>";
-				body += "<td>"+value.employee_id+"</td>";
-				body += "<td>"+value.name+"</td>";
-				body += "<td>"+(value.dept || "")+"</td>";
-				body += "<td>"+(value.section || "")+"</td>";
-				body += "<td>"+(value.group || "")+"</td>";
-				body += "<td>"+value.shift+"</td>";
-				body += "<td>"+(value.attend_code || "")+"</td>";
-				body += "<td>"+(value.time_in || "")+"</td>";
-				body += "</tr>";
-			});
-		}else if(type == 'cuti'){
+		}
+		// else if (type == 'off') {
+		// 	$.each(detail_off, function(index, value){
+		// 		body += "<tr>";
+		// 		body += "<td>"+value.employee_id+"</td>";
+		// 		body += "<td>"+value.name+"</td>";
+		// 		body += "<td>"+(value.dept || "")+"</td>";
+		// 		body += "<td>"+(value.section || "")+"</td>";
+		// 		body += "<td>"+(value.group || "")+"</td>";
+		// 		body += "<td>"+value.shift+"</td>";
+		// 		body += "<td>"+(value.attend_code || "")+"</td>";
+		// 		body += "<td>"+(value.time_in || "")+"</td>";
+		// 		body += "</tr>";
+		// 	});
+		// }
+		else if(type == 'cuti'){
+			var shifts = shift.split('_');
+			var ss = shifts[0]+' '+shifts[1];
+			var condition = 'Employee Cuti '+ss;
 			$.each(detail_cuti, function(index, value){
 				var shifts = new RegExp(shift, 'g');
 				if (value.shift.match(/OFF/gi)) {
@@ -1017,6 +1251,9 @@ table > thead > tr > th{
 				}
 			})
 		}else if(type == 'sakit'){
+			var shifts = shift.split('_');
+			var ss = shifts[0]+' '+shifts[1];
+			var condition = 'Employee Sakit '+ss;
 			$.each(detail_sakit, function(index, value){
 				var shifts = new RegExp(shift, 'g');
 				if (value.shift.match(/OFF/gi)) {
@@ -1035,7 +1272,9 @@ table > thead > tr > th{
 					}
 				}
 			})
-		}else if(type == 'izin'){
+		}else if(type == 'izin'){var shifts = shift.split('_');
+			var ss = shifts[0]+' '+shifts[1];
+			var condition = 'Employee Izin '+ss;
 			$.each(detail_izin, function(index, value){
 				var shifts = new RegExp(shift, 'g');
 				if (value.shift.match(/OFF/gi)) {
@@ -1055,6 +1294,9 @@ table > thead > tr > th{
 				}
 			})
 		}else if(type == 'alpa'){
+			var shifts = shift.split('_');
+			var ss = shifts[0]+' '+shifts[1];
+			var condition = 'Employee Absence '+ss;
 			$.each(detail_alpa, function(index, value){
 				var shifts = new RegExp(shift, 'g');
 				if (value.shift.match(/OFF/gi)) {
@@ -1108,14 +1350,7 @@ table > thead > tr > th{
 
 		$('#judul_table').append().empty();
 		// $('#judul_table').append('<center>Absence '+shift+' in '+tanggal+' '+bulanText[bulan-1]+' '+tahun+'<center>');
-		if (type === 'off') {
-			var shifts = shift.split('_');
-			var ss = 'OFF';
-		}else{
-			var shifts = shift.split('_');
-			var ss = shifts[0]+' '+shifts[1];
-		}
-		$('#judul_table').append('<center>Detail Employees '+ss+'<center>');
+		$('#judul_table').append('<center><b>Detail '+condition+'</b><center>');
 
 	}
 
