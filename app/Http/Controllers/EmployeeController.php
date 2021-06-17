@@ -4597,9 +4597,10 @@ public function setSession(Request $request)
 public function fetchEmployeeByTag(Request $request)
 {
      try {
-          $emp = Employee::whereNull('end_date');
-          $emp = $emp->where('tag', '=', $request->get('tag'));
-          $emp = $emp->first();       
+          $emp = Employee::whereNull('end_date')
+          ->where('tag', '=', $request->get('tag'))
+          ->orWhere('employee_id', '=', $request->get('tag'))
+          ->first();       
 
           if (count($emp) > 0) {
                $response = array(
