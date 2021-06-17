@@ -233,8 +233,8 @@ table > thead > tr > th{
 	var detail_off = [];
 	var detail_cuti = [];
 	var detail_sakit = [];
-	var detail_nso = [];
-	var detail_nsi = [];
+	var detail_izin = [];
+	var detail_alpa = [];
 
 	function drawChart(){
 		var tanggal = $('#tgl').val();
@@ -354,15 +354,15 @@ table > thead > tr > th{
 				var sakit_shift_3 = 0;
 				var sakit_presentase = 0;
 
-				var nso_shift_1 = 0;
-				var nso_shift_2 = 0;
-				var nso_shift_3 = 0;
-				var nso_presentase = 0;
+				var izin_shift_1 = 0;
+				var izin_shift_2 = 0;
+				var izin_shift_3 = 0;
+				var izin_presentase = 0;
 
-				var nsi_shift_1 = 0;
-				var nsi_shift_2 = 0;
-				var nsi_shift_3 = 0;
-				var nsi_presentase = 0;
+				var alpa_shift_1 = 0;
+				var alpa_shift_2 = 0;
+				var alpa_shift_3 = 0;
+				var alpa_presentase = 0;
 
 				var cuti_shift_1 = 0;
 				var cuti_shift_2 = 0;
@@ -377,8 +377,8 @@ table > thead > tr > th{
 				detail_off = [];
 				detail_cuti = [];
 				detail_sakit = [];
-				detail_nso = [];
-				detail_nsi = [];
+				detail_izin = [];
+				detail_alpa = [];
 
 				for(var i = 0; i < result.absenceResume.length; i++){
 
@@ -496,10 +496,10 @@ table > thead > tr > th{
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
 								}
-								if (result.absenceResume[i].attend_code.match(/NSO/gi)) {
-									nso_shift_1++;
-									nso_presentase++;
-									detail_nso.push({
+								if (result.absenceResume[i].attend_code.match(/Izin/gi)) {
+									izin_shift_1++;
+									izin_presentase++;
+									detail_izin.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -509,10 +509,10 @@ table > thead > tr > th{
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
 								}
-								if (result.absenceResume[i].attend_code.match(/NSI/gi)) {
-									nsi_shift_1++;
-									nsi_presentase++;
-									detail_nsi.push({
+								if (result.absenceResume[i].attend_code.match(/ABS/gi)) {
+									alpa_shift_1++;
+									alpa_presentase++;
+									detail_alpa.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -599,10 +599,10 @@ table > thead > tr > th{
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
 								}
-								if (result.absenceResume[i].attend_code.match(/NSO/gi)) {
-									nso_shift_2++;
-									nso_presentase++;
-									detail_nso.push({
+								if (result.absenceResume[i].attend_code.match(/Izin/gi)) {
+									izin_shift_2++;
+									izin_presentase++;
+									detail_izin.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -612,10 +612,10 @@ table > thead > tr > th{
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
 								}
-								if (result.absenceResume[i].attend_code.match(/NSI/gi)) {
-									nsi_shift_2++;
-									nsi_presentase++;
-									detail_nsi.push({
+								if (result.absenceResume[i].attend_code.match(/ABS/gi)) {
+									alpa_shift_2++;
+									alpa_presentase++;
+									detail_alpa.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -702,10 +702,10 @@ table > thead > tr > th{
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
 								}
-								if (result.absenceResume[i].attend_code.match(/NSO/gi)) {
-									nso_shift_3++;
-									nso_presentase++;
-									detail_nso.push({
+								if (result.absenceResume[i].attend_code.match(/Izin/gi)) {
+									izin_shift_3++;
+									izin_presentase++;
+									detail_izin.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -715,10 +715,10 @@ table > thead > tr > th{
 										section:result.absenceResume[i].section,
 										group:result.absenceResume[i].group});
 								}
-								if (result.absenceResume[i].attend_code.match(/NSI/gi)) {
-									nsi_shift_3++;
-									nsi_presentase++;
-									detail_nsi.push({
+								if (result.absenceResume[i].attend_code.match(/ABS/gi)) {
+									alpa_shift_3++;
+									alpa_presentase++;
+									detail_alpa.push({
 										employee_id: result.absenceResume[i].employee_id,
 										name:result.absenceResume[i].name,
 										dept: result.absenceResume[i].department_shortname,
@@ -786,15 +786,15 @@ table > thead > tr > th{
 				tableResume += '</thead>';
 
 				tableResume += '<tbody>';
-					tableResume += '<tr>';
-					type = 'all';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">Total Karyawan</td>';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_1+'\')">'+all_shift_1+'</td>';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_2+'\')">'+all_shift_2+'</td>';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_3+'\')">'+all_shift_3+'</td>';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+all_presentase+'</td>';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+((parseInt(all_total) / parseInt(all_presentase))*100).toFixed(2)+' %</td>';
-					tableResume += '</tr>';
+					// tableResume += '<tr>';
+					// type = 'all';
+					// 	tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">Total Karyawan</td>';
+					// 	tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_1+'\')">'+all_shift_1+'</td>';
+					// 	tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_2+'\')">'+all_shift_2+'</td>';
+					// 	tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_3+'\')">'+all_shift_3+'</td>';
+					// 	tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+all_presentase+'</td>';
+					// 	tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+((parseInt(all_total) / parseInt(all_presentase))*100).toFixed(2)+' %</td>';
+					// tableResume += '</tr>';
 
 					tableResume += '<tr>';
 					type = 'hadir';
@@ -861,23 +861,23 @@ table > thead > tr > th{
 					tableResume += '</tr>';
 
 					tableResume += '<tr>';
-					type = 'nso';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">NSO</td>';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_1+'\')">'+nso_shift_1+'</td>';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_2+'\')">'+nso_shift_2+'</td>';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_3+'\')">'+nso_shift_3+'</td>';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+nso_presentase+'</td>';
-						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+((parseInt(nso_presentase) / parseInt(all_total))*100).toFixed(2)+' %</td>';
+					type = 'izin';
+						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">Izin</td>';
+						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_1+'\')">'+izin_shift_1+'</td>';
+						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_2+'\')">'+izin_shift_2+'</td>';
+						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_3+'\')">'+izin_shift_3+'</td>';
+						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+izin_presentase+'</td>';
+						tableResume += '<td style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+((parseInt(izin_presentase) / parseInt(all_total))*100).toFixed(2)+' %</td>';
 					tableResume += '</tr>';
 
 					tableResume += '<tr>';
-					type = 'nsi';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">NSI</td>';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_1+'\')">'+nsi_shift_1+'</td>';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_2+'\')">'+nsi_shift_2+'</td>';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_3+'\')">'+nsi_shift_3+'</td>';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+nsi_presentase+'</td>';
-						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+((parseInt(nsi_presentase) / parseInt(all_total))*100).toFixed(2)+' %</td>';
+					type = 'alpa';
+						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">Alpa</td>';
+						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_1+'\')">'+alpa_shift_1+'</td>';
+						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_2+'\')">'+alpa_shift_2+'</td>';
+						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold" onclick="showDetail(\''+type+'\',\''+shift_3+'\')">'+alpa_shift_3+'</td>';
+						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+alpa_presentase+'</td>';
+						tableResume += '<td style="background-color: rgb(242, 242, 242); color: rgb(0,0,0); font-size: 16px;font-weight: bold">'+((parseInt(alpa_presentase) / parseInt(all_total))*100).toFixed(2)+' %</td>';
 					tableResume += '</tr>';
 				tableResume += '</tbody>';
 				$('#tableResume').append(tableResume);
@@ -1035,8 +1035,8 @@ table > thead > tr > th{
 					}
 				}
 			})
-		}else if(type == 'nso'){
-			$.each(detail_nso, function(index, value){
+		}else if(type == 'izin'){
+			$.each(detail_izin, function(index, value){
 				var shifts = new RegExp(shift, 'g');
 				if (value.shift.match(/OFF/gi)) {
 				}else{
@@ -1054,8 +1054,8 @@ table > thead > tr > th{
 					}
 				}
 			})
-		}else if(type == 'nsi'){
-			$.each(detail_nsi, function(index, value){
+		}else if(type == 'alpa'){
+			$.each(detail_alpa, function(index, value){
 				var shifts = new RegExp(shift, 'g');
 				if (value.shift.match(/OFF/gi)) {
 				}else{
