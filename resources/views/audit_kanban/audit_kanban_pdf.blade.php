@@ -17,7 +17,7 @@
 	<div>
 		<center>
 			<span style="font-weight: bold; font-size: 20px;">
-				Audit Kanban Daily<br>
+				Check List Audit Kanban Daily<br>
 				かんばん監査のチェックリスト
 			</span>
 		</center>
@@ -40,13 +40,12 @@
 			</tr>
 		</table>
 		<br>
-		<br>
 	</div>
 	<table>
 		<thead style="height: 50px;">
 			<tr>
 				<th>NO<br>番</th>
-				<th width="15%">Poin Audit<br>監査箇所</th>
+				<th width="13%">Poin Audit<br>監査箇所</th>
 				@for($j = 0; $j < count($weekly_calendar); $j++)
 				@if($weekly_calendar[$j]->remark == 'H')
 				<th style="background-color: rgba(80,80,80,0.3)">{{ date('d', strtotime($weekly_calendar[$j]->week_date)) }}</th>
@@ -95,7 +94,7 @@
 			@endfor
 
 			<tr style="font-size: 16px; font-weight: bold;">
-				<td colspan="2" style="padding-right: 2px; padding-left: 2px; width: 1%; text-align: center;">Total Skor</td>
+				<td colspan="2" style="padding : 8px; width: 1%; text-align: center;">Total Skor</td>
 				@for($j = 0; $j < count($percentage); $j++)
 				@if($percentage[$j]->remark == 'H')
 				<th style="background-color: rgba(80,80,80,0.3)"></th>
@@ -109,7 +108,7 @@
 				@endfor				
 			</tr>
 			<tr style="font-size: 16px; font-weight: bold;">
-				<td colspan="2" style="padding-right: 2px; padding-left: 2px; width: 1%; text-align: center;">Persentase Kesesuaian</td>
+				<td colspan="2" style="padding : 8px; width: 1%; text-align: center;">Persentase Kesesuaian</td>
 				@for($j = 0; $j < count($percentage); $j++)
 				@if($percentage[$j]->remark == 'H')
 				<th style="background-color: rgba(80,80,80,0.3)"></th>
