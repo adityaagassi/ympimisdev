@@ -570,6 +570,8 @@ class LeaderTaskReportController extends Controller
             }
             elseif ($activity_type = 'Temuan NG') {
               $act_name = 'Temuan NG';
+            }elseif ($activity_type = 'Audit Kanban') {
+              $act_name = 'Audit Kanban';
             }
           $response = array(
             'status' => true,
@@ -814,6 +816,19 @@ class LeaderTaskReportController extends Controller
                     DATE_FORMAT( ng_findings.date, "%Y-%m" ) = "'.$month.'" 
                     AND activity_list_id = "'.$activity_list_id.'" 
                     AND ng_findings.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Audit Kanban') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                        ( activity_list_id ),
+                        CONCAT( "/index/audit_kanban/print_audit_kanban/", activity_list_id, "/", "'.$month.'" ) AS link,
+                        activity_lists.activity_name,activity_lists.leader_dept,activity_lists.frequency
+                    FROM
+                        audit_kanbans 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( audit_kanbans.check_date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND audit_kanbans.deleted_at IS NULL');
             }
 
             $monthTitle = date("F Y", strtotime($month));

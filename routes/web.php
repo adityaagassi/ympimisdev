@@ -3701,6 +3701,17 @@ Route::get('index/ng_finding/print_ng_finding_email/{id}/{month}','NgFindingCont
 Route::post('index/ng_finding/sendemail/{id}','NgFindingController@sendemail');
 Route::post('index/ng_finding/approval/{id}/{month}','NgFindingController@approval');
 
+
+//AUDIT KANBAN LEADER
+Route::get('index/audit_kanban/index/{id}', 'AuditKanbanController@index');
+Route::get('fetch/audit_kanban', 'AuditKanbanController@fetchAuditKanban');
+Route::post('input/audit_kanban', 'AuditKanbanController@inputAuditKanban');
+Route::get('email/audit_kanban', 'AuditKanbanController@emailAuditKanban');
+Route::get('edit/audit_kanban', 'AuditKanbanController@editAuditKanban');
+Route::post('update/audit_kanban', 'AuditKanbanController@updateAuditKanban');
+Route::get('approval/audit_kanban/{activity_list}/{month}', 'AuditKanbanController@approvalAuditKanban');
+Route::get('index/audit_kanban/print_audit_kanban/{activity_list}/{month}', 'AuditKanbanController@printAuditKanban');
+
 //RECORDER PUSH BLOCK CHECK
 Route::get('index/recorder_process', 'RecorderProcessController@index');
 Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessController@index_push_block');
@@ -5153,8 +5164,13 @@ Route::get('fetch/fixed_asset/registration_asset_form', 'AccountingController@fe
 Route::get('fetch/fixed_asset/registration_asset_form/by', 'AccountingController@fetchAssetRegistrationById');
 Route::post('send/fixed_asset/registration_asset_form', 'AccountingController@assetRegistration');
 
+Route::get('approval/fixed_asset/{id}/{user}/{stat}', 'AccountingController@approvalAsset');
+
+Route::post('update/fixed_asset/registration_asset_form', 'AccountingController@updateAssetRegistration');
+
 Route::get('index/fixed_asset/invoice_form', 'AccountingController@indexAssetInvoice');
 Route::get('fetch/fixed_asset/invoice_form', 'AccountingController@fetchAssetInvoice');
+
 
 //  -----------------------  END FIXED ASSET ------------------------
 

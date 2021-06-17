@@ -146,6 +146,9 @@ class ProductionReportController extends Controller
         elseif($activity_type == "Temuan NG"){
             return redirect('/index/ng_finding/index/'.$id)->with('page', 'Temuan NG')->with('no', $activityList->no);
         }
+        elseif($activity_type == "Audit Kanban"){
+            return redirect('/index/audit_kanban/index/'.$id)->with('page', 'Audit Kanban')->with('no', $activityList->no);
+        }
     }
 
     function report_all($id)

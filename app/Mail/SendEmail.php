@@ -574,5 +574,11 @@ class SendEmail extends Mailable
             ->view('mails.fixed_asset_invoice');
         }
 
+        if($this->remark == 'audit_kanban'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->subject('Audit Kanban (かんばん監査)')
+            ->view('mails.audit_kanban');
+        }
+
     }
 }

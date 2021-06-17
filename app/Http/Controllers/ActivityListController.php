@@ -128,6 +128,10 @@ class ActivityListController extends Controller
           $activity_type = 'Temuan NG';
           $act_name = 'Temuan NG';
         }
+        elseif ($no == 15) {
+          $activity_type = 'Audit Kanban';
+          $act_name = 'Audit Kanban';
+        }
 
         if ($frequency == 'Daily') {
           $frekuensi = 'Harian';
