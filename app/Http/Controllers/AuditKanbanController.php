@@ -106,7 +106,7 @@ class AuditKanbanController extends Controller{
 
         $weekly_calendar = WeeklyCalendar::where(db::raw("DATE_FORMAT(week_date, '%Y-%m')"), $month)->get();
 
-        $activity_list = ActivityList::where('id', $activity_list)->first();
+        $activity = ActivityList::where('id', $activity_list)->first();
 
         $audit_kanban = AuditKanban::where('activity_list_id', $activity_list)
         ->where(db::raw("DATE_FORMAT(check_date, '%Y-%m')"), $month)
@@ -134,7 +134,7 @@ class AuditKanbanController extends Controller{
         return view('audit_kanban.audit_kanban_pdf', array(
             'month' => $month,
             'weekly_calendar' => $weekly_calendar,
-            'activity_list' => $activity_list,
+            'activity' => $activity,
             'audit_kanban' => $audit_kanban,
             'point_check' => $point_check,
             'percentage' => $percentage
