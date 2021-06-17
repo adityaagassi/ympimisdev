@@ -889,14 +889,14 @@
 	// 	});
 	// }
 
-	// function printPdf(id,month) {
- //    	if (month == "") {
-	// 		alert('Pilih Bulan');
-	// 	}else{
-	// 		var url = "{{url('index/weekly_report/print_weekly_report/')}}";
-	// 		// // console.log(url + '/' + id+ '/' + month);
-	// 		window.open(url + '/' + id+ '/'+ month,"_blank");
-	// 	}
- //    }
+	function printPdf(id,month) {
+    	if (month == "") {
+			alert('Pilih Bulan');
+		}else{
+			var url = "{{url('index/audit_kanban/print_audit_kanban/')}}";
+			// // console.log(url + '/' + id+ '/' + month);
+			window.open(url + '/' + id+ '/'+ month,"_blank");
+		}
+    }
 </script>
 @endsection
