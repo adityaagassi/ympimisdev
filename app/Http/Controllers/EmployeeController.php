@@ -4212,7 +4212,7 @@ public function fetchKaizenReport(Request $request)
 
      $kz_rank1 = db::select($q_rank1);
 
-     $q_rank2 = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ', employee_syncs.section,' - ', `group`) as bagian , COUNT(kaizen_forms.employee_id) as count from kaizen_forms 
+     $q_rank2 = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ', employee_syncs.section,' - ', IFNULL(`group`, ' ')) as bagian , COUNT(kaizen_forms.employee_id) as count from kaizen_forms 
      left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
      left join kaizen_scores on kaizen_scores.id_kaizen = kaizen_forms.id
      where `status` = 1 and DATE_FORMAT(kaizen_scores.updated_at,'%Y-%m') = '".$date."'
