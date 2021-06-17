@@ -1965,6 +1965,14 @@ Route::get('detail/payment_request', 'AccountingController@fetchPaymentRequestDe
 Route::post('create/payment_request', 'AccountingController@createPaymentRequest');
 Route::post('edit/payment_request', 'AccountingController@editPaymentRequest');
 Route::get('report/payment_request/{id}', 'AccountingController@reportPaymentRequest');
+Route::get('email/payment_request', 'AccountingController@emailPaymentRequest');
+//Approval Payment Request
+Route::get('payment_request/approvemanager/{id}', 'AccountingController@paymentapprovalmanager');
+Route::get('payment_request/approvedgm/{id}', 'AccountingController@paymentapprovaldgm');
+Route::get('payment_request/approvegm/{id}', 'AccountingController@paymentapprovalgm');
+Route::get('payment_request/receiveacc/{id}', 'AccountingController@paymentreceiveacc');
+Route::get('payment_request/reject/{id}', 'AccountingController@paymentreject');
+
 
 Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){

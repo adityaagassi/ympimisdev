@@ -166,13 +166,14 @@
 				<thead style="background-color: rgba(126,86,134,.7);">
 					<tr>
 						<th>#</th>
-						<th>Submission Date</th>
+						<th>Payment Date</th>
 						<th>Vendor</th>
 						<th>Payment Term</th>
 						<th>Due Date</th>
 						<th>Kind Of Material</th>
 						<th>Amount</th>
 						<th>Document Attach</th>
+						<th>Status</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -180,6 +181,7 @@
 				</tbody>
 				<tfoot>
 					<tr>
+						<th></th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -247,7 +249,7 @@
 						<div class="col-md-12" style="margin-bottom: 5px;">
 							<label for="payment_term" class="col-sm-3 control-label">Payment Term<span class="text-red">*</span></label>
 							<div class="col-sm-9">
-								<select class="form-control select4" id="payment_term" name="payment_term" data-placeholder='Pilih Metode Pembayaran' style="width: 100%">
+								<select class="form-control select4" id="payment_term" name="payment_term" data-placeholder='Choose Payment Term' style="width: 100%">
 									<option value="">&nbsp;</option>
 									@foreach($payment_term as $pt)
 									<option value="{{$pt->payment_term}}">{{$pt->payment_term}}</option>
@@ -256,13 +258,13 @@
 							</div>
 						</div>
 						<div class="col-md-12" style="margin-bottom: 5px;">
-							<label for="invoice_date" class="col-sm-3 control-label">Due Date<span class="text-red">*</span></label>
+							<label for="payment_due_date" class="col-sm-3 control-label">Due Date<span class="text-red">*</span></label>
 							<div class="col-sm-9">
 								<div class="input-group date">
 									<div class="input-group-addon">	
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right datepicker" id="invoice_date" name="invoice_date" placeholder="Due Date">
+									<input type="text" class="form-control pull-right datepicker" id="payment_due_date" name="payment_due_date" placeholder="Due Date">
 								</div>
 							</div>
 						</div> 
@@ -292,53 +294,46 @@
 						</div>
 
 						<div class="col-md-12" style="margin-bottom: 5px">
-							<label for="document" class="col-sm-3 control-label">Attached Documents<span class="text-red">*</span></label>
+							<label for="document" class="col-sm-3 control-label">Attached Documents</label>
 							<div class="col-sm-9">
 
 							    <label class="container">
 							  		Local
-								 	<input type="checkbox" id="doc_local" name="doc_local" value="Local">
+								 	<input type="checkbox" id="doc_local" name="doc_local" class="check_payment" value="local">
 								 	<span class="checkmark"></span>
-
 								</label>
-
 								<label class="container">
 								 	Import
-								    <input type="checkbox" id="doc_import" name="doc_import" style="margin-left: 50px;" value="Import">
+								    <input type="checkbox" id="doc_import" name="doc_import" class="check_payment" value="import">
 								 	<span class="checkmark"></span>
 								</label>
 
 							    <label class="container">
 							  		Invoice
-								 	<input type="checkbox" id="doc_invoice" name="doc_invoice" value="invoice">
+								 	<input type="checkbox" id="doc_invoice" name="doc_invoice" class="check_payment" value="invoice">
 								 	<span class="checkmark"></span>
 								</label>
 
 								<label class="container">
 							  		Receipt
-								 	<input type="checkbox" id="doc_receipt" name="doc_receipt" value="receipt">
+								 	<input type="checkbox" id="doc_receipt" name="doc_receipt" class="check_payment" value="receipt">
 								 	<span class="checkmark"></span>
 								</label>
 								<label class="container">
 							  		Surat Jalan
-								 	<input type="checkbox" id="doc_surat_jalan" name="doc_surat_jalan" value="surat_jalan">
+								 	<input type="checkbox" id="doc_surat_jalan" name="doc_surat_jalan" class="check_payment" value="surat_jalan">
 								 	<span class="checkmark"></span>
 								</label>
 								<label class="container">
 							  		Faktur Pajak
-								 	<input type="checkbox" id="doc_faktur_pajak" name="doc_faktur_pajak" value="faktur_pajak">
+								 	<input type="checkbox" id="doc_faktur_pajak" name="doc_faktur_pajak" class="check_payment" value="faktur_pajak">
 								 	<span class="checkmark"></span>
 								</label>
-								<label class="container">
-							  		Chess Report
-								 	<input type="checkbox" id="doc_chess" name="doc_chess" value="doc_chess">
-								 	<span class="checkmark"></span>
-								</label>
-
+							</div>
 						</div>
 
 						<div class="col-md-12" style="margin-bottom: 5px">
-							<label for="file" class="col-sm-3 control-label">File<span class="text-red">*</span></label>
+							<label for="file" class="col-sm-3 control-label">File</label>
 							<div class="col-sm-9">
 								<input type="file" id="file_attach" name="file_attach">
 							</div>
@@ -395,15 +390,16 @@
 		$('.select4').select2({
 			allowClear:true,
 			dropdownAutoWidth : true,
-			tags: true
+			tags: true,
+	        dropdownParent: $('#modalNew')
 		});
 	})
 
-	 $("#amount").change(function(){
-		var output = parseFloat($('#amount').val()); 
-		var output2 = output.toLocaleString(undefined,{'minimumFractionDigits':2,'maximumFractionDigits':2});
-		$('#amount').val(output2);
-  	});
+	// $("#amount").change(function(){
+	// 	var output = parseFloat($('#amount').val()); 
+	// 	var output2 = output.toLocaleString(undefined,{'minimumFractionDigits':2,'maximumFractionDigits':2});
+	// 	$('#amount').val(output2);
+ //  	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 	var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
@@ -430,12 +426,14 @@
 					$('#supplier_code').html('');
 					$('#payment_term').html('');
 					$('#currency').html('');
+					$('#kind_of').html('');
 
 					var supplier_code = "";
 					var payment_term = "";
 					var currency = "";
+					var kind_of = "";
 
-					$('#submission_date').val(result.payment.submission_date);
+					$('#payment_date').val(result.payment.payment_date);
 
 					$.each(result.vendor, function(key, value){
 						if(value.vendor_code == result.payment.supplier_code){
@@ -447,27 +445,7 @@
 					});
 
 					$('#supplier_code').append(supplier_code);
-
 					$('#supplier_name').val(result.payment.supplier_name);
-					$('#payment_no').val(result.payment.payment_no);
-					$('#kwitansi').val(result.payment.kwitansi);
-					$('#surat_jalan').val(result.payment.surat_jalan);
-					$('#bap').val(result.payment.bap);
-					$('#npwp').val(result.payment.npwp);
-					$('#faktur_pajak').val(result.payment.faktur_pajak);
-					$('#po_number').val(result.payment.po_number);
-
-
-					$.each(result.payment_term, function(key, value){
-						if(value.payment_term == result.payment.payment_term){
-							payment_term += '<option value="'+value.payment_term+'" selected>'+value.payment_term+'</option>';
-						}
-						else{
-							payment_term += '<option value="'+value.payment_term+'">'+value.payment_term+'</option>';
-						}
-					});
-
-					$('#payment_term').append(payment_term);
 
 					if(result.payment.currency == "USD"){
 						currency += '<option value="USD" selected>USD</option>';
@@ -487,10 +465,70 @@
 
 					$('#currency').append(currency);
 
+					$.each(result.payment_term, function(key, value){
+						if(value.payment_term == result.payment.payment_term){
+							payment_term += '<option value="'+value.payment_term+'" selected>'+value.payment_term+'</option>';
+						}
+						else{
+							payment_term += '<option value="'+value.payment_term+'">'+value.payment_term+'</option>';
+						}
+					});
+
+					$('#payment_term').append(payment_term);
+
+					$('#payment_due_date').val(result.payment.payment_due_date);
 					$('#amount').val(result.payment.amount);
-					$('#do_date').val(result.payment.do_date);
-					$('#due_date').val(result.payment.due_date);
-					$('#distribution_date').val(result.payment.distribution_date);
+
+					if(result.payment.kind_of == "Electricity"){
+						kind_of += '<option value="Electricity" selected>Electricity</option>';
+						kind_of += '<option value="Gas">Gas</option>';
+						kind_of += '<option value="Water">Water</option>';
+						kind_of += '<option value="Raw Materials">Raw Materials</option>';
+						kind_of += '<option value="Other (PPH)">Other (PPH)</option>';
+						kind_of += '<option value="Constool">Constool</option>';
+					}
+					else if (result.payment.kind_of == "Gas"){
+						kind_of += '<option value="Electricity">Electricity</option>';
+						kind_of += '<option value="Gas" selected>Gas</option>';
+						kind_of += '<option value="Water">Water</option>';
+						kind_of += '<option value="Raw Materials">Raw Materials</option>';
+						kind_of += '<option value="Other (PPH)">Other (PPH)</option>';
+						kind_of += '<option value="Constool">Constool</option>';
+					}
+					else if (result.payment.kind_of == "Water"){
+						kind_of += '<option value="Electricity">Electricity</option>';
+						kind_of += '<option value="Gas">Gas</option>';
+						kind_of += '<option value="Water" selected>Water</option>';
+						kind_of += '<option value="Raw Materials">Raw Materials</option>';
+						kind_of += '<option value="Other (PPH)">Other (PPH)</option>';
+						kind_of += '<option value="Constool">Constool</option>';
+					}
+					else if (result.payment.kind_of == "Raw Materials"){
+						kind_of += '<option value="Electricity">Electricity</option>';
+						kind_of += '<option value="Gas">Gas</option>';
+						kind_of += '<option value="Water">Water</option>';
+						kind_of += '<option value="Raw Materials" selected>Raw Materials</option>';
+						kind_of += '<option value="Other (PPH)">Other (PPH)</option>';
+						kind_of += '<option value="Constool">Constool</option>';
+					}
+					else if (result.payment.kind_of == "Other (PPH)"){
+						kind_of += '<option value="Electricity">Electricity</option>';
+						kind_of += '<option value="Gas">Gas</option>';
+						kind_of += '<option value="Water">Water</option>';
+						kind_of += '<option value="Raw Materials">Raw Materials</option>';
+						kind_of += '<option value="Other (PPH)" selected>Other (PPH)</option>';
+						kind_of += '<option value="Constool">Constool</option>';
+					}
+					else if (result.payment.kind_of == "Constool"){
+						kind_of += '<option value="Electricity">Electricity</option>';
+						kind_of += '<option value="Gas">Gas</option>';
+						kind_of += '<option value="Water">Water</option>';
+						kind_of += '<option value="Raw Materials">Raw Materials</option>';
+						kind_of += '<option value="Other (PPH)">Other (PPH)</option>';
+						kind_of += '<option value="Constool" selected>Constool</option>';
+					}
+
+					$('#kind_of').append(kind_of);
 
 					$('#id_edit').val(result.payment.id);
 					$('#modalNewTitle').text('Update Payment Request');
@@ -510,29 +548,35 @@
 		$('#loading').show();
 
 		if(id == 'new'){
-			if($("#submission_date").val() == "" || $('#supplier_code').val() == null || $('#currency').val() == "" || $('#payment_term').val() == "" || $('#due_date').val() == "" || $('#amount').val() == "" || $('#kind_of').val() == ""){
+			if($("#payment_date").val() == "" || $('#supplier_code').val() == null || $('#currency').val() == "" || $('#payment_term').val() == "" || $('#payment_due_date').val() == "" || $('#amount').val() == "" || $('#kind_of').val() == ""){
 				
 				$('#loading').hide();
 				openErrorGritter('Error', "Please fill field with (*) sign.");
 				return false;
 			}
 
+			var checked_payment = "";
+			var ck = [];
+
+            $.each($(".check_payment"), function(key, value) {
+            	if($(this).is(":checked")){
+	                ck.push(value.value);
+	            }
+            });
+
+            checked_payment = ck.toString();
+
 			var formData = new FormData();
-			formData.append('submission_date', $("#submission_date").val());
+			formData.append('payment_date', $("#payment_date").val());
 			formData.append('supplier_code', $("#supplier_code").val());
 			formData.append('supplier_name', $("#supplier_name").val());
 			formData.append('currency', $("#currency").val());
 			formData.append('payment_term', $("#payment_term").val());
-			formData.append('due_date', $("#due_date").val());
+			formData.append('payment_due_date', $("#payment_due_date").val());
 			formData.append('amount', $("#amount").val());
 			formData.append('kind_of', $("#kind_of").val());
-			
-			formData.append('file_attach', $(this).prop('files')[0]);
-			var file=$(this).val().replace(/C:\\fakepath\\/i, '').split(".");
-			formData.append('extension', file[1]);
-			formData.append('foto_name', file[0]);
-
-
+			formData.append('attach_document', checked_payment);
+			formData.append('file_attach', $('#file_attach').prop('files')[0]);
 			$.ajax({
 				url:"{{ url('create/payment_request') }}",
 				method:"POST",
@@ -560,28 +604,38 @@
 			});
 		}
 		else{
-			if($("#submission_date").val() == "" || $('#supplier_code').val() == null || $('#currency').val() == "" || $('#payment_term').val() == "" || $('#due_date').val() == "" || $('#amount').val() == "" || $('#kind_of').val() == ""){
+			if($("#payment_date").val() == "" || $('#supplier_code').val() == null || $('#currency').val() == "" || $('#payment_term').val() == "" || $('#payment_due_date').val() == "" || $('#amount').val() == "" || $('#kind_of').val() == ""){
 				
 				$('#loading').hide();
 				openErrorGritter('Error', "Please fill field with (*) sign.");
 				return false;
 			}
 
+
+			var checked_payment = "";
+			var ck = [];
+
+			$.each($(".check_payment"), function(key, value) {
+            	if($(this).is(":checked")){
+	                ck.push(value.value);
+	            }
+            });
+
+            checked_payment = ck.toString();
+
 			var formData = new FormData();
 			formData.append('id_edit', $("#id_edit").val());
-			formData.append('submission_date', $("#submission_date").val());
+			formData.append('payment_date', $("#payment_date").val());
 			formData.append('supplier_code', $("#supplier_code").val());
 			formData.append('supplier_name', $("#supplier_name").val());
 			formData.append('currency', $("#currency").val());
 			formData.append('payment_term', $("#payment_term").val());
-			formData.append('due_date', $("#due_date").val());
+			formData.append('payment_due_date', $("#payment_due_date").val());
 			formData.append('amount', $("#amount").val());
+			formData.append('attach_document', checked_payment);
 			formData.append('kind_of', $("#kind_of").val());
 			
-			formData.append('file_attach', $(this).prop('files')[0]);
-			var file=$(this).val().replace(/C:\\fakepath\\/i, '').split(".");
-			formData.append('extension', file[1]);
-			formData.append('foto_name', file[0]);
+			formData.append('file_attach', $("#file_attach").prop('files')[0]);
 
 			$.ajax({
 				url:"{{ url('edit/payment_request') }}",
@@ -613,12 +667,12 @@
 
 	function clearNew(){
 		$('#id_edit').val('');
-		$("#submission_date").val('');
+		$("#payment_date").val('');
 		$("#supplier_code").val('').trigger('change');
 		$("#supplier_name").val('');
 		$('#currency').val('').trigger('change');
 		$("#payment_term").val('').trigger('change');
-		$("#currency").val('').trigger('change');
+		$("#payment_due_date").val('').trigger('change');
 		$('#amount').val('');
 		$("#kind_of").val('').trigger('change');
 	}
@@ -635,15 +689,49 @@
 
 				$.each(result.payment, function(key, value){
 					listTableBody += '<tr>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.1%;">'+parseInt(key+1)+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.submission_date+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:3%;">'+value.supplier_code+' - '+value.supplier_name+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:2%;">'+value.payment_term+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.due_date+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:1%;">'+value.kind_of+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:3%;">'+value.amount+'</td>';
-					listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.1%;">'+value.file+'</td>';
-					listTableBody += '<td style="width:2%;"><center><button class="btn btn-md btn-warning" onclick="newData(\''+value.id+'\')"><i class="fa fa-eye"></i> </button>  <a class="btn btn-md btn-danger" target="_blank" href="{{ url("payment_request/report") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a></center></td>';
+					listTableBody += '<td style="width:0.1%;">'+parseInt(key+1)+'</td>';
+					listTableBody += '<td style="width:1%;">'+value.payment_date+'</td>';
+					listTableBody += '<td style="width:3%;">'+value.supplier_code+' - '+value.supplier_name+'</td>';
+					listTableBody += '<td style="width:2%;">'+value.payment_term+'</td>';
+					listTableBody += '<td style="width:1%;">'+value.payment_due_date+'</td>';
+					listTableBody += '<td style="width:2%;">'+value.kind_of+'</td>';
+					listTableBody += '<td style="width:2%;">'+value.amount.toLocaleString()+'</td>';
+
+					if (value.file != null) {
+						listTableBody += '<td style="width:0.1%;"><a target="_blank" href="{{ url("files/payment") }}/'+value.file+'"><i class="fa fa-paperclip"></i></td>';
+					}
+					else{
+						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.1%;"> - </td>';
+					}
+
+					if (value.posisi == 'user') {
+						listTableBody += '<td style="width:0.1%;"><span class="label label-danger">Not Sent</span></td>';
+					}
+					else if (value.posisi == 'manager'){
+						listTableBody += '<td style="width:0.1%;"><span class="label label-warning">Approval Manager</span></td>';
+					}
+					else if (value.posisi == 'dgm'){
+						listTableBody += '<td style="width:0.1%;"><span class="label label-warning">Approval DGM</span></td>';
+					}
+					else if (value.posisi == 'gm'){
+						listTableBody += '<td style="width:0.1%;"><span class="label label-warning">Approval GM</span></td>';
+					}
+					else if (value.posisi == 'acc'){
+						listTableBody += '<td style="width:0.1%;"><span class="label label-warning">Diverifikasi Accounting</span></td>';
+					}
+					else{
+						listTableBody += '<td style="width:0.1%;"><span class="label label-success">Diterima Accounting</span></td>';
+					}
+
+					if (value.posisi == "user")
+					{
+						listTableBody += '<td style="width:2%;"><center><button class="btn btn-md btn-primary" onclick="newData(\''+value.id+'\')"><i class="fa fa-edit"></i> </button>  <a class="btn btn-md btn-danger" target="_blank" href="{{ url("report/payment_request") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a> <button class="btn btn-md btn-success" data-toggle="tooltip" title="Send Email" style="margin-right:5px;" onclick="sendEmail(\''+value.id+'\')"><i class="fa fa-envelope"></i></button></center></td>';
+					}
+
+					else{
+						listTableBody += '<td style="width:2%;"><a class="btn btn-md btn-danger" target="_blank" href="{{ url("report/payment_request") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a></center></td>';
+					}
+
 					listTableBody += '</tr>';
 
 
@@ -747,6 +835,25 @@
 				} 
 			});
 		}
+
+	function sendEmail(id) {
+      var data = {
+        id:id
+      };
+
+      if (!confirm("Apakah anda yakin ingin mengirim Payment Request ini ke Manager?")) {
+        return false;
+      }
+      else{
+      	$("#loading").show();
+      }
+
+      $.get('{{ url("email/payment_request") }}', data, function(result, status, xhr){
+        openSuccessGritter("Success","Email Berhasil Terkirim");
+      	$("#loading").hide();
+        setTimeout(function(){  window.location.reload() }, 2500);
+      })
+    }
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({

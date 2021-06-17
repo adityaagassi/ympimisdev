@@ -40,6 +40,9 @@ use App\UtilityOrder;
 
 use App\FixedAssetClasification;
 use App\FixedAssetRegistration;
+use App\FixedAssetInvoice;
+use App\FixedAssetInvoiceDetail;
+use App\CodeGenerator;
 
 use App\CanteenPurchaseRequisition;
 use App\CanteenPurchaseRequisitionItem;
@@ -342,6 +345,15 @@ class AccountingController extends Controller
     {
         try
         {
+            // $tujuan_upload = 'images/purchase_item';
+
+            // if ($request->file('item_file') != NULL)
+            // {
+            //     $file = $request->file('item_file');
+            //     $nama = $file->getClientOriginalName();
+            //     $file->move($tujuan_upload,$nama);
+            // }
+
             $id_user = Auth::id();
 
             $item = AccItem::create(['kode_item' => $request->get('item_code') , 'kategori' => $request->get('item_category') , 'deskripsi' => $request->get('item_desc') , 'uom' => $request->get('item_uom') , 'spesifikasi' => $request->get('item_spec') , 'harga' => $request->get('item_price') , 'lot' => $request->get('item_lot') , 'moq' => $request->get('item_moq') , 'leadtime' => $request->get('item_leadtime') , 'currency' => $request->get('item_currency') , 'created_by' => $id_user]);
@@ -10053,44 +10065,44 @@ public function detailMonitoringPRPO(Request $request){
   $pr = DB::select($qry);
 
   return DataTables::of($pr)
-    ->editColumn('item_request_date', function ($pr)
-    {
-        return date('d-M-Y', strtotime($pr->item_request_date)) ;
-    })
-    ->editColumn('item_qty', function ($pr)
-    {
-        return $pr->item_qty.' '.$pr->item_uom;
-    })
-    ->editColumn('item_price', function ($pr)
-    {
-        return number_format($pr->item_price,0,",",".");
-    })
-    ->editColumn('item_amount', function ($pr)
-    {
-        return number_format($pr->item_amount,0,",",".");
-    })
-    ->editColumn('last_order', function ($pr)
-    {
-        if ($pr->last_order != null) {
-            return date('d-M-Y', strtotime($pr->last_order)) ;
-        }
-        else{
-            return '-';
-        }
-    })
+  ->editColumn('item_request_date', function ($pr)
+  {
+    return date('d-M-Y', strtotime($pr->item_request_date)) ;
+})
+  ->editColumn('item_qty', function ($pr)
+  {
+    return $pr->item_qty.' '.$pr->item_uom;
+})
+  ->editColumn('item_price', function ($pr)
+  {
+    return number_format($pr->item_price,0,",",".");
+})
+  ->editColumn('item_amount', function ($pr)
+  {
+    return number_format($pr->item_amount,0,",",".");
+})
+  ->editColumn('last_order', function ($pr)
+  {
+    if ($pr->last_order != null) {
+        return date('d-M-Y', strtotime($pr->last_order)) ;
+    }
+    else{
+        return '-';
+    }
+})
 
-    ->editColumn('status', function ($pr)
-    {
-        if ($pr->sudah_po == null) {
-            return '<span class="label label-danger">Belum PO</span>';
-        }
-        else if ($pr->sudah_po != null) {
-            return '<span class="label label-success">Sudah PO</span>';
-        }
-    })
+  ->editColumn('status', function ($pr)
+  {
+    if ($pr->sudah_po == null) {
+        return '<span class="label label-danger">Belum PO</span>';
+    }
+    else if ($pr->sudah_po != null) {
+        return '<span class="label label-success">Sudah PO</span>';
+    }
+})
 
-    ->rawColumns(['status' => 'status'])
-    ->make(true);
+  ->rawColumns(['status' => 'status'])
+  ->make(true);
 }
 
 public function detailMonitoringPRActual(Request $request){
@@ -12679,7 +12691,7 @@ public function fetch_kedatangan_kantin(Request $request)
 
     $kedatangan = DB::select("
         SELECT DISTINCT
-        canteen_receives.*, canteen_purchase_order_details.no_pr, IF(goods_price != 0,goods_price,service_price) as price, canteen_purchase_orders.no_po_sap, canteen_purchase_orders.supplier_code, canteen_purchase_orders.supplier_name
+        canteen_receives.*, canteen_purchase_order_details.no_pr, IF(goods_price != 0,goods_price,service_price) as price, canteen_purchase_orders.supplier_code, canteen_purchase_orders.supplier_name
         FROM
         `canteen_receives`
         LEFT JOIN canteen_purchase_order_details ON canteen_receives.no_po = canteen_purchase_order_details.no_po 
@@ -13175,6 +13187,7 @@ public function export_tanda_terima(Request $request){
     //                     FIXED ASSET                             //
     //=============================================================//
 
+
 public function indexFixedAsset()
 {
     $title = 'Index Fixed Asset';
@@ -13202,10 +13215,138 @@ public function indexAssetRegistration()
     ))->with('page', 'Fixed Asset Registration Form');  
 }
 
+public function indexAssetInvoice()
+{
+    $title = 'Asset Invoice Upload Form';
+    $title_jp = '??';
+
+    $inv = AccInvestment::where('category', '=', 'Investment')->select('reff_number', 'applicant_name')->get();
+
+    return view('fixed_asset.form.invoice_form', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'investment' => $inv
+    ))->with('page', 'Fixed Asset Invoice Upload Form');  
+}
+
+public function fetchAssetInvoice(Request $request)
+{
+    $data_invoice = FixedAssetInvoice::leftJoin('acc_investments', 'acc_investments.reff_number', '=', 'fixed_asset_invoices.investment_number')
+    // ->where('acc_investments.applicant_id', '=', Auth::user()->username)
+    ->select('fixed_asset_invoices.form_id', 'fixed_asset_invoices.investment_number', 'fixed_asset_invoices.invoice_number', 'fixed_asset_invoices.invoice_name', 'fixed_asset_invoices.fixed_asset_name', 'acc_investments.type', 'acc_investments.applicant_name', 'fixed_asset_invoices.created_at', 'fixed_asset_invoices.status')
+    ->get();
+
+    $response = array(
+        'status' => true,
+        'invoices' => $data_invoice
+    );
+    return Response::json($response);
+}
+
+public function assetSendInvoice(Request $request)
+{
+    $mail_to = [];
+    $investment_number = $request->get('investment_number');
+    
+    $invoice_num = json_decode($request->get('invoice_num'));
+    $invoice_name = json_decode($request->get('invoice_name'));
+    $invoice_file = json_decode($request->get('invoice_file'));
+
+    $vendor = json_decode($request->get('vendor'));
+    $currency = json_decode($request->get('currency'));
+    $amount = json_decode($request->get('amount'));
+    $amount_usd = json_decode($request->get('amount_usd'));
+
+
+    $date = date('Y-m-d');
+    $prefix_now = 'FAR'.date("y").date("m");
+    $code_generator = CodeGenerator::where('note','=','fixed_asset_register')->first();
+
+    if ($prefix_now != $code_generator->prefix){
+        $code_generator->prefix = $prefix_now;
+        $code_generator->index = '0';
+        $code_generator->save();
+    }
+
+    $number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+    $form_id = $code_generator->prefix . $number;
+    $code_generator->index = $code_generator->index+1;
+    $code_generator->save();
+
+    try{
+        for ($i=0; $i < count($invoice_num); $i++) { 
+
+            //FILE HANDLER
+            if($request->hasFile('invoice_file_'.$i)) {
+                $file = $request->file('invoice_file_'.$i);
+                $file_name = $form_id.date('His').$i.'.'.$file->getClientOriginalExtension();
+                $file->move(public_path('files/fixed_asset/'), $file_name);
+            }
+
+            $invoice_reg = new FixedAssetInvoice([
+                'form_id' => $form_id,
+                'investment_number' => $investment_number,
+                'invoice_number' => $invoice_num[$i],
+                'invoice_name' => $invoice_name[$i],
+                'fixed_asset_name' => $invoice_name[$i],
+                'att' => $file_name,
+                'status' => 'created',
+                'created_by' => Auth::user()->username
+            ]);
+            $invoice_reg->save();
+
+            //DETAIL ITEM
+            for ($z=0; $z < count($vendor); $z++) { 
+                if ($vendor[$z]->invoice == $invoice_num[$i]) {
+                    $invoice_detail = new FixedAssetInvoiceDetail([
+                        'invoice_id' => $invoice_reg->id,
+                        'vendor' => $vendor[$z]->vendor,
+                        'currency' => $currency[$z]->currency,
+                        'amount' => $amount[$z]->amount,
+                        'amount_usd' => $amount_usd[$z]->amount_usd,
+                        'remark' => null,
+                        'created_by' => Auth::user()->username
+                    ]);
+                    $invoice_detail->save();
+                }
+            }
+
+            $inv_mail = AccInvestment::where('reff_number', '=', $investment_number)
+            ->leftJoin('users', 'users.username', '=', 'acc_investments.applicant_id')
+            ->first();
+            array_push($mail_to, $inv_mail->email);
+        }
+
+        //SEND EMAIL
+
+        $data_mail = FixedAssetInvoice::leftJoin('fixed_asset_invoice_details', 'fixed_asset_invoice_details.invoice_id', '=', 'fixed_asset_invoices.id')
+        ->leftJoin('acc_investments', 'acc_investments.reff_number', '=', 'fixed_asset_invoices.investment_number')
+        ->where('fixed_asset_invoices.form_id', '=', $form_id)
+        ->select('fixed_asset_invoices.form_id', 'fixed_asset_invoices.investment_number', 'fixed_asset_invoices.invoice_number', 'fixed_asset_invoices.invoice_name', 'fixed_asset_invoices.fixed_asset_name', 'fixed_asset_invoice_details.vendor', 'fixed_asset_invoice_details.currency', 'fixed_asset_invoice_details.amount', 'fixed_asset_invoice_details.amount_usd', 'acc_investments.type')
+        ->get();
+
+        Mail::to($mail_to)
+        ->bcc(['nasiqul.ibat@music.yamaha.com'])
+        ->send(new SendEmail($data_mail, 'fixed_asset_invoice'));
+
+        $response = array(
+            'status' => true,
+        );
+        return Response::json($response);
+
+    } catch (Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+    }
+}
+
 public function fetchAssetRegistration()
 {
     $asset = FixedAssetRegistration::leftJoin('fixed_asset_clasifications', 'fixed_asset_clasifications.category_code', '=', 'fixed_asset_registrations.clasification_id')
-    ->select('fixed_asset_registrations.asset_name', 'fixed_asset_registrations.invoice_number', 'fixed_asset_registrations.investment_number', 'fixed_asset_registrations.vendor', 'fixed_asset_registrations.pic', 'fixed_asset_registrations.location', 'fixed_asset_registrations.amount', 'fixed_asset_registrations.amount_usd', 'fixed_asset_registrations.request_date', 'fixed_asset_registrations.currency', 'fixed_asset_registrations.budget_number', 'fixed_asset_registrations.usage_estimation', 'fixed_asset_registrations.status', 'fixed_asset_clasifications.clasification_name', 'fixed_asset_clasifications.life_time')
+    ->select('fixed_asset_registrations.id','fixed_asset_registrations.asset_name', 'fixed_asset_registrations.invoice_number', 'fixed_asset_registrations.investment_number', 'fixed_asset_registrations.vendor', 'fixed_asset_registrations.pic', 'fixed_asset_registrations.location', 'fixed_asset_registrations.amount', 'fixed_asset_registrations.amount_usd', 'fixed_asset_registrations.request_date', 'fixed_asset_registrations.currency', 'fixed_asset_registrations.budget_number', 'fixed_asset_registrations.usage_estimation', 'fixed_asset_registrations.status', 'fixed_asset_clasifications.clasification_name', 'fixed_asset_clasifications.life_time')
     ->where('fixed_asset_registrations.created_by', '=', Auth::user()->username)
     ->get();
 
@@ -13216,9 +13357,24 @@ public function fetchAssetRegistration()
     return Response::json($response);
 }
 
+public function fetchAssetRegistrationById(Request $request)
+{
+    $asset = FixedAssetRegistration::leftJoin('fixed_asset_clasifications', 'fixed_asset_clasifications.category_code', '=', 'fixed_asset_registrations.clasification_id')
+    ->select('fixed_asset_registrations.id','fixed_asset_registrations.asset_name', 'fixed_asset_registrations.invoice_number', 'fixed_asset_registrations.invoice_name', 'fixed_asset_registrations.investment_number', 'fixed_asset_registrations.vendor', 'fixed_asset_registrations.pic', 'fixed_asset_registrations.location', 'fixed_asset_registrations.amount', 'fixed_asset_registrations.amount_usd', 'fixed_asset_registrations.request_date', 'fixed_asset_registrations.currency', 'fixed_asset_registrations.budget_number', 'fixed_asset_registrations.usage_estimation', 'fixed_asset_registrations.status', 'fixed_asset_clasifications.clasification_name', 'fixed_asset_clasifications.life_time', 'fixed_asset_clasifications.category', 'fixed_asset_registrations.pic', 'fixed_asset_registrations.location', 'fixed_asset_registrations.usage_term', 'fixed_asset_registrations.usage_estimation')
+    ->where('fixed_asset_registrations.id', '=', $request->get('id'))
+    ->first();
+
+    $response = array(
+        'status' => true,
+        'asset' => $asset
+    );
+    return Response::json($response);
+}
+
 public function assetRegistration(Request $request)
 {
     $asset_reg = new FixedAssetRegistration([
+        'form_number' => '',
         'asset_name' => $request->get('item_name'),
         'invoice_number' => $request->get('invoice_number'),
         'invoice_name' => $request->get('invoice_name'),
@@ -13237,8 +13393,130 @@ public function assetRegistration(Request $request)
         'created_by' => Auth::user()->username
     ]);
     $asset_reg->save();
+
+
+    $new_asset = FixedAssetRegistration::where('id', '=', $asset_reg->id)
+    ->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'fixed_asset_registrations.created_by')
+    ->select('fixed_asset_registrations.id', 'fixed_asset_registrations.asset_name', 'fixed_asset_registrations.invoice_number', 'fixed_asset_registrations.vendor', 'fixed_asset_registrations.currency', 'fixed_asset_registrations.amount', 'fixed_asset_registrations.amount_usd', 'fixed_asset_registrations.pic', 'fixed_asset_registrations.investment_number', 'fixed_asset_registrations.invoice_file', 'fixed_asset_registrations.created_at', 'employee_syncs.name','fixed_asset_registrations.budget_number', 'fixed_asset_registrations.usage_term', 'fixed_asset_registrations.usage_estimation')
+    ->first();
+
+    $datas = array(
+        'status' => 'FA CONTROL',
+        'assets' => $new_asset
+    );
+
+    Mail::to(['ismail.husen@music.yamaha.com'])->bcc(['nasiqul.ibat@music.yamaha.com'])->send(new SendEmail($datas, 'fixed_asset_registrations'));
+
+    $response = array(
+        'status' => true,
+        'asset' => $asset_reg
+    );
+    return Response::json($response);
 }
 
+public function updateAssetRegistration(Request $request)
+{
+    $asset_upd = FixedAssetRegistration::where('id', '=', $request->get("id"))
+    ->update([
+        'invoice_name' => $request->get('invoice_name'),
+        'asset_name' => $request->get('item_name'),
+        'invoice_number' => $request->get('invoice_number'),
+        'investment_number' => $request->get('investment_number'),
+        'budget_number' => $request->get('budget'),
+        'vendor' => $request->get('vendor'),
+        'currency' => $request->get('currency'),
+        'amount' => $request->get('amount'),
+        'amount_usd' => $request->get('amount_usd'),
+        'pic' => $request->get('pic'),
+        'location' => $request->get('location'),
+        'category_code' => $request->get('category_code'),
+        'category' => $request->get('category'),
+        'sap_id' => $request->get('sap_id'),
+        'request_date' => $request->get('reg_date'),
+        'depreciation_key' => $request->get('depreciation'),
+        'status' => 'checked'
+    ]);
+
+    $new_asset = FixedAssetRegistration::where('fixed_asset_registrations.id', '=', $request->get("id"))
+    ->leftJoin('fixed_asset_clasifications', 'fixed_asset_clasifications.category_code', '=', 'fixed_asset_registrations.clasification_id')
+    ->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'fixed_asset_registrations.created_by')
+    ->select('fixed_asset_registrations.id', 'fixed_asset_registrations.asset_name', 'fixed_asset_registrations.invoice_number', 'fixed_asset_registrations.vendor', 'fixed_asset_registrations.currency', 'fixed_asset_registrations.amount', 'fixed_asset_registrations.amount_usd', 'fixed_asset_registrations.pic', 'fixed_asset_registrations.investment_number', 'fixed_asset_registrations.location', 'fixed_asset_registrations.created_at', 'employee_syncs.name', 'fixed_asset_registrations.budget_number', 'fixed_asset_registrations.usage_term', 'fixed_asset_registrations.usage_estimation','fixed_asset_registrations.category', 'fixed_asset_registrations.category_code', 'fixed_asset_registrations.sap_id', 'fixed_asset_registrations.depreciation_key', db::raw('fixed_asset_clasifications.category as category_name'), 'fixed_asset_clasifications.clasification_name', 'fixed_asset_clasifications.life_time', 'fixed_asset_registrations.created_by')
+    ->first();
+
+    $data = [
+        'assets' => $new_asset,
+        'status' => 'APPROVAL MANAGER'
+    ];
+
+    $mailto = db::select('SELECT email FROM send_emails where remark = (select department from employee_syncs where employee_id = "'.$new_asset->created_by.'")');
+
+    Mail::to($mailto)->bcc(['nasiqul.ibat@music.yamaha.com'])->send(new SendEmail($data, 'fixed_asset_registrations'));
+
+    $response = array(
+        'status' => true,
+        'asset' => $asset_upd
+    );
+    return Response::json($response);
+}
+
+public function approvalAsset($id, $user, $app_stat)
+{
+    $title = 'Approval New Asset Registration';
+    $title_jp = '??';
+
+
+    if ($app_stat == 'approve') {
+        $message2 = 'Successfully Approved';
+        $stat = true;
+    } else {
+        $message2 = 'Successfully Rejected';
+        $stat = false;
+    }
+
+    if ($user == 'manager_user') {
+        // MANAGER APPLICANT
+        $message = 'Registration New Asset Form';
+        $asset_upd = FixedAssetRegistration::where('id', '=', $id)
+        ->update([
+            'manager_app_date' => date('Y-m-d H:i:s'),
+            'status' => 'approved_manager'
+        ]);
+
+        if ($stat) {
+            $new_asset = FixedAssetRegistration::where('fixed_asset_registrations.id', '=', $id)
+            ->leftJoin('fixed_asset_clasifications', 'fixed_asset_clasifications.category_code', '=', 'fixed_asset_registrations.clasification_id')
+            ->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'fixed_asset_registrations.created_by')
+            ->select('fixed_asset_registrations.id', 'fixed_asset_registrations.asset_name', 'fixed_asset_registrations.invoice_number', 'fixed_asset_registrations.vendor', 'fixed_asset_registrations.currency', 'fixed_asset_registrations.amount', 'fixed_asset_registrations.amount_usd', 'fixed_asset_registrations.pic', 'fixed_asset_registrations.investment_number', 'fixed_asset_registrations.location', 'fixed_asset_registrations.created_at', 'employee_syncs.name', 'fixed_asset_registrations.budget_number', 'fixed_asset_registrations.usage_term', 'fixed_asset_registrations.usage_estimation','fixed_asset_registrations.category', 'fixed_asset_registrations.category_code', 'fixed_asset_registrations.sap_id', 'fixed_asset_registrations.depreciation_key', db::raw('fixed_asset_clasifications.category as category_name'), 'fixed_asset_clasifications.clasification_name', 'fixed_asset_clasifications.life_time', 'fixed_asset_registrations.created_by')
+            ->first();
+
+            $data = [
+                'assets' => $new_asset,
+                'status' => 'APPROVAL MANAGER FA'
+            ];
+
+            $mailto = db::select('SELECT email FROM send_emails where remark = "Accounting Department"');
+
+            Mail::to($mailto)->bcc(['nasiqul.ibat@music.yamaha.com'])->send(new SendEmail($data, 'fixed_asset_registrations'));
+        }
+    } else if ($user == 'manager_fa') {
+        // MANAGER FA
+
+        $message = 'Registration New Asset Form';
+        $asset_upd = FixedAssetRegistration::where('id', '=', $id)
+        ->update([
+            'manager_fa_date' => date('Y-m-d H:i:s'),
+            'status' => 'approved_manager_fa'
+        ]);
+    }
+
+    return view('fixed_asset.approval_message', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'message' => $message,
+        'message2' => $message2,
+        'status' => $stat
+    ))->with('page', 'Fixed Asset Approval');  
+}
 
     //=============================================================//
     //                     Payment Request                         //
@@ -13247,7 +13525,7 @@ public function assetRegistration(Request $request)
 public function IndexPaymentRequest(){
 
     $title = "Payment Request";
-    $title_jp = "??";
+    $title_jp = "支払リクエスト";
 
     $employees = EmployeeSync::orderBy('department', 'asc')->get();
 
@@ -13266,7 +13544,6 @@ public function IndexPaymentRequest(){
         'vendor' => $vendor,
         'payment_term' => $payment_term
     ));
-
 }
 
 public function fetchPaymentRequest(){
@@ -13310,6 +13587,11 @@ public function fetchPaymentRequestDetail(Request $request){
 public function createPaymentRequest(Request $request){
     try{
 
+        $manager = null;
+        $manager_name = null;
+        $dgm = null;
+        $gm = null;
+
         $tujuan_upload = 'files/payment';
 
         $file = $request->file('file_attach');
@@ -13323,6 +13605,29 @@ public function createPaymentRequest(Request $request){
             $filename = null;
         }
 
+        if($request->input('kind_of') == "Electricity" || $request->input('kind_of') == "Gas" || $request->input('kind_of') == "Water")
+        {
+            $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance Department' and position = 'manager'");
+        }
+
+        if ($manag != null)
+        {
+            foreach ($manag as $mg)
+            {
+                $manager = $mg->employee_id;
+                $manager_name = $mg->name;
+            }
+
+            $dgm = $this->dgm;
+            $gm = $this->gm;
+        }
+        else{
+            $manager = null;
+            $manager_name = null;
+            $dgm = null;
+            $gm = null;
+        }
+
         $payment = new AccPaymentRequest([
             'payment_date' => $request->input('payment_date'),
             'supplier_code' => $request->input('supplier_code'),
@@ -13334,11 +13639,32 @@ public function createPaymentRequest(Request $request){
             'kind_of' => $request->input('kind_of'),
             'attach_document' => $request->input('attach_document'),
             'file' => $filename,
+            'pdf' => 'Payment '.$request->input('kind_of'). ' '.date('d-M-y', strtotime($request->input('payment_date'))).'.pdf',
+            'posisi' => 'user', 
+            'status' => 'approval', 
+            'manager' => $manager,
+            'manager_name' => $manager_name,
+            'dgm' => $dgm, 
+            'gm' => $gm,
             'created_by' => Auth::user()->username,
             'created_name' => Auth::user()->name
         ]);
 
         $payment->save();
+
+        $payment_data = AccPaymentRequest::where('id','=',$payment->id)->first();
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->setPaper('A4', 'potrait');
+
+        $pdf->loadView('accounting_purchasing.payment_request.report_payment_request', array(
+            'payment' => $payment_data,
+            'id' => $payment->id
+        ));
+
+        $pdf->save(public_path() . "/payment_list/Payment ".$request->input('kind_of'). " ".date('d-M-y', strtotime($request->input('payment_date'))).".pdf");
+
 
         $response = array(
             'status' => true,
@@ -13394,6 +13720,17 @@ public function editPaymentRequest(Request $request){
         $payment->created_by = Auth::user()->username;
         $payment->save();
 
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->setPaper('A4', 'potrait');
+
+        $pdf->loadView('accounting_purchasing.payment_request.report_payment_request', array(
+            'payment' => $payment,
+            'id' => $payment->id
+        ));
+
+        $pdf->save(public_path() . "/payment_list/Payment ".$request->input('kind_of'). " ".date('d-M-y', strtotime($request->input('payment_date'))).".pdf");
+
         $response = array(
             'status' => true,
             'message' => 'Payment Request Updated'
@@ -13420,8 +13757,355 @@ public function reportPaymentRequest($id){
         'payment' => $payment,
         'id' => $id
     ));
-    return $pdf->stream("Payment Request ".$payment->kind_of. " ".date('d-M-y', strtotime($payment->payment_date))." ".$payment->id. ".pdf");
+    return $pdf->stream("Payment ".$payment->kind_of. " ".date('d-M-y', strtotime($payment->payment_date)).".pdf");
 }
+
+public function emailPaymentRequest(Request $request){
+    $pr = AccPaymentRequest::find($request->get('id'));
+
+    try{
+        if ($pr->posisi == "user")
+        {
+            $mails = "select distinct email from acc_payment_requests join users on acc_payment_requests.manager = users.username where acc_payment_requests.id = ".$request->get('id');
+            $mailtoo = DB::select($mails);
+
+            $pr->posisi = "manager";
+            $pr->save();
+
+            $isimail = "select * from acc_payment_requests where acc_payment_requests.id = ".$request->get('id');
+            $payment = db::select($isimail);
+
+            Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($payment, 'payment_request'));
+
+            $response = array(
+              'status' => true,
+              'datas' => "Berhasil"
+          );
+
+            return Response::json($response);
+        }
+    } 
+    catch (Exception $e) {
+        $response = array(
+          'status' => false,
+          'datas' => "Gagal"
+      );
+        return Response::json($response);
+    }
+}
+
+public function paymentapprovalmanager($id){
+    $pr = AccPaymentRequest::find($id);
+    try{
+        if ($pr->posisi == "manager")
+        {
+            if ($pr->dgm != null) {
+                $pr->posisi = "dgm";
+                $pr->status_manager = "Approved/".date('Y-m-d H:i:s');
+
+                $mailto = "select distinct email from acc_payment_requests join users on acc_payment_requests.dgm = users.username where acc_payment_requests.id = '" . $id . "'";
+                $mails = DB::select($mailto);
+
+                foreach ($mails as $mail)
+                {
+                    $mailtoo = $mail->email;
+                }
+
+                $pr->save();
+
+                $pdf = \App::make('dompdf.wrapper');
+                $pdf->getDomPDF()->set_option("enable_php", true);
+                $pdf->setPaper('A4', 'potrait');
+
+                $pdf->loadView('accounting_purchasing.payment_request.report_payment_request', array(
+                    'payment' => $pr,
+                    'id' => $id
+                ));
+
+                $pdf->save(public_path() . "/payment_list/Payment ".$pr->kind_of. " ".date('d-M-y', strtotime($pr->payment_date)).
+                    ".pdf");
+
+                $isimail = "select * from acc_payment_requests where acc_payment_requests.id = ".$id;
+                $payment = db::select($isimail);
+
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($payment, 'payment_request'));
+
+                $message = 'Payment Request '.$pr->kind_of;
+                $message2 ='Successfully Approved';
+            }
+            
+            else{
+
+                $pr->posisi = "gm";
+                $pr->status_manager = "Approved/".date('Y-m-d H:i:s');
+
+                $mailto = "select distinct email from acc_payment_requests join users on acc_payment_requests.gm = users.username where acc_payment_requests.id = '" . $id . "'";
+                $mails = DB::select($mailto);
+
+                foreach ($mails as $mail)
+                {
+                    $mailtoo = $mail->email;
+                }
+
+                $pr->save();
+
+                $pdf = \App::make('dompdf.wrapper');
+                $pdf->getDomPDF()->set_option("enable_php", true);
+                $pdf->setPaper('A4', 'potrait');
+
+                $pdf->loadView('accounting_purchasing.payment_request.report_payment_request', array(
+                    'payment' => $pr,
+                    'id' => $id
+                ));
+
+                $pdf->save(public_path() . "/payment_list/Payment ".$pr->kind_of. " ".date('d-M-y', strtotime($pr->payment_date)).
+                    ".pdf");
+
+                $isimail = "select * from acc_payment_requests where acc_payment_requests.id = ".$id;
+                $payment = db::select($isimail);
+
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($payment, 'payment_request'));
+
+                $message = 'Payment Request '.$pr->kind_of;
+                $message2 ='Successfully Approved';
+
+                
+                $pdf = \App::make('dompdf.wrapper');
+                $pdf->getDomPDF()->set_option("enable_php", true);
+                $pdf->setPaper('A4', 'potrait');
+
+                $pdf->loadView('accounting_purchasing.payment_request.report_payment_request', array(
+                    'payment' => $pr,
+                    'id' => $id
+                ));
+
+                $pdf->save(public_path() . "/payment_list/Payment ".$pr->kind_of. " ".date('d-M-y', strtotime($pr->payment_date)).
+                    ".pdf");
+            }
+        }
+        else{
+            $message = 'Payment Request '.$pr->kind_of;
+            $message2 ='Already Approved / Rejected';
+        }
+
+        return view('accounting_purchasing.verifikasi.pr_message', array(
+            'head' => $pr->kind_of,
+            'message' => $message,
+            'message2' => $message2,
+        ))->with('page', 'Payment Request');
+
+    } catch (Exception $e) {
+        return view('accounting_purchasing.verifikasi.pr_message', array(
+            'head' => $pr->kind_of,
+            'message' => 'Error',
+            'message2' => $e->getMessage(),
+        ))->with('page', 'Payment Request');
+    }
+}
+
+public function paymentapprovaldgm($id){
+        $pr = AccPaymentRequest::find($id);
+        try{
+            if ($pr->posisi == "dgm")
+            {
+                $pr->posisi = "gm";
+                $pr->status_dgm = "Approved/".date('Y-m-d H:i:s');
+
+                $mailto = "select distinct email from acc_payment_requests join users on acc_payment_requests.gm = users.username where acc_payment_requests.id = '" . $pr->id . "'";
+                $mails = DB::select($mailto);
+
+                foreach ($mails as $mail)
+                {
+                    $mailtoo = $mail->email;
+                }
+
+                $pr->save();
+
+                $pdf = \App::make('dompdf.wrapper');
+                $pdf->getDomPDF()->set_option("enable_php", true);
+                $pdf->setPaper('A4', 'potrait');
+
+                $pdf->loadView('accounting_purchasing.payment_request.report_payment_request', array(
+                    'payment' => $pr,
+                    'id' => $id
+                ));
+
+                $pdf->save(public_path() . "/payment_list/Payment ".$pr->kind_of. " ".date('d-M-y', strtotime($pr->payment_date)).
+                    ".pdf");
+
+                $isimail = "select * from acc_payment_requests where acc_payment_requests.id = ".$id;
+                $payment = db::select($isimail);
+
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($payment, 'payment_request'));
+
+                $message = 'Payment Request '.$pr->kind_of;
+                $message2 ='Successfully Approved';
+
+                $pdf = \App::make('dompdf.wrapper');
+                $pdf->getDomPDF()->set_option("enable_php", true);
+                $pdf->setPaper('A4', 'potrait');
+
+                $pdf->loadView('accounting_purchasing.payment_request.report_payment_request', array(
+                    'payment' => $pr,
+                    'id' => $id
+                ));
+
+                $pdf->save(public_path() . "/payment_list/Payment ".$pr->kind_of. " ".date('d-M-y', strtotime($pr->payment_date)).
+                    ".pdf");
+            }
+            else{
+                $message = 'Payment Request '.$pr->kind_of;
+                $message2 ='Already Approved / Rejected';
+            }
+
+            return view('accounting_purchasing.verifikasi.pr_message', array(
+                'head' => $pr->kind_of,
+                'message' => $message,
+                'message2' => $message2,
+            ))->with('page', 'Payment Request');
+
+        } catch (Exception $e) {
+            return view('accounting_purchasing.verifikasi.pr_message', array(
+                'head' => $pr->kind_of,
+                'message' => 'Error',
+                'message2' => $e->getMessage(),
+            ))->with('page', 'Payment Request');
+        }
+    }
+
+    public function paymentapprovalgm($id){
+        $pr = AccPaymentRequest::find($id);
+        try{
+            if ($pr->posisi == "gm")
+            {
+                $pr->posisi = 'acc';
+                $pr->status_gm = "Approved/".date('Y-m-d H:i:s');
+                $pr->status = "approval_acc";
+
+                //kirim email ke Mbak Laila & Mbak Afifah
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Accounting Department' and (employee_id = 'PI0902001'  or employee_id = 'PI1505001')";
+                $mailtoo = DB::select($mails);
+
+                $pr->save();
+
+                $pdf = \App::make('dompdf.wrapper');
+                $pdf->getDomPDF()->set_option("enable_php", true);
+                $pdf->setPaper('A4', 'potrait');
+
+                $pdf->loadView('accounting_purchasing.payment_request.report_payment_request', array(
+                    'payment' => $pr,
+                    'id' => $id
+                ));
+
+                $pdf->save(public_path() . "/payment_list/Payment ".$pr->kind_of. " ".date('d-M-y', strtotime($pr->payment_date)).
+                    ".pdf");
+
+                $isimail = "select * from acc_payment_requests where acc_payment_requests.id = ".$id;
+                $payment = db::select($isimail);
+
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($payment, 'payment_request'));
+
+                $message = 'Payment Request '.$pr->kind_of;
+                $message2 ='Successfully Approved';
+
+                $pdf = \App::make('dompdf.wrapper');
+                $pdf->getDomPDF()->set_option("enable_php", true);
+                $pdf->setPaper('A4', 'potrait');
+
+                $pdf->loadView('accounting_purchasing.payment_request.report_payment_request', array(
+                    'payment' => $pr,
+                    'id' => $id
+                ));
+
+                $pdf->save(public_path() . "/payment_list/Payment ".$pr->kind_of. " ".date('d-M-y', strtotime($pr->payment_date)).
+                    ".pdf");
+            }
+            else{
+                $message = 'Payment Request '.$pr->kind_of;
+                $message2 ='Already Approved / Rejected';
+            }
+
+            return view('accounting_purchasing.verifikasi.pr_message', array(
+                'head' => $pr->kind_of,
+                'message' => $message,
+                'message2' => $message2,
+            ))->with('page', 'Payment Request');
+
+        } catch (Exception $e) {
+            return view('accounting_purchasing.verifikasi.pr_message', array(
+                'head' => $pr->kind_of,
+                'message' => 'Error',
+                'message2' => $e->getMessage(),
+            ))->with('page', 'Payment Request');
+        }
+    }
+
+    public function paymentreceiveacc($id){
+        $pr = AccPaymentRequest::find($id);
+        try{
+            if ($pr->posisi == "acc")
+            {
+                $pr->posisi = 'received';
+                $pr->status_dgm = "Approved/".date('Y-m-d H:i:s');
+                $pr->status = "received";
+
+                $pr->save();
+
+                $message = 'Payment Request '.$pr->kind_of;
+                $message2 ='Successfully Received';
+            }
+            else{
+                $message = 'Payment Request '.$pr->kind_of;
+                $message2 ='Already Approved / Rejected';
+            }
+
+            return view('accounting_purchasing.verifikasi.pr_message', array(
+                'head' => $pr->kind_of,
+                'message' => $message,
+                'message2' => $message2,
+            ))->with('page', 'Payment Request');
+
+        } catch (Exception $e) {
+            return view('accounting_purchasing.verifikasi.pr_message', array(
+                'head' => $pr->kind_of,
+                'message' => 'Error',
+                'message2' => $e->getMessage(),
+            ))->with('page', 'Payment Request');
+        }
+    }
+
+    public function paymentreject(Request $request, $id)
+    {
+        $pr = AccPaymentRequest::find($id);
+
+        if ($pr->posisi == "manager" || $pr->posisi == "dgm" || $pr->posisi == "gm")
+        {
+            $pr->datereject = date('Y-m-d H:i:s');
+            $pr->posisi = "user";
+            $pr->status_manager = null;
+            $pr->status_dgm = null;
+        }
+
+        $pr->save();
+
+        $isimail = "select * from acc_payment_requests where acc_payment_requests.id = ".$id;
+        $tolak = db::select($isimail);
+
+        //kirim email ke User
+        $mails = "select distinct email from acc_payment_requests join users on acc_payment_requests.created_by = users.username where acc_payment_requests.id ='" . $id . "'";
+        $mailtoo = DB::select($mails);
+
+        Mail::to($mailtoo)->send(new SendEmail($tolak, 'payment_request'));
+
+        $message = 'Payment Request '.$pr->kind_of;
+        $message2 = 'Not Approved';
+
+        return view('accounting_purchasing.verifikasi.pr_message', array(
+            'head' => $pr->kind_of,
+            'message' => $message,
+            'message2' => $message2,
+        ))->with('page', 'Payment Request');
+    }
 
 public function verifikasi_purchase_requisition_canteen($id)
 {
@@ -13768,15 +14452,37 @@ public function detailMonitoringPRPOCanteen(Request $request){
     }
 
 
-    $qry = "SELECT canteen_purchase_requisitions.no_pr,canteen_purchase_requisitions.submission_date, canteen_purchase_requisition_items.* from canteen_purchase_requisitions left join canteen_purchase_requisition_items on canteen_purchase_requisitions.no_pr = canteen_purchase_requisition_items.no_pr WHERE canteen_purchase_requisition_items.deleted_at is NULL and canteen_purchase_requisitions.no_pr = '".$pr."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$status_sign." ";
+    $qry = "SELECT canteen_purchase_requisitions.no_pr,canteen_purchase_requisitions.submission_date, canteen_purchase_requisition_items.*, (select DATE(created_at) from canteen_purchase_order_details where canteen_purchase_order_details.no_item = canteen_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order, (select supplier_name from canteen_purchase_order_details join canteen_purchase_orders on canteen_purchase_orders.no_po = canteen_purchase_order_details.no_po where canteen_purchase_order_details.no_item = canteen_purchase_requisition_items.item_code ORDER BY canteen_purchase_order_details.created_at desc limit 1) as last_vendor from canteen_purchase_requisitions left join canteen_purchase_requisition_items on canteen_purchase_requisitions.no_pr = canteen_purchase_requisition_items.no_pr WHERE canteen_purchase_requisition_items.deleted_at is NULL and canteen_purchase_requisitions.no_pr = '".$pr."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$status_sign." ";
 
     $pr = DB::select($qry);
 
     return DataTables::of($pr)
-    ->editColumn('submission_date', function ($pr)
+    ->editColumn('item_request_date', function ($pr)
     {
-        return $pr->submission_date;
+        return date('d-M-Y', strtotime($pr->item_request_date)) ;
     })
+    ->editColumn('item_qty', function ($pr)
+    {
+        return $pr->item_qty.' '.$pr->item_uom;
+    })
+    ->editColumn('item_price', function ($pr)
+    {
+        return number_format($pr->item_price,0,",",".");
+    })
+    ->editColumn('item_amount', function ($pr)
+    {
+        return number_format($pr->item_amount,0,",",".");
+    })
+    ->editColumn('last_order', function ($pr)
+    {
+        if ($pr->last_order != null) {
+            return date('d-M-Y', strtotime($pr->last_order)) ;
+        }
+        else{
+            return '-';
+        }
+    })
+
     ->editColumn('status', function ($pr)
     {
         if ($pr->sudah_po == null) {
@@ -13785,7 +14491,6 @@ public function detailMonitoringPRPOCanteen(Request $request){
         else if ($pr->sudah_po != null) {
             return '<span class="label label-success">Sudah PO</span>';
         }
-
     })
     ->rawColumns(['status' => 'status'])
     ->make(true);
@@ -13853,27 +14558,6 @@ public function fetch_purchase_order_canteen(Request $request)
         return date('Y-m-d', strtotime($po->tgl_po));
     })
 
-    ->editColumn('no_po_sap', function ($po)
-    {
-        $id = $po->id;
-
-        $po_sap = "";
-        if ($po->no_po_sap == null && $po->status == "not_sap")
-        {
-            $po_sap = '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-md" onClick="editSAP('.$id.','.$po->no_po_sap.')"><i class="fa fa-edit"></i> NO PO SAP</a>';
-        }
-        else if ($po->no_po_sap != null){
-            $po_sap = $po->no_po_sap;
-            $po_sap .= '&nbsp;<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-md" onClick="editSAP('.$id.','.$po->no_po_sap.')"><i class="fa fa-edit"></i></a>';
-        }
-        else
-        {
-            $po_sap = '-';
-        }
-
-        return $po_sap;
-    })
-
     ->editColumn('status', function ($po)
     {
         $id = $po->id;
@@ -13922,7 +14606,7 @@ public function fetch_purchase_order_canteen(Request $request)
             ';   
         }
     })
-    ->rawColumns(['status' => 'status', 'action' => 'action', 'no_po_sap' => 'no_po_sap'])
+    ->rawColumns(['status' => 'status', 'action' => 'action'])
     ->make(true);
 }
 
@@ -14801,7 +15485,7 @@ public function delete_item_po_canteen(Request $request)
     try
     {
         $item = CanteenPurchaseOrderDetail::find($request->get('id'));
-        
+
         $data3 = CanteenPurchaseRequisitionItem::where('item_code', $item->no_item)
         ->where('no_pr', $item->no_pr)
         ->update(['sudah_po' => null ]);        
@@ -14993,7 +15677,7 @@ public function delete_item_po_canteen(Request $request)
                 $po->posisi = 'pch';
                 $po->approval_authorized2 = "Approved";
                 $po->date_approval_authorized2 = date('Y-m-d H:i:s');
-                $po->status = "not_sap";
+                $po->status = "sap";
 
                 $mailto = "select distinct email from canteen_purchase_orders join users on canteen_purchase_orders.buyer_id = users.username where canteen_purchase_orders.id = '" . $id . "'";
                 $mails = DB::select($mailto);
@@ -15074,75 +15758,42 @@ public function delete_item_po_canteen(Request $request)
         }
     }
 
-    public function edit_sap_canteen(Request $request)
-    {
-        try{
-            $po = CanteenPurchaseOrder::find($request->get("id"));
-            $po->no_po_sap = $request->get('no_po_sap');
-            $po->status = 'sap';
-            $po->save();
-
-            $response = array(
-              'status' => true,
-              'datas' => "Berhasil",
-          );
-            return Response::json($response);
-        }
-        catch (QueryException $e){
-            $error_code = $e->errorInfo[1];
-            if($error_code == 1062){
-             $response = array(
-              'status' => false,
-              'datas' => "NO PO Already Exist",
-          );
-             return Response::json($response);
-         }
-         else{
-             $response = array(
-              'status' => false,
-              'datas' => "Update NO PO Error.",
-          );
-             return Response::json($response);
-         }
-     }
- }
-
 
    //Monitoring PR PO
 
- public function monitoringPOCanteen(){
-    return view('accounting_purchasing.display.po_canteen_monitoring',  
-        array(
-          'title' => 'Purchase Order Canteen Monitoring', 
-          'title_jp' => 'PO管理',
-      )
-    )->with('page', 'Purchase Order Canteen Monitoring');
-}
-
-public function fetchMonitoringPOCanteen(Request $request){
-
-  $datefrom = date("Y-m-d",  strtotime('-30 days'));
-  $dateto = date("Y-m-d");
-
-  $last = CanteenPurchaseOrder::where('status','=','pch')
-  ->orderBy('tanggal', 'asc')
-  ->select(db::raw('date(tgl_po) as tanggal'))
-  ->first();
-
-  if(strlen($request->get('datefrom')) > 0){
-    $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-}
-else{
-    if($last){
-      $tanggal = date_create($last->tanggal);
-      $now = date_create(date('Y-m-d'));
-      $interval = $now->diff($tanggal);
-      $diff = $interval->format('%a%');
-
-      if($diff > 30){
-        $datefrom = date('Y-m-d', strtotime($last->tanggal));
+    public function monitoringPOCanteen(){
+        return view('accounting_purchasing.display.po_canteen_monitoring',  
+            array(
+              'title' => 'Purchase Order Canteen Monitoring', 
+              'title_jp' => 'PO管理',
+          )
+        )->with('page', 'Purchase Order Canteen Monitoring');
     }
-}
+
+    public function fetchMonitoringPOCanteen(Request $request){
+
+      $datefrom = date("Y-m-d",  strtotime('-30 days'));
+      $dateto = date("Y-m-d");
+
+      $last = CanteenPurchaseOrder::where('status','=','pch')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(tgl_po) as tanggal'))
+      ->first();
+
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+    }
+    else{
+        if($last){
+          $tanggal = date_create($last->tanggal);
+          $now = date_create(date('Y-m-d'));
+          $interval = $now->diff($tanggal);
+          $diff = $interval->format('%a%');
+
+          if($diff > 30){
+            $datefrom = date('Y-m-d', strtotime($last->tanggal));
+        }
+    }
 }
 
 
@@ -15208,25 +15859,6 @@ public function detailMonitoringPOCanteen(Request $request){
     return date('Y-m-d', strtotime($po->tgl_po));
 })
 
-  ->editColumn('no_po_sap', function ($po)
-  {
-    $id = $po->id;
-
-    $po_sap = "";
-    if ($po->no_po_sap == null && $po->status == "not_sap")
-    {
-        $po_sap = '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-md" onClick="editSAP(' . $id . ')"><i class="fa fa-edit"></i> NO PO SAP</a>';
-    }
-    else if ($po->no_po_sap != null){
-        $po_sap = $po->no_po_sap;   
-    }
-    else
-    {
-        $po_sap = '-';
-    }
-
-    return $po_sap;
-})
 
   ->editColumn('status', function ($po)
   {
@@ -15248,7 +15880,7 @@ public function detailMonitoringPOCanteen(Request $request){
     }
 
 })
-  ->rawColumns(['status' => 'status', 'no_po_sap' => 'no_po_sap'])
+  ->rawColumns(['status' => 'status'])
   ->make(true);
 }
 
@@ -15434,5 +16066,106 @@ public function reject_purchase_order_canteen(Request $request, $id)
     return redirect('/canteen/purchase_order/verifikasi/' . $id)->with('status', 'PO Not Approved')
     ->with('page', 'Purchase Order Canteen');
 }
+
+public function fetch_history_pembelian_canteen(Request $request){
+    $history = CanteenPurchaseOrder::whereNull('canteen_purchase_orders.deleted_at');
+
+    if($request->get('keyword') != null){
+        $history = $history->where('nama_item', 'like', '%' . $request->get('keyword') . '%');
+    }
+    $history = $history->join('canteen_purchase_order_details','canteen_purchase_orders.no_po','=','canteen_purchase_order_details.no_po');
+    $history = $history->select('canteen_purchase_orders.supplier_name','canteen_purchase_order_details.no_po','canteen_purchase_order_details.nama_item','canteen_purchase_order_details.goods_price','canteen_purchase_order_details.service_price','canteen_purchase_orders.tgl_po','canteen_purchase_orders.currency');
+    $history = $history->orderBy('canteen_purchase_orders.tgl_po', 'desc');
+    $history = $history->get();
+
+    $response = array(
+        'status' => true,
+        'history' => $history
+    );
+    return Response::json($response);
+}
+
+public function porejectKatin(Request $request, $id)
+{
+    $po = CanteenPurchaseOrder::find($id);
+
+    if ($po->posisi == "manager_pch")
+    {
+        $po->datereject = date('Y-m-d H:i:s');
+        $po->posisi = "staff_pch";
+        $po->approval_authorized2 = null;
+        $po->date_approval_authorized2 = null;
+    }
+    $po->save();
+
+    $isimail = "
+    SELECT canteen_purchase_orders.*,
+    canteen_purchase_order_details.nama_item,
+    canteen_purchase_order_details.budget_item,
+    canteen_purchase_order_details.delivery_date,
+    canteen_purchase_order_details.goods_price,
+    canteen_purchase_order_details.service_price,
+    canteen_purchase_order_details.qty,
+    canteen_purchase_order_details.uom
+    FROM
+    canteen_purchase_orders
+    JOIN canteen_purchase_order_details ON canteen_purchase_orders.no_po = canteen_purchase_order_details.no_po 
+    WHERE
+    canteen_purchase_orders.id = ".$po->id."";
+
+    $tolak = db::select($isimail);
+
+        //kirim email ke Buyer
+    $mails = "select distinct email from canteen_purchase_orders join users on canteen_purchase_orders.buyer_id = users.username where canteen_purchase_orders.id ='" . $po->id . "'";
+    $mailtoo = DB::select($mails);
+
+
+    Mail::to($mailtoo)->send(new SendEmail($tolak, 'canteen_purchase_order'));
+
+    $message = 'PO dengan Nomor. '.$po->no_po;
+    $message2 ='Tidak Disetujui';
+
+    return view('accounting_purchasing.verifikasi.pr_message', array(
+        'head' => $po->no_po,
+        'message' => $message,
+        'message2' => $message2,
+    ))->with('page', 'Approval');
+}
+
+public function exportPOKantin(Request $request){
+
+    $time = date('d-m-Y H;i;s');
+
+    $tanggal = "";
+
+    if (strlen($request->get('datefrom')) > 0)
+    {
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+        $tanggal = "and tgl_po >= '" . $datefrom . " 00:00:00' ";
+        if (strlen($request->get('dateto')) > 0)
+        {
+            $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+            $tanggal = $tanggal . "and tgl_po  <= '" . $dateto . " 23:59:59' ";
+        }
+    }
+
+    $po_detail = db::select(
+        "
+        Select canteen_purchase_order_details.id,canteen_purchase_orders.no_po, canteen_purchase_orders.remark, canteen_purchase_orders.note, canteen_purchase_order_details.no_pr, canteen_purchase_orders.tgl_po, canteen_purchase_orders.supplier_code , canteen_purchase_orders.supplier_name, canteen_purchase_orders.currency, canteen_purchase_orders.material, canteen_purchase_orders.buyer_name, canteen_purchase_order_details.no_item, canteen_purchase_order_details.nama_item, canteen_purchase_order_details.delivery_date, canteen_purchase_order_details.qty, canteen_purchase_order_details.uom, canteen_purchase_order_details.goods_price, canteen_purchase_order_details.service_price, canteen_purchase_order_details.budget_item, canteen_purchase_orders.cost_center, canteen_purchase_order_details.gl_number, acc_purchase_requisitions.emp_name, acc_investments.applicant_name from canteen_purchase_orders left join canteen_purchase_order_details on canteen_purchase_orders.no_po = canteen_purchase_order_details.no_po left join acc_purchase_requisitions on canteen_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr left join acc_investments on canteen_purchase_order_details.no_pr = acc_investments.reff_number WHERE canteen_purchase_orders.deleted_at IS NULL " . $tanggal . " order by canteen_purchase_orders.no_po,id ASC
+        ");
+
+    $data = array(
+        'po_detail' => $po_detail
+    );
+
+    ob_clean();
+
+    Excel::create('PO Kantin List '.$time, function($excel) use ($data){
+        $excel->sheet('Location', function($sheet) use ($data) {
+          return $sheet->loadView('accounting_purchasing.purchase_order_excel_canteen', $data);
+      });
+    })->export('xlsx');
+}
+
 
 }
