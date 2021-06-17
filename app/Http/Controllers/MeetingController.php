@@ -23,6 +23,7 @@ class MeetingController extends Controller
 	public function __construct()
 	{
 		$employees = EmployeeSync::orderBy('employee_id', 'asc')
+		->where('end_date',null)
 		->get();
 
 		$meeting_groups = MeetingGroup::orderBy('subject', 'asc')

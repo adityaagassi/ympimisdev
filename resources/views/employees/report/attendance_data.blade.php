@@ -32,6 +32,7 @@
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
 	}
+	#loading, #error { display: none; }
 </style>
 @endsection
 
@@ -46,6 +47,11 @@
 
 @section('content')
 <section class="content">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: white; top: 45%; left: 50%;">
+			<span style="font-size: 40px"><i class="fa fa-spinner fa-spin" id="loadingDetail" style="font-size: 80px;"></i></span>
+		</p>
+	</div>
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-primary">
