@@ -8919,6 +8919,9 @@ public function fetch_budget_detail(Request $request){
         $qry = "
     SELECT
     a.budget_no,
+    a.category_number,
+    a.po_number,
+    a.type,
     a.month_date,
     a.description,
     a.amount,
@@ -8926,6 +8929,9 @@ public function fetch_budget_detail(Request $request){
     FROM (
     select 
     budget as budget_no, 
+    category_number,
+    po_number,
+    '' as type,
     budget_month_receive as month_date,
     no_item as description,
     amount_receive as amount,
@@ -8938,6 +8944,9 @@ public function fetch_budget_detail(Request $request){
 
     select
     acc_actual_logs.budget_no, 
+    '' as category_number,
+    '' as po_number,
+    acc_actual_logs.type,
     acc_actual_logs.month_date,
     acc_actual_logs.description, 
     acc_actual_logs.local_amount as amount,

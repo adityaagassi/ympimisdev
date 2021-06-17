@@ -876,7 +876,7 @@
 	</div>
 
 
-	<div class="modal fade" id="myModal">
+	<div class="modal fade" id="myModal" style="z-index: 10000;">
 	    <div class="modal-dialog" style="width:1250px;">
 	      <div class="modal-content">
 	        <div class="modal-header">
@@ -891,9 +891,10 @@
 	                <thead style="background-color: rgba(126,86,134,.7);">
 	                  <tr>
 	                    <th width="10%">Budget</th>
-	                    <th width="10%">Month</th>
-	                    <th width="30%">Category Number</th>
-	                    <th width="30%">Detail Item</th>
+	                    <th width="5%">Month</th>
+	                    <th width="20%">Category Number</th>
+	                    <th width="5%">Type</th>
+	                    <th width="40%">Detail Item</th>
 	                    <th width="10%">Status</th>
 	                    <th width="10%">Amount ($)</th>
 	                  </tr>
@@ -901,6 +902,7 @@
 	                <tbody id="tableBodyResult">
 	                </tbody>
 	                <tfoot style="background-color: RGB(252, 248, 227);">
+	                <th></th>
 	                <th></th>
 	                <th></th>
 	                <th></th>
@@ -1418,6 +1420,7 @@
 	            tableData += '<td>'+ value.budget +'</td>';
 	            tableData += '<td>'+ value.budget_month +'</td>';
 	            tableData += '<td>'+ value.category_number +'</td>';
+	            tableData += '<td>-</td>';
 	            tableData += '<td>'+ value.no_item +'</td>';
 	            tableData += '<td>'+ value.status+ '</td>';
 	            tableData += '<td>'+ value.amount.toLocaleString() +'</td>'; 
@@ -1428,6 +1431,7 @@
 	          	tableData += '<td>'+ value.budget +'</td>';
 	            tableData += '<td>'+ value.budget_month_po +'</td>';
 	            tableData += '<td> Nomor PR/Inv : '+ value.category_number+ ' <br> Nomor PO : '+ value.po_number +'</td>';
+	            tableData += '<td>-</td>';
 	            tableData += '<td>'+ value.no_item +'</td>';
 	            tableData += '<td>'+ value.status+ '</td>';
 	            tableData += '<td>'+ value.amount_po.toLocaleString() +'</td>';
@@ -1437,6 +1441,7 @@
 	          else if(value.status == "Transfer"){
 	          	tableData += '<td>'+ value.budget_from +'</td>';
 	            tableData += '<td>'+ value.request_date +'</td>';
+	            tableData += '<td>-</td>';
 	            tableData += '<td>-</td>';
 	            tableData += '<td>'+ value.budget_from +' -> '+value.budget_to+'</td>';
 	            tableData += '<td>Transfer Budget</td>';
@@ -1465,9 +1470,22 @@
 		        //     total += parseFloat(value.local_amount);
 		        // }
 
+		        if (value.category_number == null || value.category_number == "") {
+		        	var isi = '-';
+		        }else{
+		        	var isi = 'Nomor PR/Inv : '+ value.category_number+ ' <br> Nomor PO : '+ value.po_number;
+		        }
+
+		        if (value.type == null || value.type == "") {
+		        	var type = '-';
+		        }else{
+		        	var type = value.type;
+		        }
+
 		        tableData += '<td>'+ value.budget_no +'</td>';
 	            tableData += '<td>'+ value.month_date +'</td>';
-	            tableData += '<td> - </td>';
+	            tableData += '<td>'+ isi +'</td>';
+	            tableData += '<td>'+ type +'</td>';
 	            tableData += '<td>'+ value.description +'</td>';
 	            tableData += '<td>'+ value.status +'</td>';
 	            tableData += '<td>'+ value.amount.toLocaleString() +'</td>';
