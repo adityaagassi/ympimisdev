@@ -7430,7 +7430,9 @@ class InjectionsController extends Controller
                 LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensa_initials.operator_injection 
                 LEFT JOIN users ON users.username = employee_syncs.employee_id 
             WHERE
-                rc_kensa_initials.ng_name IS NOT NULL");
+                rc_kensa_initials.ng_name IS NOT NULL
+            AND rc_kensa_initials.part_type NOT LIKE '%MJ%' 
+            AND rc_kensa_initials.part_type NOT LIKE '%BJ%' ");
 
             $response = array(
               'status' => true,

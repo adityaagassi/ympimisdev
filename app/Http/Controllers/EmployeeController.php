@@ -3219,7 +3219,9 @@ public function fetchAbsence(Request $request)
           LEFT JOIN employee_syncs ON employee_syncs.employee_id = sunfish_shift_syncs.employee_id 
           LEFT JOIN departments ON departments.department_name = employee_syncs.department 
      WHERE
-          sunfish_shift_syncs.shift_date = '".$now."'");
+          sunfish_shift_syncs.shift_date = '".$now."'
+     AND
+          sunfish_shift_syncs.shiftdaily_code not like '%OFF%'");
 
 // $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift NOT REGEXP '^[1-9]+$' and shift <> 'OFF' and shift <> 'X' GROUP BY shift ORDER BY jml";
 
