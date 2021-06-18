@@ -58,7 +58,7 @@ table.table-bordered > tfoot > tr > th{
 							<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
 								<i class="fa fa-credit-card-alt"></i>
 							</div>
-							<input type="text" class="form-control" style="text-align: center;" placeholder="SCAN RFID" id="tag_product">
+							<input type="text" class="form-control" style="text-align: center;" placeholder="SCAN RFID / INPUT KENSA CODE" id="tag_product">
 							<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
 								<i class="fa fa-credit-card-alt"></i>
 							</div>
