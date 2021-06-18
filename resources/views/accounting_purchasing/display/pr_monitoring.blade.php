@@ -138,7 +138,7 @@ table > thead > tr > th{
           </div>
         </div>
 
-        @if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PCH" || Auth::user()->role_code == "PCH-SPL")
+        @if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PCH" || Auth::user()->role_code == "PCH-SPL" || Auth::user()->role_code == "JPN-EKS")
         <div class="col-md-2">
             <div class="input-group">
               <div class="input-group-addon bg-blue">
