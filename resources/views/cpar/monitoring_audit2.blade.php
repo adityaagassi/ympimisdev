@@ -196,6 +196,10 @@ table > thead > tr > th{
       </div>
 
       <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
+          <div id="chart_lokasi" style="width: 99%; height: 300px;"></div>
+      </div>
+
+      <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
           <div id="chart_klausul" style="width: 99%; height: 300px;"></div>
       </div>
 
@@ -305,6 +309,9 @@ table > thead > tr > th{
           var not_good = [];
           var none = [];
 
+          var auditor_lokasi = [];
+          var jumlah_lokasi = [];
+
           $.each(result.datas, function(key, value) {
             tgl.push(value.tanggal);
             cpar.push(parseInt(value.cpar));
@@ -315,12 +322,18 @@ table > thead > tr > th{
             revised.push(parseInt(value.revised));
           })
 
+          $.each(result.data_location, function(key, value) {
+            auditor_lokasi.push(value.auditor_lokasi);
+            jumlah_lokasi.push(parseInt(value.jumlah_lokasi));
+          })
+
           $.each(result.data_klausul, function(key, value) {
             klausul.push(parseFloat(value.klausul));
             good.push(parseInt(value.good));
             not_good.push(parseInt(value.not_good));
             none.push(parseInt(value.none));
           })
+
 
           $('#chart').highcharts({
             chart: {
@@ -379,7 +392,7 @@ table > thead > tr > th{
                 point: {
                   events: {
                     click: function () {
-                      ShowModal(this.category,this.series.name,result.datefrom,result.dateto);
+                      ShowModallocation(this.category,this.series.name,result.datefrom,result.dateto);
                     }
                   }
                 },
@@ -440,6 +453,100 @@ table > thead > tr > th{
               }
             ]
           });
+
+          $('#chart_lokasi').highcharts({
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Report Audit By Location'
+            },
+            xAxis: {
+              type: 'category',
+              categories: auditor_lokasi,
+              lineWidth:2,
+              lineColor:'#9e9e9e',
+              gridLineWidth: 1,
+              labels: {
+                style: {
+                    fontWeight:'Bold'
+                  }
+              }
+            },
+            yAxis: {
+              lineWidth:2,
+              lineColor:'#fff',
+              type: 'linear',
+                title: {
+                  text: 'Total Temuan'
+                },
+              tickInterval: 2,  
+              stackLabels: {
+                  enabled: true,
+                  style: {
+                      fontWeight: 'bold',
+                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                  }
+              }
+            },
+            legend: {
+              align: 'right',
+              x: -30,
+              verticalAlign: 'top',
+              y: 10,
+              floating: true,
+              borderWidth: 1,
+              shadow: false,
+              reversed: true,
+              itemStyle:{
+                color: "white",
+                fontSize: "12px",
+                fontWeight: "bold",
+
+              }
+            },
+            plotOptions: {
+              series: {
+                cursor: 'pointer',
+                point: {
+                  events: {
+                    click: function () {
+                      // ShowModal(this.category,this.series.name,result.datefrom,result.dateto);
+                    }
+                  }
+                },
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: false,
+                  format: '{point.y}'
+                }
+              },
+              column: {
+                  color:  Highcharts.ColorString,
+                  stacking: 'normal',
+                  borderRadius: 1,
+                  dataLabels: {
+                      enabled: true
+                  }
+              }
+            },
+            credits: {
+              enabled: false
+            },
+
+            tooltip: {
+              formatter:function(){
+                return this.series.name+' : ' + this.y;
+              }
+            },
+            series: [
+              {
+                  name: 'Jumlah',
+                  data: jumlah_lokasi,
+                  color : '#5cb85c' //00f57f
+              }
+            ]
+          })
 
           $('#chart_klausul').highcharts({
             chart: {

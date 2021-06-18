@@ -2758,12 +2758,27 @@ class CparController extends Controller
         klausul
       ");
 
+      $data_location = DB::select("SELECT
+        auditor_lokasi,
+        sum( CASE WHEN deleted_at IS NULL THEN 1 ELSE 0 END ) AS jumlah_lokasi
+      FROM
+        standarisasi_audits 
+      WHERE
+        auditor_kategori = 'ISO 14001' 
+        AND deleted_at IS NULL 
+        AND auditor_date BETWEEN '".$datefrom."' 
+        AND '".$dateto."' ".$kate." 
+      GROUP BY
+        auditor_lokasi
+      ");
+
       $year = date('Y');
 
       $response = array(
         'status' => true,
         'datas' => $data,
         'data_klausul' => $data_klausul,
+        'data_location' => $data_location,
         'year' => $year
       );
 
