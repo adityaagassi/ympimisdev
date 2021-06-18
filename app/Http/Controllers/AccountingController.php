@@ -8602,6 +8602,7 @@ public function fetch_budget_monthly(Request $request)
         budget_month_po
         
         ) a 
+        WHERE a.Actual != 0 or a.PR != 0 or a.PO != 0 or a.Investment != 0
         GROUP BY
         a.bulan 
         HAVING
