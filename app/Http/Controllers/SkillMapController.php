@@ -183,7 +183,7 @@ class SkillMapController extends Controller
 			WHERE
 				skill_maps.employee_id = '".$employee_id."'
                 AND skill_maps.process = '".$process."'
-				AND skill_maps.location = '".$location."'
+				AND skills.location = '".$location."'
 				and skill_maps.deleted_at is null
 				and skills.deleted_at is null");
 
@@ -253,7 +253,7 @@ class SkillMapController extends Controller
                     AND employee_id = '".$employee_id."' 
                     AND skill_maps.deleted_at IS NULL 
                     AND skill_maps.location = '".$location."' 
-                    AND skill_maps.process != '".$process."' 
+                    AND skills.process != '".$process."' 
                     ) AS skill_now,(
                 SELECT 
                 VALUE
@@ -265,7 +265,7 @@ class SkillMapController extends Controller
                     AND employee_id = '".$employee_id."' 
                     AND skill_maps.deleted_at IS NULL 
                     AND skill_maps.location = '".$location."' 
-                    AND skill_maps.process != '".$process."' 
+                    AND skills.process != '".$process."' 
                     ) AS nilai_now,(
                 SELECT
                     id 
@@ -276,7 +276,7 @@ class SkillMapController extends Controller
                     AND employee_id = '".$employee_id."' 
                     AND skill_maps.deleted_at IS NULL 
                     AND skill_maps.location = '".$location."' 
-                    AND skill_maps.process != '".$process."' 
+                    AND skills.process != '".$process."' 
                 ) AS id_skill_now 
             FROM
                 skills 
