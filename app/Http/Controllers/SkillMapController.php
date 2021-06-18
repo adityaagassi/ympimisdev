@@ -131,8 +131,9 @@ class SkillMapController extends Controller
 							skill_maps
 							LEFT JOIN skills ON skills.skill_code = skill_maps.skill_code 
 						WHERE
-							employee_id = '".$emp[$i][$j]->employee_id."'
-							AND skill_maps.process = '".$emp[$i][$j]->process."'
+                            employee_id = '".$emp[$i][$j]->employee_id."' 
+                            AND skill_maps.process = '".$emp[$i][$j]->process."' 
+                            AND skills.location = '".$location."' 
 							and skill_maps.deleted_at is null
 							and skills.deleted_at is null");
 
