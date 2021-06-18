@@ -29,6 +29,7 @@
 			<a href="{{ url('index/recorder/kensa') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kensa Kakuning</a>
 			<!-- <a href="{{ url("index/recorder_push_pull_check") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Assy Check</a> -->
 			<a href="{{ url('index/recorder/clean_kanban') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Clean Kanban</a>
+			<a href="{{ url('index/injection/traceability') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Traceability</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
