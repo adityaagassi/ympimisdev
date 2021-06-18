@@ -28,6 +28,7 @@
 				<?php $seksi = $datas->seksi ?>
 				<?php $ke_seksi = $datas->ke_seksi ?>
 				<?php $departemen = $datas->departemen ?>
+        <?php $ke_departemen = $datas->ke_departemen ?>
 				<?php $jabatan = $datas->jabatan ?>
         <?php $ke_jabatan = $datas->ke_jabatan ?>
 				<?php $rekomendasi = $datas->rekomendasi ?>

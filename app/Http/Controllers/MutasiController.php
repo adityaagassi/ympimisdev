@@ -2670,18 +2670,69 @@ class MutasiController extends Controller
     public function mutasi_approvalManager_Hrga(Request $request, $id){
         try{
             $mutasi = MutasiAnt::find($id);
-            $mutasi->posisi = 'dir_hr';
-            $mutasi->app_m = 'Approved';
-            $mutasi->date_manager_hrga = date('Y-m-d H-y-s');
-            $mutasi->direktur_hr = 'PI9709001';
-            $mutasi->nama_direktur_hr = 'Arief Soekamto';
-            $mutasi->save();
+            $like = $mutasi->ke_jabatan;
 
-            $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.direktur_hr = users.username where mutasi_ant_depts.id = ".$mutasi->id;
-            $mailtoo = DB::select($mails);
-            $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
-            $mutasi = db::select($isimail);
-            Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            if (strpos($like, 'Operator') !== false) {
+                // mengandung kata operator
+                $mutasi->status  = 'All Approved';
+                $mutasi->app_m   = 'Approved';
+                $mutasi->date_manager_hrga = date('Y-m-d H-y-s');
+                $mutasi->app_dir = 'Approved';
+                $mutasi->nama_direktur_hr = 'Arief Soekamto';
+                $mutasi->date_direktur_hr = date('Y-m-d H-y-s');
+                $mutasi->save();
+
+                $resumes = MutasiAnt::select(
+                'id','status', 'posisi', 'nik', 'nama', 'mutasi_ant_depts.sub_group', 'mutasi_ant_depts.group', 'seksi', 'departemen', 'jabatan', 'rekomendasi', 'ke_sub_group', 'ke_group', 'ke_seksi', 'ke_departemen', 'ke_jabatan', 'mutasi_ant_depts.position_code', 'tanggal', 'alasan', 'created_by', 
+
+                'chief_or_foreman_asal', 'nama_chief_asal', 'date_atasan_asal',
+                'manager_asal', 'nama_manager_asal', 'date_manager_asal',
+                'dgm_asal', 'nama_dgm_asal', 'date_dgm_asal',
+                'gm_asal', 'nama_gm_asal', 'date_gm_asal', 
+                'chief_or_foreman_tujuan', 'nama_chief_tujuan', 'date_atasan_tujuan',
+                'manager_tujuan', 'nama_manager_tujuan', 'date_manager_tujuan',
+                'dgm_tujuan', 'nama_dgm_tujuan', 'date_dgm_tujuan', 
+                'gm_tujuan', 'nama_gm_tujuan', 'date_gm_tujuan', 
+                'manager_hrga', 'nama_manager', 'date_manager_hrga',
+                'direktur_hr', 'nama_direktur_hr', 'date_direktur_hr', 
+                
+                'app_ca', 'app_ma', 'app_da', 'app_ga', 'app_ct', 'app_mt', 'app_dt', 'app_gt', 'app_m', 'app_dir',
+                db::raw('pegawai.employment_status as pegawai'), db::raw('grade.grade_code as grade'), db::raw('posisi.position as posisi'), db::raw('code.position_code as code'))
+                ->leftJoin(db::raw('employee_syncs as pegawai'), 'mutasi_ant_depts.nik', '=', 'pegawai.employee_id')
+                ->leftJoin(db::raw('employee_syncs as grade'), 'mutasi_ant_depts.nik', '=', 'grade.employee_id')
+                ->leftJoin(db::raw('employee_syncs as posisi'), 'mutasi_ant_depts.nik', '=', 'posisi.employee_id')
+                ->leftJoin(db::raw('employee_syncs as code'), 'mutasi_ant_depts.nik', '=', 'code.employee_id')
+                ->where('mutasi_ant_depts.id', '=', $id)
+                ->get();
+                $data = array(
+                    'resumes' => $resumes
+                );
+
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0603019' or employee_id = 'PI1404001'";
+                $mailtoo = DB::select($mails);
+
+                $mailscc = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI9709001'";
+                $mailtoocc = DB::select($mailscc);                
+
+                $isimail = "select id, nama, nik, sub_group, ke_sub_group, `group`, ke_group, seksi, ke_seksi, departemen, ke_departemen, jabatan, ke_jabatan, rekomendasi, tanggal, alasan from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
+                $mutasi = db::select($isimail);
+                Mail::to($mailtoo)->cc($mailtoocc)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'done_mutasi_ant'));
+            }else{
+                $mutasi->posisi = 'dir_hr';
+                $mutasi->app_m = 'Approved';
+                $mutasi->date_manager_hrga = date('Y-m-d H-y-s');
+                $mutasi->direktur_hr = 'PI9709001';
+                $mutasi->nama_direktur_hr = 'Arief Soekamto';
+                $mutasi->save();
+
+                $mails = "select distinct email from mutasi_ant_depts join users on mutasi_ant_depts.direktur_hr = users.username where mutasi_ant_depts.id = ".$mutasi->id;
+                $mailtoo = DB::select($mails);
+                $isimail = "select id, nama, tanggal, tanggal_maksimal, departemen,ke_departemen from mutasi_ant_depts where mutasi_ant_depts.id = ".$mutasi->id;
+
+                $mutasi = db::select($isimail);
+                Mail::to($mailtoo)->bcc(['lukmannul.arif@music.yamaha.com','rio.irvansyah@music.yamaha.com'])->send(new SendEmail($mutasi, 'mutasi_ant'));
+            }
+            
             return redirect('/dashboard_ant/mutasi')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Mutasi');
             }
             catch (QueryException $e){
