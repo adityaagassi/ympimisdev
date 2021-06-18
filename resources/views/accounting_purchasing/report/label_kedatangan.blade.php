@@ -34,17 +34,17 @@
 		}
 
 		.left {
-			font-size: 7pt;
+			font-size: 6pt;
 			text-align: left;
 		}
 
 		.text {
-			font-size: 8pt;
+			font-size: 7pt;
 			text-align: left;
 		}
 
 		.desc {
-			font-size: 7pt;
+			font-size: 6pt;
 			text-align: left;
 		}
 
