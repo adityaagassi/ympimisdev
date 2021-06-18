@@ -327,6 +327,26 @@ class AuditController extends Controller
     ))->with('page', 'Audit Stocktaking');
   }
 
+  public function index_audit_mis()
+  {
+    $title = "Audit MIS";
+    $title_jp = "MIS監査";
+
+    $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+    ->select('employee_id', 'name', 'position', 'department')->first();
+
+    $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+      where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%' or position like '%Coordinator%')");
+
+    return view('audit.audit_mis', array(
+      'title' => $title,
+      'title_jp' => $title_jp,
+      'employee' => $emp,
+      'auditee' => $auditee,
+      'location' => $this->location
+    ))->with('page', 'Audit MIS');
+  }
+
 
 	public function post_audit(Request $request)
 	{
@@ -473,16 +493,16 @@ class AuditController extends Controller
           'created_by' => $id_user
         ]);
 
-        // $id = $audit_all->id;
+        $id = $audit_all->id;
 
-        // $mails = "select distinct email from users where name = '".$request->input('patrol_pic_'.$i)."'";
-        // $mailtoo = DB::select($mails);
+        $mails = "select distinct email from users where name = '".$request->input('patrol_pic_'.$i)."'";
+        $mailtoo = DB::select($mails);
 
-        // $isimail = "select * from audit_all_results where id = ".$id;
+        $isimail = "select * from audit_all_results where id = ".$id;
 
-        // $auditdata = db::select($isimail);
+        $auditdata = db::select($isimail);
 
-        // Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
+        Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
       }
 
       $response = array(
@@ -1172,6 +1192,9 @@ public function detailPenanganan(Request $request){
           else if ($request->get('category_export') == "stocktaking") {
             $category = "Audit Stocktaking";
           }
+          else if ($request->get('category_export') == "mis") {
+            $category = "Audit MIS";
+          }
 
           $kategori = "and kategori = '".$category."'";
       }
@@ -1232,6 +1255,9 @@ public function detailPenanganan(Request $request){
       }
       else if ($request->get('category') == "stocktaking") {
         $category = "Audit Stocktaking";
+      }
+      else if ($request->get('category') == "mis") {
+        $category = "Audit MIS";
       }
 
       $data = db::select("SELECT
@@ -1306,6 +1332,9 @@ public function detailPenanganan(Request $request){
       }
       else if ($request->get('category') == "stocktaking") {
         $category = "Audit Stocktaking";
+      }
+      else if ($request->get('category') == "mis") {
+        $category = "Audit MIS";
       }
 
 
@@ -1495,6 +1524,9 @@ public function detailPenanganan(Request $request){
       }
       else if ($request->get('category') == "stocktaking") {
         $category = "Audit Stocktaking";
+      }
+      else if ($request->get('category') == "mis") {
+        $category = "Audit MIS";
       }
 
       $data_bulan = db::select("

@@ -30,7 +30,7 @@
 			<a href="{{ url('index/audit?category=kanban') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit Kanban</a>
 			<a href="{{ url('index/audit_iso/create_audit') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit ISO</a>
 			<a href="{{ url('index/audit_patrol_stocktaking') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit Stocktaking</a>
-<!-- 			<a href="{{ url('index/audit?category=Audit_MIS') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit MIS</a> -->
+			<a href="{{ url('index/audit_patrol_mis') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit MIS</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Monitoring <i class="fa fa-angle-double-down"></i></span>
@@ -41,6 +41,8 @@
 			</div>
 
 			<a href="{{ url('index/audit_patrol_monitoring/stocktaking') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;margin-top: 5px">Audit Stocktaking Monitoring</a>
+
+			<a href="{{ url('index/audit_patrol_monitoring/mis') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;margin-top: 5px">Audit MIS Monitoring</a>
 
 		</div>
 	</div>

@@ -4033,7 +4033,6 @@ Route::get('index/patrol', 'AuditController@index');
 Route::get('fetch/patrol', 'AuditController@fetch_patrol');
 Route::get('index/audit_internal', 'AuditController@index_audit');
 Route::get('index/audit_patrol', 'AuditController@index_patrol');
-Route::get('index/audit_patrol_mis', 'AuditController@index_mis');
 Route::get('index/audit_patrol_std', 'AuditController@index_std');
 Route::get('fetch/audit_patrol', 'AuditController@fetch_audit');
 Route::post('post/audit_patrol', 'AuditController@post_audit');
@@ -4044,6 +4043,9 @@ Route::get('index/audit_patrol_covid', 'AuditController@index_patrol_covid');
 
 Route::get('index/audit_patrol_stocktaking', 'AuditController@index_audit_stocktaking');
 Route::post('post/audit_patrol_stocktaking', 'AuditController@post_audit_stocktaking');
+
+// Route::get('index/audit_patrol_mis', 'AuditController@index_mis');
+Route::get('index/audit_patrol_mis', 'AuditController@index_audit_mis');
 
 Route::get('index/audit_patrol/monitoring', 'AuditController@indexMonitoring');
 Route::get('fetch/audit_patrol/monitoring', 'AuditController@fetchMonitoring');
@@ -5051,6 +5053,8 @@ Route::get('scan/reed/operator', 'ReedSyntheticController@scanReedOperator');
 //Molding
 Route::get('index/reed/molding_verification', 'ReedSyntheticController@indexMoldingVerification');
 Route::post('fetch/reed/finish_setup_molding', 'ReedSyntheticController@fetchFinishMolding');
+Route::get('index/reed/molding_approval/{kanban}/{employee_id}', 'ReedSyntheticController@indexMoldingApproval');
+
 
 //Injeksi
 Route::get('index/reed/injection_verification', 'ReedSyntheticController@indexInjectionVerification');
