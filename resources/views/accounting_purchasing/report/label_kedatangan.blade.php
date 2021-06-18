@@ -22,12 +22,12 @@
 		}
 
 		.top {
-			font-size: 7pt;
+			font-size: 8pt;
 			text-align: center;
 		}
 
 		.bottom {
-			font-size: 4pt;
+			font-size: 3pt;
 			font-weight: normal;
 			text-align: center;
 			-moz-transform:scale(1.4,1);
@@ -39,7 +39,7 @@
 		}
 
 		.text {
-			font-size: 7pt;
+			font-size: 8pt;
 			text-align: left;
 		}
 
