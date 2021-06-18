@@ -3537,6 +3537,7 @@ class MutasiController extends Controller
             'mutasi_ant_depts.ke_jabatan')
         // ->where(db::raw('date(created_at)'),'=', $today)
         ->where('mutasi_ant_depts.status', '=', 'All Approved')
+        ->where('mutasi_ant_depts.remark', '=', '2')
         ->orderBy('mutasi_ant_depts.tanggal', 'asc')
         ->get(); 
         }
@@ -3549,6 +3550,7 @@ class MutasiController extends Controller
             'mutasi_ant_depts.position_code',
             'mutasi_ant_depts.ke_jabatan')
         ->where('mutasi_ant_depts.status', '=', 'All Approved')
+        ->where('mutasi_ant_depts.remark', '=', '2')
         ->where(db::raw('date(tanggal)'),'=', $tanggal)
         ->orderBy('mutasi_ant_depts.tanggal', 'asc')
         ->get(); 
