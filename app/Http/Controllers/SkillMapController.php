@@ -61,11 +61,17 @@ class SkillMapController extends Controller
             $title = 'Skill Map - Pianica Assembly Final';
             $subtitle = 'Pianica Assembly Final';
             $title_jp = 'のスキルマップ ~ ピアニカ集成';
-        }else if ($location == 'maintenance') {
+        }else if ($location == 'maintenance-mp') {
             $dept = 'Maintenance Department';
-            $section = 'Maintenance';
-            $title = 'Skill Map - Maintenance';
-            $subtitle = 'Maintenance';
+            $section = 'Maintenance MP';
+            $title = 'Skill Map - Maintenance MP';
+            $subtitle = 'Maintenance MP';
+            $title_jp = 'のスキルマップ ~ メンテナン';
+        }else if ($location == 'maintenance-ut') {
+            $dept = 'Maintenance Department';
+            $section = 'Maintenance UT';
+            $title = 'Skill Map - Maintenance UT';
+            $subtitle = 'Maintenance UT';
             $title_jp = 'のスキルマップ ~ メンテナン';
         }
 

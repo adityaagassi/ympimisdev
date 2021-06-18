@@ -1481,8 +1481,11 @@
     @if(isset($page) && $page == "MP Position")<li class="active">@else<li>@endif
       <a href="{{ secure_url("/index/maintenance/operator") }}"><i class="fa fa-map-pin"></i> <span>Sign to Area</span></a>
     </li>
-    @if(isset($page) && $page == "Skill Map Maintenance")<li class="active">@else<li>@endif
-      <a href="{{ url('index/skill_map','maintenance') }}"><i class="fa fa-sitemap"></i> <span>Skill Map</span></a>
+    @if(isset($page) && $page == "Skill Map Maintenance MP")<li class="active">@else<li>@endif
+      <a href="{{ url('index/skill_map','maintenance-mp') }}"><i class="fa fa-sitemap"></i> <span>Skill Map</span></a>
+    </li>
+    @if(isset($page) && $page == "Skill Map Maintenance UT")<li class="active">@else<li>@endif
+      <a href="{{ url('index/skill_map','maintenance-ut') }}"><i class="fa fa-sitemap"></i> <span>Skill Map</span></a>
     </li>
   </li>
 </ul>
@@ -1815,27 +1818,7 @@
 </li>
 @endif
 
-@if(in_array('M34', $navs))
-@if(isset($head) && $head == "Stock")<li class="treeview active">@else<li class="treeview">@endif
-  <a href="#">
-  <i class="fa fa-archive"></i> <span>Stock</span>
-   <span class="pull-right-container">
-    <i class="fa fa-angle-left pull-right"></i>
-  </span>
-</a>
-<ul class="treeview-menu">
- @if(isset($page) && $page == "Audit Stock")<li class="active">@else<li>@endif
-      <a href="{{ url("stock/ideal/stock") }}"><i class="fa fa-upload"></i> <span>Upload Master</span></a>
-</li>
-@if(isset($page) && $page == "Monitoring")<li class="active">@else<li>@endif
-      <a href="{{ url("stock/aktual/home") }}"><i class="fa fa-check-square-o"></i> <span>Audit Stock</span></a>
-</li>
-@if(isset($page) && $page == "Monitoring")<li class="active">@else<li>@endif
-      <a href="{{ url("stock/aktual/monitoring") }}"><i class="fa fa-tv"></i> <span>Monitoring</span></a>
-</li>
-</ul>
-</li>
-@endif
+
 
 
 @if(in_array('R8', $navs))
@@ -1847,7 +1830,7 @@
   </span>
 </a>
 <ul class="treeview-menu">
- @if(isset($page) && $page == "Manpower by Status Kerja")<li class="active">@else<li>@endif
+@if(isset($page) && $page == "Manpower by Status Kerja")<li class="active">@else<li>@endif
   <a href="{{ url("/index/report/stat") }}" target="_blank"><i class="fa fa-line-chart"></i> Manpower by Status Kerja</a>
 </li>
 @if(isset($page) && $page == "Manpower by Gender")<li class="active">@else<li>@endif
