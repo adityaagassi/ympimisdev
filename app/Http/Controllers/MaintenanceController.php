@@ -2801,7 +2801,8 @@ class MaintenanceController extends Controller
 				'min_stock' => $request->get('min'),
 				'max_stock' => $request->get('max'),
 				'uom' => $request->get('uom'),
-				'user' => $request->get('user')
+				'user' => $request->get('user'),
+				'cost' => $request->get('cost'),
 			]);
 
 			$response = array(

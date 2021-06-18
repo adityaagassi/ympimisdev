@@ -415,6 +415,15 @@
               </div>
             </div>
 
+            <div class="col-xs-12" style="padding-bottom: 1%;">
+              <div class="col-xs-4" style="padding: 0px;" align="right">
+                <span style="font-size: 16px;">Harga</span>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" class="form-control" id="edit_harga" placeholder="Harga Part">
+              </div>
+            </div>
+
           </div>
         </div>
         <div class="modal-footer">
@@ -669,7 +678,8 @@
       min : $("#edit_min_stock").val(),
       max : $("#edit_max_stock").val(),
       uom : $("#edit_uom").val(),
-      user : $("#edit_user").val()
+      user : $("#edit_user").val(),
+      cost : $("#edit_harga").val(),
     }
 
     $.post('{{ url("post/maintenance/inven/list/edit") }}', data, function(result, status, xhr){

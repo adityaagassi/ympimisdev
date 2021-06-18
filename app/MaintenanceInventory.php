@@ -10,6 +10,15 @@ class MaintenanceInventory extends Model
 	Use SoftDeletes;
 
 	protected $fillable = [
-		'part_number', 'part_name', 'location', 'stock', 'uom', 'created_by'
+		'item_number',
+		'part_name',
+		'category',
+		'specification',
+		'maker',
+		'location',
+		'min_stock',
+		'max_stock',
+		'uom',
+		'user','cost', 'created_by'
 	];
 }
