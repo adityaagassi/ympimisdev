@@ -3624,9 +3624,11 @@ class MaintenanceController extends Controller
 		$machine_groups = MaintenanceMachineProblemLog::leftJoin('maintenance_plan_items', 'maintenance_machine_problem_logs.machine_id', '=', 'maintenance_plan_items.machine_id')
 		->where('maintenance_machine_problem_logs.started_time', '>=', $date_from)
 		->where('maintenance_machine_problem_logs.started_time', '<=', $date_to)
+		->whereNotNull('maintenance_plan_items.machine_group')
 		->select('maintenance_plan_items.machine_group', db::raw('count(maintenance_machine_problem_logs.id) as jml_rusak'))
 		->groupBy('maintenance_plan_items.machine_group')
 		->orderBy(db::raw('count(maintenance_machine_problem_logs.id)'), 'desc')
+		->limit(20)
 		->get();
 
 		$trouble_list = MaintenanceMachineProblemLog::leftJoin('maintenance_plan_items', 'maintenance_machine_problem_logs.machine_id', '=', 'maintenance_plan_items.machine_id')
