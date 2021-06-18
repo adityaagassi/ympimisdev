@@ -794,6 +794,11 @@
                         <a href="{{ url("index/maintenance/operator/workload") }}">
                             <i class="fa fa-caret-right"></i> Maintenance Operator Workload (??)
                         </a> -->
+
+                        <br>
+                        <a href="{{ url("index/maintenance/machine_report/report") }}">
+                            <i class="fa fa-caret-right"></i> Maintenance Trouble Report (??)
+                        </a>
                     </td>                     
                 </tr>
                 <tr>

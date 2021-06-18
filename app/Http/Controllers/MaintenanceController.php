@@ -717,6 +717,18 @@ class MaintenanceController extends Controller
 
 	}
 
+	public function machineTroubleReport()
+	{
+		$title = 'Trouble Machine Report';
+		$title_jp = '??';
+
+		return view('maintenance.report.machine_trouble_report', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page','Trouble Machine Report')->with('head', 'Maintenance');
+
+	}
+
 	// -----------------------  END INDEX --------------------
 
 	public function fetchMaintenance(Request $request)
@@ -896,15 +908,6 @@ class MaintenanceController extends Controller
 			if($prioritas == 'Urgent'){
 				$remark = 0;
 
-				// if (date('W') % 2 == 0) {
-				// 	// $id = 'PI0004007';
-				// 	$id = 'PI1910003';
-
-				// } else {
-				// 	// $id = 'PI0805001';
-				// 	$id = 'PI1910003';
-
-				// }
 
 				$ids = ['PI0004007', 'PI0805001'];
 				// $ids = ['PI2002021', 'PI1910003'];
@@ -3600,6 +3603,100 @@ class MaintenanceController extends Controller
 			'status' => true,
 			'load_hour' => $load_hour,
 			'chart_data' => $chart_data
+		);
+		return Response::json($response);
+	}
+
+	public function fetchTroubleReport(Request $request)
+	{
+		$date_from = date('Y-m-01');
+		$date_to = date('Y-m-t');
+
+		if(strlen($request->get('tanggal_from')) > 0 ){
+			$date_from = $request->get('tanggal_from').'-01';
+		}
+
+		if(strlen($request->get('tanggal_to')) > 0 ){
+			$date_to = date('Y-m-t', strtotime($request->get('tanggal_to').'-01'));	
+		}
+
+
+		$machine_groups = MaintenanceMachineProblemLog::leftJoin('maintenance_plan_items', 'maintenance_machine_problem_logs.machine_id', '=', 'maintenance_plan_items.machine_id')
+		->where('maintenance_machine_problem_logs.started_time', '>=', $date_from)
+		->where('maintenance_machine_problem_logs.started_time', '<=', $date_to)
+		->select('maintenance_plan_items.machine_group', db::raw('count(maintenance_machine_problem_logs.id) as jml_rusak'))
+		->groupBy('maintenance_plan_items.machine_group')
+		->orderBy(db::raw('count(maintenance_machine_problem_logs.id)'), 'desc')
+		->get();
+
+		$trouble_list = MaintenanceMachineProblemLog::leftJoin('maintenance_plan_items', 'maintenance_machine_problem_logs.machine_id', '=', 'maintenance_plan_items.machine_id')
+		->where('maintenance_machine_problem_logs.started_time', '>=', $date_from)
+		->where('maintenance_machine_problem_logs.started_time', '<=', $date_to)
+		->select('maintenance_plan_items.machine_group',  'maintenance_machine_problem_logs.trouble_part', db::raw('count(maintenance_machine_problem_logs.id) as jml_trouble'))
+		->groupBy('maintenance_machine_problem_logs.trouble_part', 'maintenance_plan_items.machine_group')
+		->get();
+
+		// $error_log = MaintenanceMachineProblemLog::where(db::raw('DATE_FORMAT(started_time,"%Y-%m")'), '=', '2021-06')
+		// ->select('trouble_part', db::raw('count(trouble_part) as jml_ng'))
+		// ->groupBy('trouble_part')
+		// ->orderBy(db::raw('count(trouble_part)'), 'desc')
+		// ->get();
+
+		// $machine_log = MaintenanceMachineProblemLog::where(db::raw('DATE_FORMAT(started_time,"%Y-%m")'), '=', '2021-06')
+		// ->select('machine_id', 'machine_name', 'trouble_part', db::raw('count(trouble_part) as jml_ng'))
+		// ->groupBy('machine_id', 'machine_name', 'trouble_part')
+		// ->orderBy('machine_id', 'asc')
+		// ->get();
+
+		// $trouble_list = db::select('SELECT * from
+		// 	(select machine_name from maintenance_machine_problem_logs
+		// 	group by machine_name) mch
+		// 	cross join
+		// 	(select trouble_part from maintenance_machine_problem_logs
+		// 	group by trouble_part) trb
+		// 	order by machine_name, trouble_part');
+
+		$response = array(
+			'status' => true,
+			// 'by_trouble' => $error_log,
+			// 'by_machine' => $machine_log,
+			'machine_groups' => $machine_groups,
+			'trouble_list' => $trouble_list,
+			'mon_from' => date('Y M', strtotime($date_from)),
+			'mon_to' => date('Y M', strtotime($date_to))
+		);
+		return Response::json($response);
+	}
+
+	public function fetchSPKWeekly(Request $request)
+	{
+		$datas = db::select("SELECT mstr.week_name, 
+			SUM(IF(mstr.process_code = '3' OR mstr.process_code = '4' OR mstr.process_code = '5',IFNULL(spk.tot_spk,0),0)) as open_spk,
+			SUM(IF(mstr.process_code = '6',IFNULL(spk.tot_spk,0),0)) as close_spk
+			from
+			(select * from
+			(select week_name from weekly_calendars
+			where week_date >= '2021-01-01'
+			group by week_name) wk_name
+			cross join
+			(select process_code from processes
+			where remark = 'maintenance') mtc
+			) as mstr
+			left join 
+			(
+			select weekly_calendars.week_name, spk.remark, SUM(spk.tot) as tot_spk from
+			(select DATE_FORMAT(created_at, '%Y-%m-%d') as dt, remark, count(order_no) as tot from maintenance_job_orders 
+			where remark <> 7 and deleted_at is null
+			group by DATE_FORMAT(created_at, '%Y-%m-%d'), remark) as spk
+			left join weekly_calendars on spk.dt = weekly_calendars.week_date
+			group by week_name, remark
+			) as spk on mstr.week_name = spk.week_name AND mstr.process_code = spk.remark
+			group by mstr.week_name
+			");
+
+		$response = array(
+			'status' => true,
+			'datas' => $datas,
 		);
 		return Response::json($response);
 	}
