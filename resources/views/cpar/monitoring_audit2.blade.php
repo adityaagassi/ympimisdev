@@ -196,7 +196,7 @@ table > thead > tr > th{
       </div>
 
       <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
-          <div id="chart_lokasi" style="width: 99%; height: 300px;"></div>
+          <div id="chart_lokasi" style="width: 99%; height: 400px;"></div>
       </div>
 
       <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
