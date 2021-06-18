@@ -226,7 +226,7 @@
               point: {
                 events: {
                   click: function () {
-                    
+                    drawDetail(this.series.name);
                   }
                 }
               }
@@ -437,7 +437,7 @@ function drawDetail(category) {
               point: {
                 events: {
                   click: function () {
-                    drawDetail(this.series.name);
+
                   }
                 }
               }
