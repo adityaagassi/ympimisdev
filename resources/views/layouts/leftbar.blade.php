@@ -1482,10 +1482,10 @@
       <a href="{{ secure_url("/index/maintenance/operator") }}"><i class="fa fa-map-pin"></i> <span>Sign to Area</span></a>
     </li>
     @if(isset($page) && $page == "Skill Map Maintenance MP")<li class="active">@else<li>@endif
-      <a href="{{ url('index/skill_map','maintenance-mp') }}"><i class="fa fa-sitemap"></i> <span>Skill Map</span></a>
+      <a href="{{ url('index/skill_map','maintenance-mp') }}"><i class="fa fa-sitemap"></i> <span>Skill Map MP</span></a>
     </li>
     @if(isset($page) && $page == "Skill Map Maintenance UT")<li class="active">@else<li>@endif
-      <a href="{{ url('index/skill_map','maintenance-ut') }}"><i class="fa fa-sitemap"></i> <span>Skill Map</span></a>
+      <a href="{{ url('index/skill_map','maintenance-ut') }}"><i class="fa fa-sitemap"></i> <span>Skill Map UT</span></a>
     </li>
   </li>
 </ul>
