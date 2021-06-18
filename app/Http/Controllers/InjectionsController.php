@@ -6862,37 +6862,58 @@ class InjectionsController extends Controller
             }else{
                 $tag = $request->get('tag');
 
-                $datas = DB::SELECT('SELECT
-                    *,
-                    rc_kensa_initials.ng_name AS ng_name_injection,
-                    rc_kensa_initials.ng_count AS ng_count_injection,
-                    rc_kensas.ng_name AS ng_name_kensa,
-                    rc_kensas.ng_count AS ng_count_kensa,
-                    emp_injection.employee_id AS employee_id_injection,
-                    emp_injection.NAME AS name_injection,
-                    emp_resin.employee_id AS employee_id_resin,
-                    emp_resin.NAME AS name_resin,
-                    emp_kensa.employee_id AS employee_id_kensa,
-                    emp_kensa.NAME AS name_kensa,   
-                    part_injection.gmc AS material_number,
-                    part_injection.part_name AS part_name,
-                    part_resin.gmc AS material_number_resin,
-                    part_resin.part_name AS mat_desc_resin,
-                    rc_kensa_initials.part_type AS parts
+                $datas = DB::SELECT('SELECT DISTINCT
+                ( rc_kensa_initials.serial_number ),
+                rc_kensa_initials.*,
+                rc_kensa_initials.ng_name AS ng_name_injection,
+                rc_kensa_initials.ng_count AS ng_count_injection,
+                (
+                SELECT
+                    GROUP_CONCAT( rc_kensas.ng_name ) 
                 FROM
-                    rc_kensa_initials
-                    LEFT JOIN rc_kensas ON rc_kensas.serial_number = rc_kensa_initials.serial_number 
-                    AND rc_kensas.material_number = rc_kensa_initials.material_number
-                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensa_initials.operator_kensa
-                    LEFT JOIN injection_parts part_injection ON part_injection.gmc = rc_kensa_initials.material_number
-                    LEFT JOIN injection_parts part_resin ON part_resin.gmc = rc_kensa_initials.material_resin
-                    LEFT JOIN employee_syncs emp_injection ON emp_injection.employee_id = operator_injection
-                    LEFT JOIN employee_syncs emp_resin ON emp_resin.employee_id = operator_resin 
-                    LEFT JOIN employee_syncs emp_kensa ON emp_kensa.employee_id = rc_kensas.operator_kensa
+                    rc_kensas
+                    LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
                 WHERE
-                    rc_kensa_initials.serial_number = "'.$tag.'" 
-                    AND part_resin.deleted_at IS NULL
-                    AND part_injection.deleted_at IS NULL');
+                    rc_kensas.kensa_initial_code = rc_kensa_initials.kensa_initial_code 
+                    AND ng_name IS NOT NULL 
+                    AND injection_parts.deleted_at IS NULL 
+                    AND injection_parts.remark = "injection"
+                ) AS ng_name_kensa,
+                (
+                SELECT
+                    GROUP_CONCAT( rc_kensas.ng_count ) 
+                FROM
+                    rc_kensas
+                    LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
+                WHERE
+                    rc_kensas.kensa_initial_code = rc_kensa_initials.kensa_initial_code 
+                    AND ng_name IS NOT NULL 
+                    AND injection_parts.deleted_at IS NULL 
+                    AND injection_parts.remark = "injection"
+                ) AS ng_count_kensa,
+                emp_injection.employee_id AS employee_id_injection,
+                emp_injection.NAME AS name_injection,
+                emp_resin.employee_id AS employee_id_resin,
+                emp_resin.NAME AS name_resin,
+                emp_kensa.employee_id AS employee_id_kensa,
+                emp_kensa.NAME AS name_kensa,
+                part_injection.gmc AS material_number,
+                part_injection.part_name AS part_name,
+                part_resin.gmc AS material_number_resin,
+                part_resin.part_name AS mat_desc_resin,
+                rc_kensa_initials.part_type AS parts 
+            FROM
+                rc_kensa_initials
+                LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensa_initials.operator_kensa
+                LEFT JOIN injection_parts part_injection ON part_injection.gmc = rc_kensa_initials.material_number
+                LEFT JOIN injection_parts part_resin ON part_resin.gmc = rc_kensa_initials.material_resin
+                LEFT JOIN employee_syncs emp_injection ON emp_injection.employee_id = operator_injection
+                LEFT JOIN employee_syncs emp_resin ON emp_resin.employee_id = operator_resin
+                LEFT JOIN employee_syncs emp_kensa ON emp_kensa.employee_id = rc_kensa_initials.operator_kensa 
+            WHERE
+                rc_kensa_initials.serial_number = "'.$tag.'" 
+                AND part_resin.deleted_at IS NULL 
+                AND part_injection.deleted_at IS NULL');
 
                 $data_kensa = DB::SELECT("SELECT
                   * 
@@ -6902,13 +6923,23 @@ class InjectionsController extends Controller
                   LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
                 WHERE
                   serial_number = '".$tag."'
-                  AND injection_parts.deleted_at IS NULL");
-                
-                $response = array(
-                    'status' => true,
-                    'datas' => $datas,
-                    'data_kensa' => $data_kensa,
-                );
+                  AND injection_parts.deleted_at IS NULL
+                ORDER BY
+                    rc_kensas.id");
+
+                if (count($datas) > 0 && count($data_kensa) > 0) {
+                    $response = array(
+                        'status' => true,
+                        'datas' => $datas,
+                        'data_kensa' => $data_kensa,
+                    );
+                }else{
+                    $response = array(
+                        'status' => false,
+                        'message' => 'Not Found'
+                    );
+                    return Response::json($response);
+                }
             }
             return Response::json($response);
         } catch (\Exception $e) {
@@ -7340,7 +7371,9 @@ class InjectionsController extends Controller
                 rc_kensa_initials
                 LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensa_initials.operator_injection 
             WHERE
-                rc_kensa_initials.ng_name IS NOT NULL");
+                rc_kensa_initials.ng_name IS NOT NULL
+            AND rc_kensa_initials.part_type NOT LIKE '%MJ%' 
+            AND rc_kensa_initials.part_type NOT LIKE '%BJ%'");
 
             $dateTitle = date('d M Y',strtotime($now));
 
