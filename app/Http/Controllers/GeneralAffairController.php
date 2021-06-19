@@ -555,6 +555,7 @@ public function fetchBentoOrderCount(){
 public function fetchBentoOrderEdit(Request $request){
 	$bento = Bento::where('due_date', '=', $request->get('due_date'))
 	->where('employee_name', '=', $request->get('employee_name'))
+	->where('status', '!=', 'Cancelled')
 	->first();
 
 	$response = array(
@@ -658,7 +659,7 @@ public function editBentoOrder(Request $request){
 			$bento_quota_old = BentoQuota::where('due_date', '=', $bento->due_date)->first();
 			$bento_quota_new = BentoQuota::where('due_date', '=', $request->get('due_date'))->first();
 			$now = date('Y-m-d H:i:s');
-			$limit = date('Y-m-d 09:00:00', strtotime($bento->due_date));
+			$limit = date('Y-m-d', strtotime($bento->due_date));
 
 			$date_old = date('Y-m-d', strtotime($bento->due_date));
 			if(
@@ -687,7 +688,7 @@ public function editBentoOrder(Request $request){
 			if($now > $limit){
 				$response = array(
 					'status' => false,
-					'message' => 'Can not edit order, time limit reached. Max change request on day before 09:00',
+					'message' => 'Can not edit order, time limit reached. Max change request one day before.',
 				);
 				return Response::json($response);
 			}
@@ -2271,7 +2272,7 @@ public function detailLiveCooking(Request $request)
 {
 	try {
 
-		$datas = CanteenLiveCooking::select('canteen_live_cookings.id as id_live','canteen_live_cookings.*','employee_syncs.*','canteen_live_cooking_menus.*')->where('canteen_live_cookings.due_date',$request->get('due_date'))->join('employee_syncs','employee_syncs.employee_id','canteen_live_cookings.order_for')->join('canteen_live_cooking_menus','canteen_live_cooking_menus.due_date','canteen_live_cookings.due_date')->get();
+		$datas = CanteenLiveCooking::select(DB::RAW('DATE_FORMAT(DATE(NOW()),"%Y-%m-%d") as date_now'),'canteen_live_cookings.id as id_live','canteen_live_cookings.*','employee_syncs.*','canteen_live_cooking_menus.*')->where('canteen_live_cookings.due_date',$request->get('due_date'))->join('employee_syncs','employee_syncs.employee_id','canteen_live_cookings.order_for')->join('canteen_live_cooking_menus','canteen_live_cooking_menus.due_date','canteen_live_cookings.due_date')->get();
 
 		$response = array(
 			'status' => true,
