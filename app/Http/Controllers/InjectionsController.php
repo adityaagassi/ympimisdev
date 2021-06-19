@@ -51,6 +51,8 @@ use App\InjectionHistoryMoldingWorks;
 use App\InjectionScheduleLog;
 use App\InjectionScheduleMoldingLog;
 use App\InjectionScheduleAdjustmentLog;
+use App\RcKensaInitial;
+use App\Employee;
 use Response;
 use DataTables;
 use Carbon\Carbon;
@@ -6916,16 +6918,17 @@ class InjectionsController extends Controller
                 AND part_injection.deleted_at IS NULL');
 
                 $data_kensa = DB::SELECT("SELECT
-                  * 
+                  * ,
+                    rc_kensa_initials.created_at AS create_kensa 
                 FROM
-                  rc_kensas
+                  rc_kensa_initials
                   LEFT JOIN employee_syncs ON employee_syncs.employee_id = operator_kensa
-                  LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
+                  LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensa_initials.material_number 
                 WHERE
                   serial_number = '".$tag."'
                   AND injection_parts.deleted_at IS NULL
                 ORDER BY
-                    rc_kensas.id");
+                    rc_kensa_initials.id");
 
                 if (count($datas) > 0 && count($data_kensa) > 0) {
                     $response = array(
@@ -7336,7 +7339,14 @@ class InjectionsController extends Controller
                 employee_syncs.`name`,
                 rc_kensa_initials.ng_name,
                 rc_kensa_initials.ng_count,
+                empkensa.`name` AS name_kensa,
+                operator_kensa AS emp_kensa,
                 serial_number,
+                rc_kensa_initials.product,
+                rc_kensa_initials.material_number,
+                part_code,
+                injection_parts.part_name,
+                rc_kensa_initials.cavity,
                 (
                 SELECT
                     GROUP_CONCAT( rc_kensas.ng_name ) 
@@ -7370,10 +7380,15 @@ class InjectionsController extends Controller
             FROM
                 rc_kensa_initials
                 LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensa_initials.operator_injection 
+                LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensa_initials.material_number
+                LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = rc_kensa_initials.operator_kensa
             WHERE
                 rc_kensa_initials.ng_name IS NOT NULL
             AND rc_kensa_initials.part_type NOT LIKE '%MJ%' 
-            AND rc_kensa_initials.part_type NOT LIKE '%BJ%'");
+            AND rc_kensa_initials.part_type NOT LIKE '%BJ%'
+            AND injection_parts.deleted_at IS NULL 
+            AND injection_parts.remark = 'injection'
+            AND DATE( rc_kensa_initials.created_at ) = '".$now."'  ");
 
             $dateTitle = date('d M Y',strtotime($now));
 
@@ -7419,6 +7434,14 @@ class InjectionsController extends Controller
                 $lastdayweek = $key->week_date;
             }
 
+            // $kensa = RcKensaInitial::whereDate('created_at','>=',$firstdayweek)->whereDate('created_at','<=',$lastdayweek)->get();
+
+            // if ($kensa[0]->counceled_employee == null) {
+            //     var_dump(date('Y-m-d', strtotime("-7 day", strtotime($firstdayweek))));
+            //     var_dump(date('Y-m-d', strtotime("-7 day", strtotime($lastdayweek))));
+            //     die();
+            // }
+
             $resumeweek = DB::SELECT("SELECT DISTINCT
                 ( rc_kensa_initials.operator_injection ),
                 employee_syncs.`name`,
@@ -7457,7 +7480,11 @@ class InjectionsController extends Controller
                     AND injection_parts.remark = 'injection' 
                     AND injection_parts.part_code NOT LIKE '%MJ%' 
                     AND injection_parts.part_code NOT LIKE '%BJ%' 
-                ) AS ng_count_kensa 
+                ) AS ng_count_kensa,
+                rc_kensa_initials.counceled_employee,
+                rc_kensa_initials.counceled_by,
+                rc_kensa_initials.counceled_at,
+                rc_kensa_initials.counceled_image 
             FROM
                 rc_kensa_initials
                 LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensa_initials.operator_injection 
@@ -7465,14 +7492,18 @@ class InjectionsController extends Controller
             WHERE
                 rc_kensa_initials.ng_name IS NOT NULL
             AND rc_kensa_initials.part_type NOT LIKE '%MJ%' 
-            AND rc_kensa_initials.part_type NOT LIKE '%BJ%' ");
+            AND rc_kensa_initials.part_type NOT LIKE '%BJ%'
+            AND DATE( rc_kensa_initials.created_at ) >= '".$firstdayweek."' 
+            AND DATE( rc_kensa_initials.created_at ) <= '".$lastdayweek."'  ");
 
             $response = array(
               'status' => true,
               'emp' => $emp,
               'resumes' => $resumes,
               'resumeweek' => $resumeweek,
-              'dateTitle' => $dateTitle
+              'dateTitle' => $dateTitle,
+              'firstdayweek' => $firstdayweek,
+              'lastdayweek' => $lastdayweek,
             );
             return Response::json($response);
           } catch (\Exception $e) {
@@ -7482,5 +7513,97 @@ class InjectionsController extends Controller
             );
             return Response::json($response);
           }
+    }
+
+    public function inputInjectionCounceling(Request $request)
+    {
+        try {
+              $id_user = Auth::id();
+              $tujuan_upload = 'data_file/injection/counceling';
+              $file = $request->file('fileData');
+              $filename = md5($request->input('counceled_employee').$request->input('counceled_by').date('YmdHisa')).'.'.$request->input('extension');
+              $file->move($tujuan_upload,$filename);
+
+              $emp = explode('-', $request->input('counceled_employee'));
+              $leader = explode('-', $request->input('counceled_by'));
+
+              $kensa = RcKensaInitial::whereDate('created_at','>=',$request->input('first_date'))->whereDate('created_at','<=',$request->input('last_date'))->get();
+              foreach ($kensa as $key) {
+                  $kensainitial = RcKensaInitial::where('id',$key->id)->first();
+                  $kensainitial->counceled_employee = $emp[0];
+                  $kensainitial->counceled_by = $leader[0];
+                  $kensainitial->counceled_at = date('Y-m-d H:i:s');
+                  $kensainitial->counceled_image = $filename;
+                  $kensainitial->save();
+              }
+
+            $response = array(
+                'status' => true,
+                'message' => 'Konseling Berhasil'
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function scanInjectionCounceledEmployee(Request $request)
+    {
+        try {
+            $emp = Employee::where('tag',$request->get('employee_id'))->first();
+
+            if (count($emp) > 0) {
+                $response = array(
+                    'status' => true,
+                    'employee' => $emp,
+                    'message' => 'Scan Sukses'
+                );
+                return Response::json($response);
+            }else{
+                $response = array(
+                    'status' => false,
+                    'message' => 'Scan Failed'
+                );
+                return Response::json($response);
+            }
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function scanInjectionCounceledBy(Request $request)
+    {
+        try {
+            $emp = Employee::where('tag',$request->get('employee_id'))->first();
+
+            if (count($emp) > 0) {
+                $response = array(
+                    'status' => true,
+                    'employee' => $emp,
+                    'message' => 'Scan Sukses'
+                );
+                return Response::json($response);
+            }else{
+                $response = array(
+                    'status' => false,
+                    'message' => 'Scan Failed'
+                );
+                return Response::json($response);
+            }
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
     }
 }

@@ -51,6 +51,12 @@ class RcKensaInitial extends Model
 		'remark',
 		'ng_name_kensa',
 		'ng_count_kensa',
+		'counceled_employee',
+		'counceled_by',
+		'counceled_at',
+		'counceled_image',
+		'ng_name_kensa',
+		'ng_count_kensa',
 		'created_by',
 
 	];

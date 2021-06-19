@@ -1223,18 +1223,16 @@ table.table-bordered > tfoot > tr > th{
 							tableKensa += '<th style="width: 1%;font-weight: bold;border-top:0px;font-size:20px">Product</th>';
 							tableKensa += '<th style="width: 1%;border-top:0px;font-size:20px">Material</th>';
 							tableKensa += '<th style="width: 1%;border-top:0px;font-size:20px">Cav</th>';
-							tableKensa += '<th style="width: 1%;border-top:0px;font-size:20px">Start</th>';
-							tableKensa += '<th style="width: 1%;border-top:0px;font-size:20px">Finish</th>';
 							tableKensa += '<th style="width: 1%;border-top:0px;font-size:20px">By</th>';
+							tableKensa += '<th style="width: 1%;border-top:0px;font-size:20px">At</th>';
 							tableKensa += '</tr>';
 							$.each(result.data_kensa, function(key, value) {
 								tableKensa += '<tr>';
 								tableKensa += '<th>'+value.product+'</th>';
 								tableKensa += '<th>'+value.material_number+'<br>'+value.part_name+'</th>';
 								tableKensa += '<th>'+value.cavity+'</th>';
-								tableKensa += '<th>'+value.start_time+'</th>';
-								tableKensa += '<th>'+value.end_time+'</th>';
 								tableKensa += '<th>'+value.employee_id+'<br>'+value.name+'</th>';
+								tableKensa += '<th>'+value.create_kensa+'</th>';
 								tableKensa += '</tr>';
 							});
 							tableKensa += '</thead>';	
