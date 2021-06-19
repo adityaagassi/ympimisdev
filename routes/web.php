@@ -507,6 +507,9 @@ Route::get('fetch/injection/transactions', 'InjectionsController@fetchInjectionT
 
 Route::get('index/injection/ng_rate', 'InjectionsController@indexInjectionNgRate');
 Route::get('fetch/injection/ng_rate', 'InjectionsController@fetchInjectionNgRate');
+Route::post('input/injection/counceling', 'InjectionsController@inputInjectionCounceling');
+Route::get('scan/injection/counceled_employee', 'InjectionsController@scanInjectionCounceledEmployee');
+Route::get('scan/injection/counceled_by', 'InjectionsController@scanInjectionCounceledBy');
 
 // end mesin injeksi
 
