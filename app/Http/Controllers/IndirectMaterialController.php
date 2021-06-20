@@ -85,13 +85,11 @@ class IndirectMaterialController extends Controller{
 				ORDER BY cc.section, cc.location, cs.solution_name ASC");
 		}
 
-		$convertions = db::select("SELECT * FROM chemical_convertions ORDER BY material ASC");
 
 		return view('indirect_material.chemical.solution_control', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-			'solutions' => $solutions,
-			'convertions' => $convertions
+			'solutions' => $solutions
 		))->with('head', 'Chemical')->with('page', 'Chemical Solution Control');
 	}
 
@@ -1138,6 +1136,19 @@ class IndirectMaterialController extends Controller{
 			'data' => $data
 		);
 		return Response::json($response);
+	}
+
+	public function fetchGetMaterial(Request $request){
+		$id = $request->get('id');
+
+		$materials = ChemicalConvertion::where('solution_id', $id)
+		->orderBy('id', 'ASC')
+		->get();
+
+		echo '<option value=""></option>';
+		for($i=0; $i < count($materials); $i++) {
+			echo '<option value="'.$materials[$i]['material'].'(ime)'.$materials[$i]['material'].'">'.$materials[$i]['material'].'</option>';
+		}
 	}
 
 	public function fetchLarutanDetail(Request $request){

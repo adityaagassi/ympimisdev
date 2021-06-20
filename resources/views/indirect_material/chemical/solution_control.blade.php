@@ -185,11 +185,7 @@
 									<label class="col-sm-3">Material<span class="text-red">*</span></label>
 									<div class="col-sm-4" align="left">
 										<select class="form-control select3" data-placeholder="Select Material" id="add_material" style="width: 100%">
-											<option value="">Select Solution</option>
-											@foreach($convertions as $convertion)
-											<option style="text-transform: capitalize;" value="{{ $convertion->id }}(ime){{ $convertion->material }}">{{ $convertion->material }}</option>
-											@endforeach
-
+											<option value=""></option>
 										</select>
 									</div>
 									<div class="col-sm-2" style="padding-left: 0px;" align="left">
@@ -302,6 +298,25 @@
 
 		materials = [];
 
+	});
+
+	$("#add_larutan_id").change(function(){
+		$("#loading").show();
+
+		var id = $(this).val(); 
+		var data = {
+			id : id
+		}
+		$.ajax({
+			type: "GET",
+			dataType: "html",
+			url: "{{ url("fetch/chm_get_material") }}",
+			data: data,
+			success: function(message){
+				$("#add_material").html(message);                                                   
+				$("#loading").hide();                                                        
+			}
+		});                    
 	});
 
 	var materials = [];

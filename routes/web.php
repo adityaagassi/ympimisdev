@@ -2929,6 +2929,8 @@ Route::get('index/chm_solution_control', 'IndirectMaterialController@indexSoluti
 Route::get('fetch/chm_solution_control', 'IndirectMaterialController@fetchSolutionControl');
 Route::get('fetch/chm_check_result', 'IndirectMaterialController@fetchcheckResult');
 Route::post('input/chm_production_result', 'IndirectMaterialController@inputProductionResult');
+Route::get('fetch/chm_get_material', 'IndirectMaterialController@fetchGetMaterial');
+
 
 //Request
 Route::get('index/indirect_material_request/{id}', 'IndirectMaterialController@indexRequest');
