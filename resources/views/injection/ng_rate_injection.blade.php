@@ -39,6 +39,24 @@
 	    display: inline-block;
 	    border: 2px solid white;
 	  }
+
+	.sedang {
+		/*width: 50px;
+		height: 50px;*/
+		-webkit-animation: sedang 1s infinite;  /* Safari 4+ */
+		-moz-animation: sedang 1s infinite;  /* Fx 5+ */
+		-o-animation: sedang 1s infinite;  /* Opera 12+ */
+		animation: sedang 1s infinite;  /* IE 10+, Fx 29+ */
+	}
+
+	@-webkit-keyframes sedang {
+		0%, 49% {
+			background: #ff8080;
+		}
+		50%, 100% {
+			background-color: #ffe8e8;
+		}
+	}
 	#loading, #error { display: none; }
 </style>
 @endsection
@@ -146,19 +164,19 @@
 							<div class="gambar">
 								<table style="text-align:center;width:100%">
 									<tr>
-										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;" onclick="councelingModal()">BAD QUALITY EMPLOYEE<br>OF THE WEEK</td>
+										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;" onclick="councelingModal()" class="sedang" id="highest_title">BAD QUALITY EMPLOYEE<br>OF THE WEEK</td>
 									</tr>
 									<tr id="not_counceled">
-										<td onclick="councelingModal()" id="not_counceled_td" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;">BELUM KONSELING</td>
+										<td onclick="councelingModal()" id="not_counceled_td" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;" class="sedang">BELUM TRAINING & KONSELING</td>
 									</tr>
 									<tr>
 										<td id="highest_avatar" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 20px;font-weight: bold;cursor: pointer;"></td>
 									</tr>
 									<tr>
-										<td id="highest_name" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;"></td>
+										<td id="highest_name" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;" class="sedang"></td>
 									</tr>
 									<tr>
-										<td id="highest_ng" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;"></td>
+										<td id="highest_ng" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;" class="sedang"></td>
 									</tr>
 								</table>
 							</div>
@@ -235,7 +253,7 @@
 
 					<div class="form-group">
 					  <div class="col-xs-12" style="padding-left: 0px;padding-right: 0px">
-		              	<label for="">Counceled Employee</label>
+		              	<label for="">Trainee Employee</label>
 		              </div>
 					  <div class="col-xs-10" style="padding-left: 0px">
 					  	<input type="text" name="tag_employee" id="tag_employee" class="form-control" placeholder="Scan ID Card Employee">
@@ -249,7 +267,7 @@
 
 		            <div class="form-group">
 		              <div class="col-xs-12" style="padding-left: 0px">
-		              	<label for="">Counceled By</label>
+		              	<label for="">Trained By</label>
 		              </div>
 					  <div class="col-xs-10" style="padding-left: 0px">
 					  	<input type="text" name="tag_leader" id="tag_leader" class="form-control" placeholder="Scan ID Card Sub Leader / Leader">
@@ -261,7 +279,7 @@
 
 		            <div class="form-group">
 		              <div class="col-xs-12" style="padding-left: 0px;">
-		              	<label for="">Counceling Image</label>
+		              	<label for="">Upload Document Training</label>
 		              </div>
 					  <div class="col-xs-10" style="padding-left: 0px;">
 					  	<input type="file" name="counceled_image" id="counceled_image" class="form-control" placeholder="Scan ID Card Sub Leader / Leader">
@@ -919,27 +937,29 @@
 						},
 					}
 					]
-				}, function (chartt) { // on complete
+				}
+				// , function (chartt) { // on complete
 
-				    chartt.renderer.image(url_highest,80,0,70,90)
-				        .add();
-				    chartt.renderer.text('TODAY BAD',77,90,85,90).css({
-				        fontSize: '12px',
-				        color: '#fff',
-				        fontWeight:'bold',
-				        textShadow: '1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue'
-				      }).add();
+				//     chartt.renderer.image(url_highest,80,0,70,90)
+				//         .add();
+				//     chartt.renderer.text('TODAY BAD',77,90,85,90).css({
+				//         fontSize: '12px',
+				//         color: '#fff',
+				//         fontWeight:'bold',
+				//         textShadow: '1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue'
+				//       }).add();
 
-				    chartt.renderer.image(url_lowest,160,0,70,90)
-				        .add();
-				    chartt.renderer.text('TODAY BEST',160,90,85,90).css({
-				        fontSize: '12px',
-				        color: '#fff',
-				        fontWeight:'bold',
-				        textShadow: '1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue'
-				      }).add();
+				//     chartt.renderer.image(url_lowest,160,0,70,90)
+				//         .add();
+				//     chartt.renderer.text('TODAY BEST',160,90,85,90).css({
+				//         fontSize: '12px',
+				//         color: '#fff',
+				//         fontWeight:'bold',
+				//         textShadow: '1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue'
+				//       }).add();
 						
-				});
+				// }
+				);
 
 				var operator = [];
 				var ngname = [];
@@ -996,12 +1016,20 @@
 				$('#lastDate').val(result.lastdayweek);
 
 				if (counceling == null) {
-					$('#not_counceled_td').html('BELUM KONSELING');
+					$('#not_counceled_td').html('BELUM TRAINING & KONSELING');
 					document.getElementById('not_counceled_td').style.backgroundColor = '#ff8080';
+					$('#highest_title').prop('class','sedang');
+					$('#not_counceled_td').prop('class','sedang');
+					$('#highest_name').prop('class','sedang');
+					$('#highest_ng').prop('class','sedang');
 				}else{
 					// $('#not_counceled').show();
 					document.getElementById('not_counceled_td').style.backgroundColor = '#82ff80';
-					$('#not_counceled_td').html('SUDAH KONSELING');
+					$('#not_counceled_td').html('SUDAH TRAINING &KONSELING');
+					$('#highest_title').removeAttr('class');
+					$('#not_counceled_td').removeAttr('class');
+					$('#highest_name').removeAttr('class');
+					$('#highest_ng').removeAttr('class');
 				}
 			}
 			else{
@@ -1111,7 +1139,7 @@ function ShowModal(operator_injection,type) {
 }
 
 function councelingModal() {
-	if ($('#not_counceled_td').text() == 'BELUM KONSELING') {
+	if ($('#not_counceled_td').text() == 'BELUM TRAINING & KONSELING') {
 		$('#modalCounceling').modal('show');
 		$('#employee_id').html($('#highest_name').text().split(' - ')[0]);
 		$('#name').html($('#highest_name').text().split(' - ')[1]);
