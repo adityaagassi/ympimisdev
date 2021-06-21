@@ -1928,6 +1928,7 @@ Route::post('fetch/ga/update_receive_kantin', 'AccountingController@update_recei
 
 Route::get('ga/cek_kedatangan/kantin', 'AccountingController@cek_kedatangan_kantin');
 Route::get('fetch/ga/cek_kedatangan/kantin', 'AccountingController@fetch_kedatangan_kantin');
+Route::get('fetch/ga/outstanding_kedatangan_kantin', 'AccountingController@fetch_outstanding_kantin');
 
 
 //Print Label Barang
@@ -4865,6 +4866,7 @@ Route::group(['nav' => 'S63', 'middleware' => 'permission'], function(){
 	Route::get('stock/grafik/aktual', 'StockAktualController@FatchMonitoring');
 	Route::get('stock/aktual/home', 'StockAktualController@AuditStockAktualHome');
 	Route::get('stock/aktual/list', 'StockAktualController@FatchListStock');
+	Route::get('stock/aktual/edit/{id}', 'StockAktualController@EditListStock');
 	Route::post('stock/aktual/update', 'StockAktualController@UpdateStock');
 	Route::get('stock/aktual/resume', 'StockAktualController@UpdateStockResume');
 	Route::get('stock/ideal/stock', 'StockAktualController@UploadMasterIdeal');
@@ -5059,6 +5061,8 @@ Route::get('scan/reed/operator', 'ReedSyntheticController@scanReedOperator');
 Route::get('index/reed/molding_verification', 'ReedSyntheticController@indexMoldingVerification');
 Route::post('fetch/reed/finish_setup_molding', 'ReedSyntheticController@fetchFinishMolding');
 Route::get('index/reed/molding_approval/{kanban}/{employee_id}', 'ReedSyntheticController@indexMoldingApproval');
+
+Route::post('fetch/reed/submit_approval', 'ReedSyntheticController@fetchSubmitApproval');
 
 
 //Injeksi
