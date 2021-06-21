@@ -3626,7 +3626,7 @@ class MaintenanceController extends Controller
 		->where('maintenance_machine_problem_logs.started_time', '>=', $date_from)
 		->where('maintenance_machine_problem_logs.started_time', '<=', $date_to)
 		->whereNotNull('maintenance_plan_items.machine_group')
-		->whereNotNull('maintenance_plan_items.trouble_part')
+		->whereNotNull('maintenance_machine_problem_logs.trouble_part')
 		->select('maintenance_plan_items.machine_group', db::raw('count(maintenance_machine_problem_logs.id) as jml_rusak'))
 		->groupBy('maintenance_plan_items.machine_group')
 		->orderBy(db::raw('count(maintenance_machine_problem_logs.id)'), 'desc')
