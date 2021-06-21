@@ -64,6 +64,7 @@ class Kernel extends ConsoleKernel
         Commands\EmailBento::class,
         Commands\DoubleTransactionNotification::class,
         Commands\RawMaterialOverUsage::class,
+        Commands\ResetOperatorLocation::class,
 
 
         //KITTO
@@ -137,6 +138,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('16:30');
         $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('17:00');
         $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('19:30');
+        $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('01:15');
+        $schedule->command('sync:shift_sunfish')->weekdays()->dailyAt('01:45');
         $schedule->command('email:kaizen')->weekdays()->dailyAt('08:45');
         $schedule->command('email:hrq')->weekdays()->dailyAt('07:45');
         $schedule->command('log:room_temperature')->everyThirtyMinutes();
@@ -189,6 +192,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('update:geocode')->dailyAt('18:00');
 
         // $schedule->command('generate:live_cooking')->dailyAt('04:00');
+
+        $schedule->command('mtc:op_reset 1')->weekdays()->dailyAt('07:00');
+        $schedule->command('mtc:op_reset 2')->weekdays()->dailyAt('16:30');
+        $schedule->command('mtc:op_reset 3')->weekdays()->dailyAt('00:30');
+
     }
 
     /**l
