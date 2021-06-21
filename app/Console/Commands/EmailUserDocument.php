@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use App\Mail\SendEmail;
 use Carbon\Carbon;
+use App\User;
+
 
 class EmailUserDocument extends Command
 {
