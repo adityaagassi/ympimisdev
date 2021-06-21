@@ -1075,7 +1075,7 @@ class MaterialController extends Controller{
           $material_numbers = array();
 
           foreach($policies as $policy){
-               if($policy->percentage < 0.75){
+               if($policy->percentage < 1){
                     if(!in_array($policy->material_number, $material_numbers)){
                          array_push($material_numbers, $policy->material_number);
                     }
