@@ -3867,7 +3867,10 @@ public function fetchDataKaizen()
      }
 
      $kzn = KaizenForm::leftJoin('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
-     ->select('kaizen_forms.id','employee_id','employee_name','title','area','section','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3');
+     ->leftJoin('employee_syncs','employee_syncs.employee_id', '=', 'kaizen_forms.employee_id')
+     ->select('kaizen_forms.id','kaizen_forms.employee_id','employee_name','title','area','kaizen_forms.section','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3')
+     ->whereNull('employee_syncs.end_date');
+
      if ($_GET['area'][0] != "") {
           $areas = implode("','", $_GET['area']);
 
@@ -4230,6 +4233,7 @@ public function fetchKaizenReport(Request $request)
      group by employee_id, employee_name
      ) as kz
      left join employee_syncs on kz.employee_id = employee_syncs.employee_id
+     where employee_syncs.end_date is null
      order by (mp1+mp2+mp3) desc
      limit 3";
 
@@ -4239,6 +4243,7 @@ public function fetchKaizenReport(Request $request)
      left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
      left join kaizen_scores on kaizen_scores.id_kaizen = kaizen_forms.id
      where `status` = 1 and DATE_FORMAT(kaizen_scores.updated_at,'%Y-%m') = '".$date."'
+     and employee_syncs.end_date is null
      group by kaizen_forms.employee_id, employee_name, department, employee_syncs.section, `group`
      order by count desc
      limit 10";
