@@ -9359,12 +9359,12 @@ public function import_receive(Request $request){
               array_push($department,"General Affairs Department");
           }
 
-          else if ($department[0] == "Woodwind Instrument - Key Parts Process (WI-KPP) Department") {
-              array_push($department,"Woodwind Instrument - Body Parts Process (WI-BPP) Department");
+          else if ($department[0] == "Educational Instrument (EI) Department") {
+              array_push($department,"Woodwind Instrument - Key Parts Process (WI-KPP) Department");
           }
 
-          else if ($department[0] == "Woodwind Instrument - Welding Process (WI-WP) Department") {
-            array_push($department,"Woodwind Instrument - Surface Treatment (WI-ST) Department");
+          else if ($department[0] == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
+            array_push($department,"Woodwind Instrument - Welding Process (WI-WP) Department");
         }
 
         $deptt = json_encode($department);
@@ -9478,13 +9478,14 @@ public function fetchMonitoringPROutstanding(Request $request)
   else if ($department[0] == "Human Resources Department") {
       array_push($department,"General Affairs Department");
   }
-  else if ($department[0] == "Woodwind Instrument - Key Parts Process (WI-KPP) Department") {
-      array_push($department,"Woodwind Instrument - Body Parts Process (WI-BPP) Department");
+
+  else if ($department[0] == "Educational Instrument (EI) Department") {
+      array_push($department,"Woodwind Instrument - Key Parts Process (WI-KPP) Department");
   }
-  
-  else if ($department[0] == "Woodwind Instrument - Welding Process (WI-WP) Department") {
-    array_push($department,"Woodwind Instrument - Surface Treatment (WI-ST) Department");
-}
+
+  else if ($department[0] == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
+    array_push($department,"Woodwind Instrument - Welding Process (WI-WP) Department");
+  }
 
 $deptt = json_encode($department);
 $dept = str_replace(array("[","]"),array("(",")"),$deptt);
@@ -9658,13 +9659,13 @@ public function fetchtablePR(Request $request)
           array_push($department,"General Affairs Department");
       }
 
-      else if ($department[0] == "Woodwind Instrument - Key Parts Process (WI-KPP) Department") {
-          array_push($department,"Woodwind Instrument - Body Parts Process (WI-BPP) Department");
+      else if ($department[0] == "Educational Instrument (EI) Department") {
+          array_push($department,"Woodwind Instrument - Key Parts Process (WI-KPP) Department");
       }
-      
-      else if ($department[0] == "Woodwind Instrument - Welding Process (WI-WP) Department") {
-        array_push($department,"Woodwind Instrument - Surface Treatment (WI-ST) Department");
-    }
+
+      else if ($department[0] == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
+        array_push($department,"Woodwind Instrument - Welding Process (WI-WP) Department");
+      }
 
     $deptt = json_encode($department);
     $dept = str_replace(array("[","]"),array("(",")"),$deptt);
@@ -10458,13 +10459,13 @@ if ($department != null) {
   else if ($department[0] == "Human Resources Department") {
       array_push($department,"General Affairs Department");
   }
-  else if ($department[0] == "Woodwind Instrument - Key Parts Process (WI-KPP) Department") {
-      array_push($department,"Woodwind Instrument - Body Parts Process (WI-BPP) Department");
+  else if ($department[0] == "Educational Instrument (EI) Department") {
+      array_push($department,"Woodwind Instrument - Key Parts Process (WI-KPP) Department");
   }
-  
-  else if ($department[0] == "Woodwind Instrument - Welding Process (WI-WP) Department") {
-    array_push($department,"Woodwind Instrument - Surface Treatment (WI-ST) Department");
-}
+
+  else if ($department[0] == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
+    array_push($department,"Woodwind Instrument - Welding Process (WI-WP) Department");
+  }
 
 $deptt = json_encode($department);
 $dept = str_replace(array("[","]"),array("(",")"),$deptt);
@@ -10625,13 +10626,13 @@ if ($department != null) {
   else if ($department[0] == "Human Resources Department") {
       array_push($department,"General Affairs Department");
   }
-  else if ($department[0] == "Woodwind Instrument - Key Parts Process (WI-KPP) Department") {
-      array_push($department,"Woodwind Instrument - Body Parts Process (WI-BPP) Department");
+  else if ($department[0] == "Educational Instrument (EI) Department") {
+      array_push($department,"Woodwind Instrument - Key Parts Process (WI-KPP) Department");
   }
-  
-  else if ($department[0] == "Woodwind Instrument - Welding Process (WI-WP) Department") {
-    array_push($department,"Woodwind Instrument - Surface Treatment (WI-ST) Department");
-}
+
+  else if ($department[0] == "Woodwind Instrument - Body Parts Process (WI-BPP) Department") {
+    array_push($department,"Woodwind Instrument - Welding Process (WI-WP) Department");
+  }
 
 $deptt = json_encode($department);
 $dept = str_replace(array("[","]"),array("(",")"),$deptt);
