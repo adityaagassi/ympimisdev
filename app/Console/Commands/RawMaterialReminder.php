@@ -90,7 +90,7 @@ class RawMaterialReminder extends Command
                     AND msp.material_number in (SELECT material_number FROM material_controls)
                     AND date_format( msp.period, '%Y-%m' ) = '".$period."'
                     AND mc.pic = '".$pic[$i]->pic."'
-                    HAVING percentage < 75
+                    HAVING percentage < 100
                     ORDER BY percentage ASC");
 
                 $resume = array();
@@ -116,7 +116,7 @@ class RawMaterialReminder extends Command
 
                     $adjustment = 'Re-schedule in';
 
-                    if(is_null($material[$j]->plan)){
+                    if(!is_null($material[$j]->plan)){
                         if($material[$j]->plan < $stock_out_date){
                             $adjustment = 'Re-schedule out';
                         }

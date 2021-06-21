@@ -474,30 +474,30 @@
                 <tr>
                     <td>
                         <a href="{{ url("/index/material/material_monitoring/direct") }}">
-                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (素材監視)
+                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (Direct) (素材監視「直材」)
+                        </a>
+                        <br>
+                        <a href="{{ url("/index/material/material_monitoring/indirect") }}">
+                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (Indirect) (素材監視「間材」)
                         </a>
                         {{-- <br>
-                            <a href="{{ url("/index/material/material_monitoring/indirect") }}">
-                                <i class="fa fa-caret-right"></i> Raw Material Monitoring (Indirect) (素材監視「」)
-                            </a>
-                            <br>
-                            <a href="{{ url("/index/material/material_monitoring/subcon") }}">
-                                <i class="fa fa-caret-right"></i> Raw Material Monitoring (Subcon) (素材監視「」)
-                            </a> --}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                        <a href="{{ url("/index/material/material_monitoring/subcon") }}">
+                            <i class="fa fa-caret-right"></i> Raw Material Monitoring (Subcon) (素材監視「サブコン」)
+                        </a> --}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-            <table class="table table-bordered">
-                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
-                    <tr>
-                        <th>Other Information<br/>他の情報</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                     <td>
+        <table class="table table-bordered">
+            <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                <tr>
+                    <th>Other Information<br/>他の情報</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                   <td>
                         {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a> --}}

@@ -45,6 +45,8 @@
 		</div>
 	</div>
 	<div class="row">
+		<input type="hidden" id="purchasing_group" value="{{ $purchasing_group }}">
+
 		<div class="col-xs-12" style="padding-bottom: 10px;">
 			<div id="period_title" class="col-xs-7" style="background-color: #64b5f6;"><center><span style="color: black; font-size: 2vw; font-weight: bold;" id="title_text"></span></center>
 			</div>
@@ -113,11 +115,11 @@
 </div>
 
 <div class="modal fade" id="materialModal" style="overflow-y:auto;">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog" style="width:90%;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Upload Monitored Material</h4>
-				<span>Format Upload: [GMC][DESKRIPSI][KODE VENDOR][NAMA VENDOR][KATEGORI][NIK BUYER][NIK CONTROL][REMARK]</span>
+				<span>Format Upload: [GMC][DESKRIPSI][PURCHASING GROUP][KODE VENDOR][NAMA VENDOR][KATEGORI][NIK BUYER][NIK CONTROL][REMARK]</span>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<textarea id="materialData" style="height: 100px; width: 100%;"></textarea>
 				</div>
@@ -128,13 +130,14 @@
 					<table id="tableMaterial" class="table table-bordered table-striped table-hover">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 1%">Material</th>
-								<th style="width: 7%">Description</th>
-								<th style="width: 5%">Vendor</th>
-								<th style="width: 1%">Category</th>
-								<th style="width: 1%">BUYER</th>
-								<th style="width: 1%">CONTROL</th>
-								<th style="width: 2%">Remark</th>
+								<th style="width: 5%">Material</th>
+								<th style="width: 20%">Description</th>
+								<th style="width: 5%">PGR</th>
+								<th style="width: 30%">Vendor</th>
+								<th style="width: 5%">Category</th>
+								<th style="width: 15%">BUYER</th>
+								<th style="width: 15%">CONTROL</th>
+								<th style="width: 5%">Remark</th>
 							</tr>
 						</thead>
 						<tbody id="tableMaterialBody">
@@ -220,7 +223,11 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Upload In/Out Material</h4>
+				@if($purchasing_group == 'G08')
 				<span>Format Upload: [GMC][MVT][ISSUE LOC][RECEIVE LOC][QUANTITY][ENTRY DATE][POSTING DATE]</span>
+				@elseif($purchasing_group == 'G15')
+				<span>Format Upload: [GMC][MVT][ISSUE LOC][COST CENTER][QUANTITY][ENTRY DATE][POSTING DATE]</span>
+				@endif
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<div class="form-group">
 						<div class="row" style="padding-bottom: 5px;">
@@ -357,10 +364,13 @@
 
 	function uploadData(id){
 		$('#loading').show();
+		var purchasing_group = $('#purchasing_group').val();
+
 		if(id == 'material'){
 			var upload = $('#materialData').val();
 			var data = {
 				id:id,
+				purchasing_group:purchasing_group,
 				upload:upload
 			}	
 		}
@@ -373,6 +383,7 @@
 			}
 			var data = {
 				id:id,
+				purchasing_group:purchasing_group,
 				upload:upload,
 				period:period
 			}				
@@ -386,6 +397,7 @@
 			}
 			var data = {
 				id:id,
+				purchasing_group:purchasing_group,
 				upload:upload,
 				period:period
 			}			
@@ -395,6 +407,7 @@
 			var period = $('#deliveryPeriod').val();
 			var data = {
 				id:id,
+				purchasing_group:purchasing_group,
 				upload:upload,
 				period:period
 			}			
@@ -405,6 +418,7 @@
 			var inoutTo = $('#inoutTo').val();
 			var data = {
 				id:id,
+				purchasing_group:purchasing_group,
 				upload:upload,
 				inoutFrom:inoutFrom,
 				inoutTo:inoutTo
@@ -451,6 +465,7 @@
 						tableBody += '<tr>';
 						tableBody += '<td>'+value.material_number+'</td>';
 						tableBody += '<td>'+value.material_description+'</td>';
+						tableBody += '<td>'+value.purchasing_group+'</td>';
 						tableBody += '<td>'+value.vendor_code+'-'+value.vendor_name+'</td>';
 						tableBody += '<td>'+value.category+'</td>';
 						tableBody += '<td>'+value.buyer+'</td>';
@@ -777,14 +792,16 @@
 
 function fetchChart(id){
 	$('#loading').show();
+	var purchasing_group = $('#purchasing_group').val();
 	var period = $('#period').val();
 	var data = {
+		purchasing_group:purchasing_group,
 		period:period
 	}
 	$.get('{{ url("fetch/material/material_monitoring") }}', data, function(result, status, xhr) {
 		if(result.status){
 
-			$('#title_text').text('Stock Condition on '+result.period+' ('+result.count_item+' item(s) <75%)');
+			$('#title_text').text('Stock Condition on '+result.period+' ('+result.count_item+' item(s) Under Stock Policy)');
 			var h = $('#period_title').height();
 			$('#period').css('height', h);
 			$('#btnUpload').css('height', h);
@@ -804,6 +821,8 @@ function fetchChart(id){
 
 			$.each(result.material_percentages, function(key, value){
 				count_material++;
+
+				//Bar Chart
 				div_chart += '<div class="col-xs-6" style="padding: 0 5px 0 5px;">';
 				div_chart += '<div class="box box-solid" style="margin-bottom: 10px;">';
 				div_chart += '<div class="box-header">';
@@ -822,6 +841,29 @@ function fetchChart(id){
 				div_chart += '</div>';
 				div_chart += '</div>';
 				div_chart += '</div>';
+
+
+				//Line Chart
+				div_chart += '<div class="col-xs-6" style="padding: 0 5px 0 5px;">';
+				div_chart += '<div class="box box-solid" style="margin-bottom: 10px;">';
+				div_chart += '<div class="box-header">';
+				div_chart += '<span style="font-weight: bold; font-size: 1.2vw;">'+count_material+') '+value.material_number+' '+value.material_description+'</span>';
+				div_chart += '<span style="font-weight: bold; font-size: 1.2vw; color:red;" class="pull-right">&nbsp;'+value.percentage+'%</span>';
+				div_chart += '<span style="font-weight: bold; font-size: 1.2vw;" class="pull-right">Stock Condition : </span>';
+				div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+value.vendor_code+' - '+value.vendor_name+'</span>';
+				div_chart += '<br><span style="font-weight: bold; font-size: 1vw;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stock Policy : '+value.day +' Days ('+value.policy+' '+value.bun+')</span>';
+				div_chart += '<div class="box-body" style="padding: 10px 0 10px 0;">';
+				div_chart += '<div style="height: 350px;" id="chart_line_'+value.material_number+'"></div>';
+				div_chart += '</div>';
+				div_chart += '</div>';
+				div_chart += '</div>';
+				div_chart += '</div>';
+				div_chart += '</div>';
+				div_chart += '</div>';
+				div_chart += '</div>';
+				div_chart += '</div>';
+
+
 				$('#material_monitoring').append(div_chart);
 				div_chart = "";
 
@@ -839,6 +881,9 @@ function fetchChart(id){
 				var percentage = 0;
 				var stock_percentage = [];
 				var yAxis = value.bun;
+
+				var line_actual_stock = [];
+
 
 
 				for(var i = 0; i < result.results.length; i++){
@@ -859,6 +904,10 @@ function fetchChart(id){
 							percentage = (parseFloat(result.results[i].plan_stock)/parseFloat(policy))*100;
 						}
 						stock_percentage.push((parseFloat(percentage)).toFixed(2));
+
+
+						line_actual_stock.push(parseFloat(result.results[i].stock_total));
+
 					}
 				}
 
@@ -973,6 +1022,134 @@ function fetchChart(id){
 						type: 'spline',
 						data: actual_usage,
 						color: '#f57f17'
+					}]
+				});
+
+				var chart_name = 'chart_line_'+value.material_number;
+
+				Highcharts.chart(chart_name, {
+					chart: {
+						backgroundColor	: null
+					},
+					title: {
+						text: null
+					},
+					credits: {
+						enabled: false
+					},
+					xAxis: {
+						tickInterval: 1,
+						gridLineWidth: 1,
+						categories: result.categories,
+						crosshair: true,
+						plotBands:[{
+							from: result.count_now-1.5,
+							to: result.count_now-0.5,
+							color: 'rgba(68, 170, 213, .2)',
+							label: {
+								text: 'Today',
+								style: {
+									color: '#999999'
+								},
+								y: 20
+							}
+						}]
+					},
+					yAxis: [{
+						title: {
+							text: yAxis
+						}
+					}],
+					legend: {
+						align: 'right',
+						verticalAlign: 'top',
+						layout: 'vertical',
+						x: 0,
+						y: 100,
+						symbolRadius: 1,
+						borderWidth: 1
+					},
+					tooltip: {
+						headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+						pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+						'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+						footerFormat: '</table>',
+						shared: true,
+						useHTML: true
+					},
+					plotOptions: {
+						column: {
+							stacking: 'normal',
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.8,
+							borderColor: '#212121'
+						}
+					},
+					series:
+					[{
+						name: 'Stock Policy',
+						type: 'spline',
+						marker:{
+							enabled:false
+						},
+						lineColor: 'red',
+						color: 'RGBA(255,0,0,0.05)',
+						data: stock_policy,
+						dashStyle: 'shortdash'
+					},{
+						name: 'Total Stock',
+						type: 'spline',
+						stack: 'Stock',
+						data: stock_total,
+						marker: {
+							enabled: false
+						},
+						color: '#00a307'
+					},{
+						name: 'Plan Stock',
+						type: 'spline',
+						dashStyle: 'shortdash',
+						data: plan_stock,
+						marker: {
+							enabled: false
+						},
+						color: '#757575'
+					},{
+						name: 'Actual Usage',
+						type: 'spline',
+						data: actual_usage,
+						marker: {
+							enabled: false
+						},
+						color: '#fab06e'
+					},{
+						name: 'Plan Usage',
+						type: 'spline',
+						dashStyle: 'shortdash',
+						data: plan_usage,
+						marker: {
+							enabled: false
+						},
+						color: '#212121'
+					},{
+						name: 'Actual Delivery',
+						type: 'spline',
+						stack: 'Stock',
+						data: actual_delivery,
+						marker: {
+							enabled: false
+						},
+						color: '#f5dc00'
+					},{
+						name: 'Plan Delivery',
+						type: 'spline',
+						dashStyle: 'shortdash',
+						data: plan_delivery,
+						marker: {
+							enabled: false
+						},
+						color: '#64b5f6'
 					}]
 				});
 

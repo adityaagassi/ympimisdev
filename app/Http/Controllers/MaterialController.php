@@ -95,29 +95,35 @@ class MaterialController extends Controller{
 
           if($id == 'direct'){
                $title = 'Raw Material Monitoring (Direct)';
-               $title_jp = '素材監視「」';
+               $title_jp = '素材監視「直材」';
                $material_code = $id;
+               $purchasing_group = 'G08';
           }
 
           if($id == 'indirect'){
                $title = 'Raw Material Monitoring (Indirect)';
-               $title_jp = '素材監視「」';
+               $title_jp = '素材監視「間材」';
                $material_code = $id;
+               $purchasing_group = 'G15';
           }
 
           if($id == 'subcon'){
                $title = 'Raw Material Monitoring (Subcon)';
-               $title_jp = '素材監視「」';
+               $title_jp = '素材監視「サブコン」';
                $material_code = $id;
+               $purchasing_group = '999';
           }
 
-          $material = MaterialControl::orderBy('material_number', 'ASC')->get();
+          $material = MaterialControl::where('purchasing_group', $purchasing_group)
+          ->orderBy('material_number', 'ASC')
+          ->get();
 
 
           return view('materials.material_monitoring', array(
                'title' => $title,
                'title_jp' => $title_jp,
                'material_code' => $material_code,
+               'purchasing_group' => $purchasing_group,
                'materials' => $material
           ))->with('page', 'Raw Material Monitoring')->with('Head', 'Raw Material Monitoring'); 
      }
@@ -125,6 +131,7 @@ class MaterialController extends Controller{
      public function uploadMaterialMonitoring(Request $request){
           $id = $request->get('id');
           $upload = $request->get('upload');
+          $purchasing_group = $request->get('purchasing_group');
           $error_count = array();
           $ok_count = array();
 
@@ -132,27 +139,37 @@ class MaterialController extends Controller{
 
           if($id == 'policy'){
                $period = date('Y-m-01', strtotime($request->get('period')));
-               $delete = MaterialStockPolicy::where('period', '=', $period)->forceDelete();
+               $delete = MaterialStockPolicy::leftJoin('material_controls', 'material_controls.material_number', '=', 'material_stock_policies.material_number')
+               ->where('material_stock_policies.period', '=', $period)
+               ->where('material_controls.purchasing_group', '=', $purchasing_group)
+               ->forceDelete();
           }
 
           if($id == 'usage'){
                $period = date('Y-m-01', strtotime($request->get('period')));
-               $delete = MaterialRequirementPlan::where('due_date', '=', $period)->forceDelete();
+               $delete = MaterialRequirementPlan::leftJoin('material_controls', 'material_controls.material_number', '=', 'material_requirement_plans.material_number')
+               ->where('material_requirement_plans.due_date', '=', $period)
+               ->where('material_controls.purchasing_group', '=', $purchasing_group)
+               ->forceDelete();
           }
 
           if($id == 'delivery'){
                $period_from = date('Y-m-01', strtotime($request->get('period')));
                $period_to = date('Y-m-t', strtotime($request->get('period')));
-               $delete = MaterialPlanDelivery::where('due_date', '>=', $period_from)
-               ->where('due_date', '<=', $period_to)
+               $delete = MaterialPlanDelivery::leftJoin('material_controls', 'material_controls.material_number', '=', 'material_plan_deliveries.material_number')
+               ->where('material_plan_deliveries.due_date', '>=', $period_from)
+               ->where('material_plan_deliveries.due_date', '<=', $period_to)
+               ->where('material_controls.purchasing_group', '=', $purchasing_group)
                ->forceDelete();
           }
 
           if($id == 'inout'){
                $period_from = date('Y-m-d', strtotime($request->get('inoutFrom')));
                $period_to = date('Y-m-d', strtotime($request->get('inoutTo')));
-               $delete = MaterialInOut::where('entry_date', '>=', $period_from)
-               ->where('entry_date', '<=', $period_to)
+               $delete = MaterialInOut::leftJoin('material_controls', 'material_controls.material_number', '=', 'material_in_outs.material_number')
+               ->where('material_in_outs.entry_date', '>=', $period_from)
+               ->where('material_in_outs.entry_date', '<=', $period_to)
+               ->where('material_controls.purchasing_group', '=', $purchasing_group)
                ->forceDelete();
           }
 
@@ -163,14 +180,18 @@ class MaterialController extends Controller{
                if($id == 'material'){
                     $material = $uploadColumn[0];
                     $description = $uploadColumn[1];
-                    $vendor_code = $uploadColumn[2];
-                    $vendor_name = $uploadColumn[3];
-                    $category = $uploadColumn[4];
-                    $pic = $uploadColumn[5];
-                    $control = $uploadColumn[6];
-                    $remark = $uploadColumn[7];
+                    // $purchasing_group = $uploadColumn[2];
+                    $vendor_code = $uploadColumn[3];
+                    $vendor_name = $uploadColumn[4];
+                    $category = $uploadColumn[5];
+                    $pic = $uploadColumn[6];
+                    $control = $uploadColumn[7];
+                    $remark = $uploadColumn[8];
 
-                    if(strlen($material) < 7){
+                    if(strlen($material) != 7 && $purchasing_group == 'G08'){
+                         array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+                    }
+                    else if((strlen($material) < 7 || strlen($material) > 9) && $purchasing_group == 'G15'){
                          array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
                     }
                     else if(strlen($vendor_code) < 4){
@@ -195,6 +216,7 @@ class MaterialController extends Controller{
                                         'material_number' => $material
                                    ],[
                                         'material_description' => $description,
+                                        'purchasing_group' => $purchasing_group,
                                         'vendor_code' => $vendor_code,
                                         'vendor_name' => $vendor_name,
                                         'category' => $category,
@@ -215,43 +237,65 @@ class MaterialController extends Controller{
                     }
                }
 
+
+
+
+
+
                if($id == 'policy'){
                     $material = $uploadColumn[0];
                     $description = $uploadColumn[1];
                     $day = $uploadColumn[2];
                     $policy = $uploadColumn[3];
+                    
+                    $cek = MaterialControl::where('material_number', $material)->first();
 
-                    if(strlen($material) < 7 || strlen($material) > 8){
-                         array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
-                    }
-                    else if($period == "" || $material == "" || $description == "" || $policy == ""){
-                         array_push($error_count, 'Data Blank '.$material); 
-                    }
-                    else if(preg_match("/[a-z]/i", $day)){
-                         array_push($error_count, 'Data not number '.$material);                    
-                    }
-                    else if(preg_match("/[a-z]/i", $policy)){
-                         array_push($error_count, 'Data not number '.$material);                    
-                    }
-                    else{
-                         try{
-                              $material_stock_policy = new MaterialStockPolicy([
-                                   'period' => $period,
-                                   'material_number' => $material,
-                                   'material_description' => $description,
-                                   'day' => $day,
-                                   'policy' => $policy,
-                                   'created_by' => Auth::id()
-                              ]);
-                              $material_stock_policy->save();
+                    if($cek){
+                         if(strlen($material) != 7 && $purchasing_group == 'G08'){
+                              array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+                         }
+                         else if((strlen($material) < 7 || strlen($material) > 9) && $purchasing_group == 'G15'){
+                              array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+                         }
+                         else if($period == "" || $material == "" || $description == "" || $policy == ""){
+                              array_push($error_count, 'Data Blank '.$material); 
+                         }
+                         else if(preg_match("/[a-z]/i", $day)){
+                              array_push($error_count, 'Data not number '.$material);                    
+                         }
+                         else if(preg_match("/[a-z]/i", $policy)){
+                              array_push($error_count, 'Data not number '.$material);                    
+                         }
+                         else if($cek->purchasing_group != $purchasing_group){
+                              array_push($error_count, 'Upload menu for '.$purchasing_group.' but material PGR is '.$cek->purchasing_group);
+                         }
+                         else{
+                              try{
+                                   $material_stock_policy = new MaterialStockPolicy([
+                                        'period' => $period,
+                                        'material_number' => $material,
+                                        'material_description' => $description,
+                                        'day' => $day,
+                                        'policy' => $policy,
+                                        'created_by' => Auth::id()
+                                   ]);
+                                   $material_stock_policy->save();
 
-                              array_push($ok_count, 'ok');
+                                   array_push($ok_count, 'ok');
+                              }
+                              catch (Exception $e) {
+                                   array_push($error_count, $e->getMessage());
+                              }
                          }
-                         catch (Exception $e) {
-                              array_push($error_count, $e->getMessage());
-                         }
-                    }
+                    }else{
+                         array_push($error_count, $material.' not found in monitored material');
+                    }    
                }
+
+
+
+
+
 
                if($id == 'usage'){
                     $material = $uploadColumn[0];
@@ -259,36 +303,53 @@ class MaterialController extends Controller{
                     $usage = $uploadColumn[2];
                     $remark = "";
 
-                    if(strlen($material) < 7 || strlen($material) > 8){
-                         array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
-                    }
-                    else if($due_date == "" || $material == "" || $usage == ""){
-                         array_push($error_count, 'Data Blank '.$material); 
-                    }
-                    else if(date('Y-m', strtotime($due_date)) != date('Y-m', strtotime($request->get('period')))){
-                         array_push($error_count, 'Period Unmatch '.$material.' '.date('Y-m', strtotime($due_date)).' '.date('Y-m', strtotime($request->get('period'))));                     
-                    }
-                    else if(preg_match("/[a-z]/i", $usage)){
-                         array_push($error_count, 'Data not number '.$material.' '.$due_date.' '.$usage);                    
-                    }
-                    else{
-                         try{
-                              $material_requirement_plan = new MaterialRequirementPlan([
-                                   'material_number' => $material,
-                                   'due_date' => $due_date,
-                                   'usage' => $usage,
-                                   'remark' => $remark,
-                                   'created_by' => Auth::id()
-                              ]);
-                              $material_requirement_plan->save();
+                    $cek = MaterialControl::where('material_number', $material)->first();
 
-                              array_push($ok_count, 'ok');
+                    if($cek){
+                         if(strlen($material) != 7 && $purchasing_group == 'G08'){
+                              array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
                          }
-                         catch (Exception $e) {
-                              array_push($error_count, $e->getMessage());
+                         else if((strlen($material) < 7 || strlen($material) > 9) && $purchasing_group == 'G15'){
+                              array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
                          }
-                    }
+                         else if($due_date == "" || $material == "" || $usage == ""){
+                              array_push($error_count, 'Data Blank '.$material); 
+                         }
+                         else if(date('Y-m', strtotime($due_date)) != date('Y-m', strtotime($request->get('period')))){
+                              array_push($error_count, 'Period Unmatch '.$material.' '.date('Y-m', strtotime($due_date)).' '.date('Y-m', strtotime($request->get('period'))));                     
+                         }
+                         else if(preg_match("/[a-z]/i", $usage)){
+                              array_push($error_count, 'Data not number '.$material.' '.$due_date.' '.$usage);                    
+                         }
+                         else if($cek->purchasing_group != $purchasing_group){
+                              array_push($error_count, 'Upload menu for '.$purchasing_group.' but material PGR is '.$cek->purchasing_group);
+                         }
+                         else{
+                              try{
+                                   $material_requirement_plan = new MaterialRequirementPlan([
+                                        'material_number' => $material,
+                                        'due_date' => $due_date,
+                                        'usage' => $usage,
+                                        'remark' => $remark,
+                                        'created_by' => Auth::id()
+                                   ]);
+                                   $material_requirement_plan->save();
+
+                                   array_push($ok_count, 'ok');
+                              }
+                              catch (Exception $e) {
+                                   array_push($error_count, $e->getMessage());
+                              }
+                         }
+                    }else{
+                         array_push($error_count, $material.' not found in monitored material');
+                    } 
                }
+
+
+
+
+
 
                if($id == 'delivery'){
                     $material = $uploadColumn[0];
@@ -296,81 +357,176 @@ class MaterialController extends Controller{
                     $quantity = $uploadColumn[2];
                     $remark = "";
 
-                    if(strlen($material) < 7 || strlen($material) > 8){
-                         array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
-                    }
-                    else if($due_date == "" || $material == ""){
-                         array_push($error_count, 'Data Blank '.$material); 
-                    }
-                    else if(date('Y-m', strtotime($due_date)) != $request->get('period')){
-                         array_push($error_count, 'Period Unmatch '.$material.' '.$due_date);                     
-                    }
-                    else if(preg_match("/[a-z]/i", $quantity)){
-                         array_push($error_count, 'Data not number '.$material.' '.$due_date.' '.$quantity);                    
-                    }
-                    else{
-                         try{
-                              $material_plan_delivery = new MaterialPlanDelivery([
-                                   'material_number' => $material,
-                                   'due_date' => $due_date,
-                                   'quantity' => $quantity,
-                                   'remark' => $remark,
-                                   'created_by' => Auth::id()
-                              ]);
-                              $material_plan_delivery->save();
+                    $cek = MaterialControl::where('material_number', $material)->first();
 
-                              array_push($ok_count, 'ok');
+                    if($cek){
+                         if(strlen($material) != 7 && $purchasing_group == 'G08'){
+                              array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
                          }
-                         catch (Exception $e) {
-                              array_push($error_count, $e->getMessage());
+                         else if((strlen($material) < 7 || strlen($material) > 9) && $purchasing_group == 'G15'){
+                              array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
                          }
-                    }
+                         else if($due_date == "" || $material == ""){
+                              array_push($error_count, 'Data Blank '.$material); 
+                         }
+                         else if(date('Y-m', strtotime($due_date)) != $request->get('period')){
+                              array_push($error_count, 'Period Unmatch '.$material.' '.$due_date);                     
+                         }
+                         else if(preg_match("/[a-z]/i", $quantity)){
+                              array_push($error_count, 'Data not number '.$material.' '.$due_date.' '.$quantity);                    
+                         }
+                         else if($cek->purchasing_group != $purchasing_group){
+                              array_push($error_count, 'Upload menu for '.$purchasing_group.' but material PGR is '.$cek->purchasing_group);
+                         }
+                         else{
+                              try{
+                                   $material_plan_delivery = new MaterialPlanDelivery([
+                                        'material_number' => $material,
+                                        'due_date' => $due_date,
+                                        'quantity' => $quantity,
+                                        'remark' => $remark,
+                                        'created_by' => Auth::id()
+                                   ]);
+                                   $material_plan_delivery->save();
+
+                                   array_push($ok_count, 'ok');
+                              }
+                              catch (Exception $e) {
+                                   array_push($error_count, $e->getMessage());
+                              }
+                         }
+                    }else{
+                         array_push($error_count, $material.' not found in monitored material');
+                    } 
                }
 
+
+
+
+
                if($id == 'inout'){
-                    $material = $uploadColumn[0];
-                    $movement_type = $uploadColumn[1];
-                    $issue_location = $uploadColumn[2];
-                    $receive_location = $uploadColumn[3];
-                    $quantity = $uploadColumn[4];
-                    $entry_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[5])->format('Y-m-d');
-                    $posting_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[6])->format('Y-m-d');
+                    if($purchasing_group == 'G08'){
+                         $material = $uploadColumn[0];
+                         $movement_type = $uploadColumn[1];
+                         $issue_location = $uploadColumn[2];
+                         $receive_location = $uploadColumn[3];
+                         $quantity = $uploadColumn[4];
+                         $entry_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[5])->format('Y-m-d');
+                         $posting_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[6])->format('Y-m-d');
 
-                    if(strlen($material) < 7 || strlen($material) > 8){
-                         array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
-                    }
-                    else if(strlen($movement_type) != 3){
-                         array_push($error_count, 'MvT Unmatch '.$movement_type.' ('.strlen($material).')');
-                    }
-                    else if(strlen($issue_location) < 3 || strlen($issue_location) > 4){
-                         array_push($error_count, 'Location Unmatch '.$material.' '.$issue_location.' '.$receive_location.' ('.strlen($material).')');
-                    }
-                    else if($movement_type == "" || $material == "" || $issue_location == "" || $receive_location == "" || $quantity == "" || $entry_date == "" || $posting_date == ""){
-                         array_push($error_count, 'Data Blank '.$material); 
-                    }
-                    else if(preg_match("/[a-z]/i", $quantity)){
-                         array_push($error_count, 'Data not number '.$material.' '.$posting_date.' '.$quantity);                    
-                    }
-                    else{
-                         try{
-                              $material_in_out = new MaterialInOut([
-                                   'material_number' => $material,
-                                   'movement_type' => $movement_type,
-                                   'issue_location' => $issue_location,
-                                   'receive_location' => $receive_location,
-                                   'quantity' => $quantity,
-                                   'entry_date' => $entry_date,
-                                   'posting_date' => $posting_date,
-                                   'created_by' => Auth::id()
-                              ]);
-                              $material_in_out->save();
+                         $cek = MaterialControl::where('material_number', $material)->first();
 
-                              array_push($ok_count, 'ok');
-                         }
-                         catch (Exception $e) {
-                              array_push($error_count, $e->getMessage());
-                         }
+                         if($cek){
+                              if(strlen($material) != 7 && $purchasing_group == 'G08'){
+                                   array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+                              }
+                              else if((strlen($material) < 7 || strlen($material) > 9) && $purchasing_group == 'G15'){
+                                   array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+                              }
+                              else if(strlen($movement_type) != 3){
+                                   array_push($error_count, 'MvT Unmatch '.$movement_type.' ('.strlen($material).')');
+                              }
+                              else if(strlen($issue_location) < 3 || strlen($issue_location) > 4){
+                                   array_push($error_count, 'Location Unmatch '.$material.' '.$issue_location.' ('.strlen($issue_location).')');
+                              }
+                              else if(strlen($receive_location) < 3 || strlen($receive_location) > 4){
+                                   array_push($error_count, 'Location Unmatch '.$material.' '.$receive_location.' ('.strlen($receive_location).')');
+                              }
+                              else if($movement_type == "" || $material == "" || $issue_location == "" || $receive_location == "" || $quantity == "" || $entry_date == "" || $posting_date == ""){
+                                   array_push($error_count, 'Data Blank '.$material); 
+                              }
+                              else if(preg_match("/[a-z]/i", $quantity)){
+                                   array_push($error_count, 'Data not number '.$material.' '.$posting_date.' '.$quantity);                    
+                              }
+                              else if($cek->purchasing_group != $purchasing_group){
+                                   array_push($error_count, 'Upload menu for '.$purchasing_group.' but material PGR is '.$cek->purchasing_group);
+                              }
+                              else{
+                                   try{
+                                        $material_in_out = new MaterialInOut([
+                                             'material_number' => $material,
+                                             'movement_type' => $movement_type,
+                                             'issue_location' => $issue_location,
+                                             'receive_location' => $receive_location,
+                                             'quantity' => $quantity,
+                                             'entry_date' => $entry_date,
+                                             'posting_date' => $posting_date,
+                                             'created_by' => Auth::id()
+                                        ]);
+                                        $material_in_out->save();
+
+                                        array_push($ok_count, 'ok');
+                                   }
+                                   catch (Exception $e) {
+                                        array_push($error_count, $e->getMessage());
+                                   }
+                              }
+                         }else{
+                              array_push($error_count, $material.' not found in monitored material');
+                         } 
+
+                    }elseif ($purchasing_group == 'G15') {
+                         $material = $uploadColumn[0];
+                         $movement_type = $uploadColumn[1];
+                         $issue_location = $uploadColumn[2];
+                         $cost_center = $uploadColumn[3];
+                         $quantity = $uploadColumn[4];
+                         $entry_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[5])->format('Y-m-d');
+                         $posting_date = Carbon::createFromFormat('d/m/Y', $uploadColumn[6])->format('Y-m-d');
+
+                         $cek = MaterialControl::where('material_number', $material)->first();
+
+                         if($cek){
+                              if(strlen($material) != 7 && $purchasing_group == 'G08'){
+                                   array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+                              }
+                              else if((strlen($material) < 7 || strlen($material) > 9) && $purchasing_group == 'G15'){
+                                   array_push($error_count, 'GMC Unmatch '.$material.' ('.strlen($material).')');
+                              }
+                              else if(strlen($movement_type) != 3){
+                                   array_push($error_count, 'MvT Unmatch '.$movement_type.' ('.strlen($material).')');
+                              }
+                              else if(strlen($issue_location) < 3 || strlen($issue_location) > 4){
+                                   array_push($error_count, 'Location Unmatch '.$material.' '.$issue_location.' ('.strlen($issue_location).')');
+                              }
+                              else if(strlen($cost_center) != 5){
+                                   array_push($error_count, 'Cost Center Unmatch '.$material.' '.$cost_center.' ('.strlen($cost_center).')');
+                              }
+                              else if($movement_type == "" || $material == "" || $issue_location == "" || $receive_location == "" || $quantity == "" || $entry_date == "" || $posting_date == ""){
+                                   array_push($error_count, 'Data Blank '.$material); 
+                              }
+                              else if(preg_match("/[a-z]/i", $quantity)){
+                                   array_push($error_count, 'Data not number '.$material.' '.$posting_date.' '.$quantity);                    
+                              }
+                              else if($cek->purchasing_group != $purchasing_group){
+                                   array_push($error_count, 'Upload menu for '.$purchasing_group.' but material PGR is '.$cek->purchasing_group);
+                              }
+                              else{
+                                   try{
+                                        $material_in_out = new MaterialInOut([
+                                             'material_number' => $material,
+                                             'movement_type' => $movement_type,
+                                             'issue_location' => $issue_location,
+                                             'cost_center' => $cost_center,
+                                             'quantity' => $quantity,
+                                             'entry_date' => $entry_date,
+                                             'posting_date' => $posting_date,
+                                             'created_by' => Auth::id()
+                                        ]);
+                                        $material_in_out->save();
+
+                                        array_push($ok_count, 'ok');
+                                   }
+                                   catch (Exception $e) {
+                                        array_push($error_count, $e->getMessage());
+                                   }
+                              }
+                         }else{
+                              array_push($error_count, $material.' not found in monitored material');
+                         } 
                     }
+
+
                }
 
           }
@@ -393,6 +549,7 @@ class MaterialController extends Controller{
                'material_controls.remark',
                'material_controls.material_number',
                'material_controls.material_description',
+               'material_controls.purchasing_group',
                'material_controls.vendor_code',
                'material_controls.vendor_name',
                'material_controls.category',
@@ -573,19 +730,20 @@ class MaterialController extends Controller{
 
 
      public function fetchMaterialMonitoring(Request $request){
+          $purchasing_group = $request->get('purchasing_group');
           $period = date('Y-m-d');
 
           if(strlen($request->get('period'))>0){
                $period = $request->get('period');
           }
-          $generates = self::generateMaterialMonitoring($period);
+          $generates = self::generateMaterialMonitoring($period, $purchasing_group);
 
           $material_percentages = array();
           $results1 = array();
           $count_item = 0;
 
           foreach ($generates['policies'] as $policy) {
-               if($policy->percentage < 0.75){
+               if($policy->percentage < 1){
                     $mpdl = MaterialPlantDataList::where('material_number', $policy->material_number)->first();
 
                     array_push($material_percentages, [
@@ -861,7 +1019,7 @@ class MaterialController extends Controller{
                material_in_outs AS mio 
                WHERE
                mio.issue_location = 'MSTK' 
-               AND mio.movement_type IN ( '9I3', '9I4' ) 
+               AND mio.movement_type IN ( '9I3', '9I4', '9OE' , '9OF' ) 
                AND date( mio.posting_date) >= '".$first."' 
                AND date( mio.posting_date) < '".$due_date."'
                AND material_number = '".$material_number."' 
@@ -882,57 +1040,37 @@ class MaterialController extends Controller{
 
      }
 
-     function generateMaterialMonitoring($due_date){
+     function generateMaterialMonitoring($due_date, $purchasing_group){
 
           $period = date('Y-m', strtotime($due_date));
 
           $first = date('Y-m-01', strtotime($due_date));
           $last = date('Y-m-t', strtotime($due_date));
 
-          $policies = db::select("SELECT
-               msp.period,
-               msp.material_number,
-               msp.material_description,
-               mc.vendor_code,
-               mc.vendor_name,
+          $policies = db::select("SELECT msp.period, msp.material_number, msp.material_description, mc.purchasing_group, mc.vendor_code, mc.vendor_name,
                '".$due_date."' AS stock_date,
-               COALESCE ( s.stock_total, 0 ) AS stock,
-               msp.day,
-               msp.policy,
-               COALESCE ( s.stock_total, 0 ) / msp.policy AS percentage 
-               FROM
-               material_stock_policies AS msp
-               LEFT JOIN (
-               SELECT
-               sls.material_number,
-               sls.stock_date,
-               sum(
-               IF
-               ( sl.category = 'MSTK', sls.unrestricted, 0 )) AS stock_mstk,
-               sum(
-               IF
-               ( sl.category = 'WIP', sls.unrestricted, 0 )) AS stock_wip,
-               sum( sls.unrestricted ) AS stock_total 
-               FROM
-               storage_location_stocks AS sls
+               COALESCE(s.stock_total, 0) AS stock, msp.day, msp.policy,
+               COALESCE(s.stock_total, 0) / msp.policy AS percentage 
+               FROM material_stock_policies AS msp
+               LEFT JOIN
+               (SELECT sls.material_number, sls.stock_date,
+               sum(IF(sl.category = 'MSTK', sls.unrestricted, 0)) AS stock_mstk,
+               sum(IF(sl.category = 'WIP', sls.unrestricted, 0)) AS stock_wip,
+               sum(sls.unrestricted) AS stock_total 
+               FROM storage_location_stocks AS sls
                LEFT JOIN storage_locations AS sl ON sls.storage_location = sl.storage_location 
-               WHERE
-               sls.stock_date = '".$due_date."' 
+               WHERE sls.stock_date = '".$due_date."' 
                AND sls.material_number IN ( SELECT material_number FROM material_controls WHERE deleted_at IS NULL ) 
-               GROUP BY
-               sls.material_number,
-               sls.stock_date 
-               ORDER BY
-               sls.material_number ASC,
-               sls.stock_date ASC 
-               ) AS s ON s.material_number = msp.material_number
+               GROUP BY sls.material_number, sls.stock_date 
+               ORDER BY sls.material_number ASC, sls.stock_date ASC 
+               ) AS s
+               ON s.material_number = msp.material_number
                LEFT JOIN material_controls mc ON mc.material_number = msp.material_number
-               WHERE
-               msp.policy > 0 
+               WHERE msp.policy > 0 
                AND msp.material_number in (SELECT material_number FROM material_controls)
+               AND mc.purchasing_group = '".$purchasing_group."'
                AND date_format( msp.period, '%Y-%m' ) = '".$period."'
-               ORDER BY
-               percentage ASC");
+               ORDER BY percentage ASC");
 
           $material_numbers = array();
 
@@ -960,103 +1098,56 @@ class MaterialController extends Controller{
                $where_materials = "''";
           }
 
-          $materials = db::select("SELECT
-               mc.material_number,
-               wc.week_date AS due_date,
-               mc.material_description,
-               mc.vendor_code,
-               mc.vendor_name,
-               mc.category,
-               mc.pic,
-               mc.remark 
-               FROM
-               weekly_calendars AS wc
+          $materials = db::select("SELECT mc.material_number, wc.week_date AS due_date, mc.material_description, mc.purchasing_group, mc.vendor_code,
+               mc.vendor_name, mc.category, mc.pic, mc.remark 
+               FROM weekly_calendars AS wc
                CROSS JOIN material_controls AS mc 
-               WHERE
-               mc.deleted_at IS NULL 
+               WHERE mc.deleted_at IS NULL
                AND date_format( wc.week_date, '%Y-%m' ) = '".$period."' 
                AND mc.material_number in (".$where_materials.")
+               AND mc.purchasing_group = '".$purchasing_group."'
                AND wc.remark <> 'H'
-               ORDER BY
-               mc.material_number ASC,
-               wc.week_date ASC");
+               ORDER BY mc.material_number ASC, wc.week_date ASC");
 
-          $stocks = db::select("SELECT
-               sls.material_number,
-               sls.stock_date,
-               sum(
-               IF
-               ( sl.category = 'MSTK', sls.unrestricted, 0 )) AS stock_mstk,
-               sum(
-               IF
-               ( sl.category = 'WIP', sls.unrestricted, 0 )) AS stock_wip,
-               sum( sls.unrestricted ) AS stock_total 
-               FROM
-               storage_location_stocks AS sls
+          $stocks = db::select("SELECT sls.material_number, sls.stock_date,
+               sum(IF(sl.category = 'MSTK', sls.unrestricted, 0)) AS stock_mstk,
+               sum(IF(sl.category = 'WIP', sls.unrestricted, 0)) AS stock_wip,
+               sum(sls.unrestricted) AS stock_total 
+               FROM storage_location_stocks AS sls
                LEFT JOIN storage_locations AS sl ON sls.storage_location = sl.storage_location 
-               WHERE
-               date( sls.stock_date ) >= '".$first."' 
+               WHERE date( sls.stock_date ) >= '".$first."' 
                AND date( sls.stock_date ) <= '".$due_date."'
                AND sls.material_number IN (".$where_materials.") 
                AND sl.category IN ('MSTK', 'WIP')
-               GROUP BY
-               sls.material_number,
-               sls.stock_date 
-               ORDER BY
-               sls.material_number ASC,
-               sls.stock_date ASC");
+               GROUP BY sls.material_number, sls.stock_date 
+               ORDER BY sls.material_number ASC, sls.stock_date ASC");
 
-          $mrps = db::select("SELECT
-               mrp.material_number,
-               mrp.due_date,
-               mrp.usage 
-               FROM
-               material_requirement_plans AS mrp 
-               WHERE
-               date_format( mrp.due_date, '%Y-%m' ) = '".$period."'
+          $mrps = db::select("SELECT mrp.material_number, mrp.due_date, mrp.usage 
+               FROM material_requirement_plans AS mrp 
+               WHERE date_format( mrp.due_date, '%Y-%m' ) = '".$period."'
                AND mrp.material_number IN (".$where_materials.")");
 
-          $deliveries = db::select("SELECT
-               mpd.material_number,
-               mpd.due_date,
-               mpd.quantity 
-               FROM
-               material_plan_deliveries AS mpd 
-               WHERE
-               date_format( mpd.due_date, '%Y-%m' ) = '".$period."'
+          $deliveries = db::select("SELECT mpd.material_number,
+               mpd.due_date, mpd.quantity 
+               FROM material_plan_deliveries AS mpd 
+               WHERE date_format( mpd.due_date, '%Y-%m' ) = '".$period."'
                AND mpd.material_number IN (".$where_materials.")");
 
-          $material_ins = db::select("SELECT
-               mio.posting_date,
-               mio.material_number,
-               sum( mio.quantity ) AS quantity 
-               FROM
-               material_in_outs AS mio 
-               WHERE
-               mio.issue_location = 'MSTK' 
+          $material_ins = db::select("SELECT mio.posting_date, mio.material_number, sum(mio.quantity) AS quantity FROM material_in_outs AS mio 
+               WHERE mio.issue_location = 'MSTK' 
                AND mio.movement_type IN ( '101', '102', '9T3', '9T4' )
                AND date( mio.posting_date) >= '".$first."' 
                AND date( mio.posting_date) < '".$due_date."'
                AND material_number IN (".$where_materials.") 
-               GROUP BY
-               mio.posting_date,
-               mio.material_number");
+               GROUP BY mio.posting_date, mio.material_number");
 
-          $material_outs = db::select("SELECT
-               mio.posting_date,
-               mio.material_number,
-               sum( mio.quantity ) AS quantity 
-               FROM
-               material_in_outs AS mio 
-               WHERE
-               mio.issue_location = 'MSTK' 
-               AND mio.movement_type IN ( '9I3', '9I4' ) 
+          $material_outs = db::select("SELECT mio.posting_date, mio.material_number, sum(mio.quantity) AS quantity FROM material_in_outs AS mio 
+               WHERE mio.issue_location = 'MSTK' 
+               AND mio.movement_type IN ( '9I3', '9I4', '9OE', '9OF' ) 
                AND date( mio.posting_date) >= '".$first."' 
                AND date( mio.posting_date) < '".$due_date."'
                AND material_number IN (".$where_materials.") 
-               GROUP BY
-               mio.posting_date,
-               mio.material_number");
+               GROUP BY mio.posting_date, mio.material_number");
 
           return array(
                'policies' => $policies,

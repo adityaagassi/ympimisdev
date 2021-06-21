@@ -27,20 +27,21 @@
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th rowspan="2" style="width: 5%; border:1px solid black;">Material</th>
-						<th rowspan="2" style="width: 15%; border:1px solid black;">Description</th>
+						<th rowspan="2" style="width: 25%; border:1px solid black;">Description</th>
 						<th rowspan="2" style="width: 5%; border:1px solid black;">UoM</th>
 						<th rowspan="2" style="width: 5%; border:1px solid black;">Plan Usage</th>
-						<th colspan="6" style="width: 60%; border:1px solid black;">Delivery</th>
+						<th colspan="6" style="width: 30%; border:1px solid black;">Actual Usage Cummulative by Departement</th>
 						<th rowspan="2" style="width: 5%; border:1px solid black;">Total</th>
-						<th rowspan="2" style="width: 5%; border:1px solid black;">Status</th>
+						<th rowspan="2" style="width: 15%; border:1px solid black;">Status</th>
+						<th rowspan="2" style="width: 15%; border:1px solid black;">Reason</th>
 					</tr>
 					<tr>
-						<th style="width: 10%; border:1px solid black; background-color: rgb(126,86,134);">Part Process</th>
-						<th style="width: 10%; border:1px solid black; background-color: rgb(126,86,134);">Body Process</th>
-						<th style="width: 10%; border:1px solid black; background-color: rgb(126,86,134);">Welding</th>
-						<th style="width: 10%; border:1px solid black; background-color: rgb(126,86,134);">Surface Treatement</th>
-						<th style="width: 10%; border:1px solid black; background-color: rgb(126,86,134);">Assembly</th>
-						<th style="width: 10%; border:1px solid black; background-color: rgb(126,86,134);">EDIN</th>
+						<th style="width: 7.5%; border:1px solid black; background-color: rgb(126,86,134);">Part Process</th>
+						<th style="width: 7.5%; border:1px solid black; background-color: rgb(126,86,134);">Body Process</th>
+						<th style="width: 7.5%; border:1px solid black; background-color: rgb(126,86,134);">Welding</th>
+						<th style="width: 7.5%; border:1px solid black; background-color: rgb(126,86,134);">ST</th>
+						<th style="width: 7.5%; border:1px solid black; background-color: rgb(126,86,134);">Assembly</th>
+						<th style="width: 7.5%; border:1px solid black; background-color: rgb(126,86,134);">EDIN</th>
 					</tr>
 				</thead>
 				<tbody>					
