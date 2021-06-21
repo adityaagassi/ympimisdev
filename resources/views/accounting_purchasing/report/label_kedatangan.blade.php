@@ -166,7 +166,7 @@
 		"footerStrLeft": "",
 		"footerStrCenter": "",
 		"footerStrRight": "",
-		"printerName" : "SATO CG412"
+		"printerName" : "SATO CG412DT"
 	};
 
 	function tutup() {
