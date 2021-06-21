@@ -1145,7 +1145,7 @@ function councelingModal() {
 		$('#name').html($('#highest_name').text().split(' - ')[1]);
 		$('#ng_qty').html($('#highest_ng').text().split(' = ')[1]);
 
-		$('#modalDetailTitleCounceling').html('Counceling');
+		$('#modalDetailTitleCounceling').html('TRAINING DAN KONSELING');
 
 		$('#tag_employee').val('');
 		$('#tag_leader').val('');
