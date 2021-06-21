@@ -492,7 +492,7 @@ class MaterialController extends Controller{
                               else if(strlen($cost_center) != 5){
                                    array_push($error_count, 'Cost Center Unmatch '.$material.' '.$cost_center.' ('.strlen($cost_center).')');
                               }
-                              else if($movement_type == "" || $material == "" || $issue_location == "" || $receive_location == "" || $quantity == "" || $entry_date == "" || $posting_date == ""){
+                              else if($movement_type == "" || $material == "" || $issue_location == "" || $cost_center == "" || $quantity == "" || $entry_date == "" || $posting_date == ""){
                                    array_push($error_count, 'Data Blank '.$material); 
                               }
                               else if(preg_match("/[a-z]/i", $quantity)){
