@@ -1010,9 +1010,9 @@
 				var thumbs_up = '{{ url("data_file/injection/ok.png") }}';
 				var url_highest = '{{ url("images/avatar/") }}/'+highest_emp+'.jpg';
 				var thumbs_down = '{{ url("data_file/injection/not_ok.png") }}';
+				var ganbatte = '{{ url("data_file/injection/ganbatte.png") }}';
 
 				$('#lowest_avatar').html('<img style="width:120px" src="'+url_lowest+'" class="user-image" alt="User image"> <img style="width:120px" src="'+thumbs_up+'" class="user-image" alt="User image">');
-				$('#highest_avatar').html('<img style="width:120px" src="'+url_highest+'" class="user-image" alt="User image"> <img style="width:120px" src="'+thumbs_down+'" class="user-image" alt="User image">');
 
 				$('#firstDate').val(result.firstdayweek);
 				$('#lastDate').val(result.lastdayweek);
@@ -1020,6 +1020,7 @@
 				if (counceling == null) {
 					$('#not_counceled_td').html('BELUM TRAINING & KONSELING');
 					document.getElementById('not_counceled_td').style.backgroundColor = '#ff8080';
+					$('#highest_avatar').html('<img style="width:120px" src="'+url_highest+'" class="user-image" alt="User image"> <img style="width:120px" src="'+thumbs_down+'" class="user-image" alt="User image">');
 					$('#highest_title').prop('class','sedang');
 					$('#not_counceled_td').prop('class','sedang');
 					$('#highest_name').prop('class','sedang');
@@ -1027,6 +1028,7 @@
 				}else{
 					// $('#not_counceled').show();
 					document.getElementById('not_counceled_td').style.backgroundColor = '#82ff80';
+					$('#highest_avatar').html('<img style="width:120px" src="'+url_highest+'" class="user-image" alt="User image"> <img style="width:120px" src="'+ganbatte+'" class="user-image" alt="User image">');
 					$('#not_counceled_td').html('SUDAH TRAINING &KONSELING');
 					$('#highest_title').removeAttr('class');
 					$('#not_counceled_td').removeAttr('class');
