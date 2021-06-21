@@ -502,6 +502,9 @@ class MaterialController extends Controller{
                                    array_push($error_count, 'Upload menu for '.$purchasing_group.' but material PGR is '.$cek->purchasing_group);
                               }
                               else{
+                                   if($movement_type == '101' || $movement_type == '102'){
+                                        $cost_center = null;
+                                   }
                                    try{
                                         $material_in_out = new MaterialInOut([
                                              'material_number' => $material,
