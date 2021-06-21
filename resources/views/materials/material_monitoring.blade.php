@@ -29,7 +29,9 @@
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
 	}
-	#loading { display: none; }
+	#loading {
+		display: none;
+	}
 </style>
 @stop
 @section('header')

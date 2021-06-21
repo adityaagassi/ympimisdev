@@ -442,6 +442,9 @@ class MaterialController extends Controller{
                                    array_push($error_count, 'Upload menu for '.$purchasing_group.' but material PGR is '.$cek->purchasing_group);
                               }
                               else{
+                                    if($movement_type == '101' || $movement_type == '102'){
+                                        $receive_location = null;
+                                   }
                                    try{
                                         $material_in_out = new MaterialInOut([
                                              'material_number' => $material,
@@ -489,7 +492,7 @@ class MaterialController extends Controller{
                               else if(strlen($issue_location) < 3 || strlen($issue_location) > 4){
                                    array_push($error_count, 'Location Unmatch '.$material.' '.$issue_location.' ('.strlen($issue_location).')');
                               }
-                              else if(strlen($cost_center) != 5){
+                              else if(strlen($cost_center) != 5 && ($movement_type == '9OE' || $movement_type == '9OF')){
                                    array_push($error_count, 'Cost Center Unmatch '.$material.' '.$cost_center.' ('.strlen($cost_center).')');
                               }
                               else if($movement_type == "" || $material == "" || $issue_location == "" || $cost_center == "" || $quantity == "" || $entry_date == "" || $posting_date == ""){
@@ -548,6 +551,7 @@ class MaterialController extends Controller{
      public function fetchMaterialControl(Request $request){
           $material_control = MaterialControl::leftJoin(db::raw('(SELECT * FROM employee_syncs) AS buyer'), 'buyer.employee_id', '=', 'material_controls.pic')
           ->leftJoin(db::raw('(SELECT * FROM employee_syncs) AS control'), 'control.employee_id', '=', 'material_controls.control')
+          ->where('material_controls.purchasing_group', $request->get('purchasing_group'))
           ->select(
                'material_controls.remark',
                'material_controls.material_number',
