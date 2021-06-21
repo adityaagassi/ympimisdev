@@ -657,6 +657,7 @@
       $("#edit_stock").val(result.datas.stock);
       $("#edit_min_stock").val(result.datas.min_stock);
       $("#edit_max_stock").val(result.datas.max_stock);
+      $("#edit_harga").val(result.datas.cost);
       $("#edit_uom").val(result.datas.uom).trigger("change");
       $("#edit_user").val(result.datas.user);
 
