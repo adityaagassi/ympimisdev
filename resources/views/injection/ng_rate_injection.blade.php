@@ -303,7 +303,7 @@
 		$('#modalDetail').on('hidden.bs.modal', function () {
 			$('#tableDetail').DataTable().clear();
 		});
-		// setInterval(fetchChart, 20000);
+		setInterval(fetchChart, 20000);
 	});
 
 	Highcharts.createElement('link', {
@@ -994,8 +994,6 @@
 
 				$('#firstDate').val(result.firstdayweek);
 				$('#lastDate').val(result.lastdayweek);
-
-				console.log(counceling);
 
 				if (counceling == null) {
 					$('#not_counceled_td').html('BELUM KONSELING');
