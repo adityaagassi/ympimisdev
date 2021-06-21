@@ -109,7 +109,7 @@
             <th style="width: 1%;">Min Stock</th>
             <th style="width: 1%;">Stock</th>
             <th style="width: 1%;">Max Stock</th>
-            <th style="width: 1%;">UOM</th>
+            <th style="width: 1%;">Harga</th>
             <th style="width: 1%;">Status</th>
             <th style="width: 7%;">User</th>
             <th style="width: 10%;">Last Update</th>
@@ -541,7 +541,7 @@
           body += "<td style='background-color:#ffccff'>"+value.min_stock+"</td>";
           body += "<td>"+value.stock+"</td>";
           body += "<td style='background-color:#ffccff'>"+value.max_stock+"</td>";
-          body += "<td>"+value.uom+"</td>";
+          body += "<td>"+(value.cost || '')+"</td>";
 
           if (value.stock <= value.min_stock) {
             cls = 'label label-danger';

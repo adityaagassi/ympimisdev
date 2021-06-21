@@ -2670,7 +2670,7 @@ class MaintenanceController extends Controller
 
 	public function fetchInventory(Request $request)
 	{
-		$inv = MaintenanceInventory::select('part_number', 'part_name', 'category', 'location', 'specification', 'maker', 'user', 'stock', 'uom', 'min_stock', 'max_stock', 'updated_at')->get();
+		$inv = MaintenanceInventory::select('part_number', 'part_name', 'category', 'location', 'specification', 'maker', 'user', 'stock', 'uom', 'min_stock', 'max_stock', 'updated_at', 'cost')->get();
 
 		$response = array(
 			'status' => true,
