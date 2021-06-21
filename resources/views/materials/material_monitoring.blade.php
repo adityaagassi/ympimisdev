@@ -452,7 +452,13 @@
 		if(id == 'material'){
 			$('#materialModal').modal('show');
 			$('#loading').show();
-			$.get('{{ url("fetch/material/material_control") }}', function(result, status, xhr) {
+
+			var purchasing_group = $('#purchasing_group').val();
+			var data = {
+				purchasing_group : purchasing_group 
+			}
+
+			$.get('{{ url("fetch/material/material_control") }}', data, function(result, status, xhr) {
 				if(result.status){
 					$('#loading').hide();
 

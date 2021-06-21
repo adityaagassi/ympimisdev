@@ -1007,10 +1007,12 @@
 				$('#lowest_ng').html('Jumlah NG = '+lowest_ng);
 
 				var url_lowest = '{{ url("images/avatar/") }}/'+lowest_emp+'.jpg';
+				var thumbs_up = '{{ url("data_file/injection/ok.png") }}';
 				var url_highest = '{{ url("images/avatar/") }}/'+highest_emp+'.jpg';
+				var thumbs_down = '{{ url("data_file/injection/not_ok.png") }}';
 
-				$('#lowest_avatar').html('<img style="width:120px" src="'+url_lowest+'" class="user-image" alt="User image">');
-				$('#highest_avatar').html('<img style="width:120px" src="'+url_highest+'" class="user-image" alt="User image">');
+				$('#lowest_avatar').html('<img style="width:120px" src="'+url_lowest+'" class="user-image" alt="User image"> <img style="width:120px" src="'+thumbs_up+'" class="user-image" alt="User image">');
+				$('#highest_avatar').html('<img style="width:120px" src="'+url_highest+'" class="user-image" alt="User image"> <img style="width:120px" src="'+thumbs_down+'" class="user-image" alt="User image">');
 
 				$('#firstDate').val(result.firstdayweek);
 				$('#lastDate').val(result.lastdayweek);
