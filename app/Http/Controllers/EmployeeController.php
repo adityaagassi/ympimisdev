@@ -3163,10 +3163,18 @@ public function detailPresence(Request $request){
 //------------- Start Absence
 public function indexAbsence()
 {
+     $dept = DB::SELECT("SELECT
+               department_shortname 
+          FROM
+               departments 
+          ORDER BY
+               department_shortname");
+
      return view('employees.report.absence',array(
           'title' => 'Absence',
           'title_jp' => '欠勤',
-          'absence_category' => $this->attend
+          'absence_category' => $this->attend,
+          'dept' => $dept
      ))->with('page', 'Absence Data');
 }
 
@@ -3203,24 +3211,24 @@ public function fetchAbsence(Request $request)
           employee_syncs.section,
           employee_syncs.`group`,
           departments.`department_shortname`,
-     IF
-          (
-               sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
-               ( SELECT MAX( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 22:00:00' AND '".$now." 23:59:59' ),
           IF
-               (
-                    sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',
-                    ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 15:00:00' AND '".$now." 18:00:00' ),
-                    ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' ) 
-               ) 
+          (
+          sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+          ( SELECT MAX( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 22:00:00' AND '".$now." 23:59:59' ),
+          IF
+          (
+          sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',
+          ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 15:00:00' AND '".$now." 18:00:00' ),
+          ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' ) 
+          ) 
           ) AS time_in 
-     FROM
+          FROM
           sunfish_shift_syncs
           LEFT JOIN employee_syncs ON employee_syncs.employee_id = sunfish_shift_syncs.employee_id 
           LEFT JOIN departments ON departments.department_name = employee_syncs.department 
-     WHERE
+          WHERE
           sunfish_shift_syncs.shift_date = '".$now."'
-     AND
+          AND
           sunfish_shift_syncs.shiftdaily_code not like '%OFF%'");
 
 // $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift NOT REGEXP '^[1-9]+$' and shift <> 'OFF' and shift <> 'X' GROUP BY shift ORDER BY jml";
@@ -3228,9 +3236,22 @@ public function fetchAbsence(Request $request)
 // $absence = db::connection('mysql3')->select($query);
      $titleChart = date('j F Y',strtotime($tgl));
 
+     $sections = DB::SELECT("SELECT DISTINCT
+               ( section ),
+               department_shortname,
+               employee_syncs.department
+          FROM
+               employee_syncs
+               LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+          WHERE
+               department IS NOT NULL 
+          ORDER BY
+               department");
+
      $response = array(
           'status' => true,
           'absenceResume' => $absenceResume,
+          'sections' => $sections,
           // 'absence' => $absence,
           'titleChart' => $titleChart,
           'tgl' => $tgl
@@ -3448,19 +3469,19 @@ public function fetchAttendanceData(Request $request)
 
      for ($i=0; $i < count($attendances); $i++) { 
           $empatt = DB::SELECT("SELECT
-                    GROUP_CONCAT( DISTINCT ( ivms.ivms_attendance_triggers.auth_datetime ) ORDER BY ivms.ivms_attendance_triggers.auth_datetime ASC) AS attend_time,
+               GROUP_CONCAT( DISTINCT ( ivms.ivms_attendance_triggers.auth_datetime ) ORDER BY ivms.ivms_attendance_triggers.auth_datetime ASC) AS attend_time,
                IF
-                    (
-                         MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 04:00:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 07:00:00', 'Shift_1', IF ( MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 00:30:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 03:00:00', 'Shift_2', IF ( MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 07:01:01' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 08:00:00',
-                                   'Shift_3',
-                                   IF(MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 22:00:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 23:59:59','Shift_3','No Data' )
-                              ))) AS shift_suggest 
+               (
+               MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 04:00:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 07:00:00', 'Shift_1', IF ( MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 00:30:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 03:00:00', 'Shift_2', IF ( MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 07:01:01' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 08:00:00',
+               'Shift_3',
+               IF(MIN( ivms.ivms_attendance_triggers.auth_datetime ) >= '".$attendances[$i]->tanggal." 22:00:00' && MIN( ivms.ivms_attendance_triggers.auth_datetime ) <= '".$attendances[$i]->tanggal." 23:59:59','Shift_3','No Data' )
+               ))) AS shift_suggest 
                FROM
-                    ivms.ivms_attendance_triggers 
+               ivms.ivms_attendance_triggers 
                WHERE
-                    employee_id = '".$attendances[$i]->emp_no."' 
-                    AND DATE( ivms.ivms_attendance_triggers.auth_datetime ) = '".$attendances[$i]->tanggal."' 
-                    LIMIT 1");
+               employee_id = '".$attendances[$i]->emp_no."' 
+               AND DATE( ivms.ivms_attendance_triggers.auth_datetime ) = '".$attendances[$i]->tanggal."' 
+               LIMIT 1");
 
 
           array_push($attendanceall, [
