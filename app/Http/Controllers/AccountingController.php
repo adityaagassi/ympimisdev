@@ -12072,7 +12072,7 @@ public function transfer_approvalto($id){
             AND acc_purchase_orders.no_po like '%GA%'
             ORDER BY
             acc_purchase_order_details.id 
-            ");
+        ");
 
         return view('accounting_purchasing.master.receive_ga', array(
             'title' => $title,
@@ -12096,7 +12096,7 @@ public function transfer_approvalto($id){
             AND canteen_purchase_order_details.`status` IS NULL 
             ORDER BY
             canteen_purchase_order_details.id 
-            ");
+        ");
 
         return view('accounting_purchasing.master.receive_ga_kantin', array(
             'title' => $title,
@@ -12147,9 +12147,16 @@ public function transfer_approvalto($id){
             $item = $request->get('item');
 
             foreach ($item as $itm) {
-                if ($itm['qty'] != null && $itm['date'] != null) {
+                
+                if($itm['qty'] == "" || $itm['date'] == ""){
+                    $response = array(
+                       'status' => false,
+                       'message' => 'Mohon Diisi Jumlah & Tanggal Kedatangan',
+                   );
+                    return Response::json($response);
+                }
 
-                    //Get PO
+                else {
                     $po_detail = AccPurchaseOrderDetail::where('id', $itm['id'])
                     ->first();
 
@@ -12314,9 +12321,16 @@ public function transfer_approvalto($id){
             $item = $request->get('item');
 
             foreach ($item as $itm) {
-                if ($itm['qty'] != null && $itm['date'] != null) {
 
-                    //Get PO
+                if($itm['qty'] == "" || $itm['date'] == ""){
+                    $response = array(
+                       'status' => false,
+                       'message' => 'Mohon Diisi Jumlah & Tanggal Kedatangan',
+                   );
+                    return Response::json($response);
+                }
+
+                else {
                     $po_detail = CanteenPurchaseOrderDetail::where('id', $itm['id'])
                     ->first();
 
@@ -12720,6 +12734,66 @@ public function fetch_kedatangan_kantin(Request $request)
     })
 
     ->rawColumns(['price' => 'price','amount_po' => 'amount_po'])
+    ->make(true);
+}
+
+public function fetch_outstanding_kantin(Request $request)
+{
+    $tanggal = "";
+
+    if (strlen($request->get('tanggal')) > 0)
+    {
+        $tanggal = "and delivery_date = '".$request->get('tanggal')."'";
+    }
+    else{
+
+        $tanggal = "and delivery_date = '".date('Y-m-d')."'";
+    }
+
+    $kedatangan = DB::select("
+        SELECT
+        canteen_purchase_order_details.*
+    FROM
+        canteen_purchase_orders
+        JOIN canteen_purchase_order_details ON canteen_purchase_orders.no_po = canteen_purchase_order_details.no_po
+    WHERE
+        canteen_purchase_orders.deleted_at IS NULL ". $tanggal . "");
+
+    return DataTables::of($kedatangan)
+    ->editColumn('goods_price', function ($kedatangan)
+    {
+        if ($kedatangan->goods_price == 0) {
+            $price = $kedatangan->service_price;
+        }else{
+            $price = $kedatangan->goods_price;
+        }
+
+        return number_format($price,2,".",",");  
+    })
+
+    ->editColumn('qty_receive', function ($kedatangan)
+    {
+        if ($kedatangan->qty_receive != 0) {
+            $qty_receive = $kedatangan->qty_receive;
+        }else{
+            $qty_receive = '-';
+        }
+
+        return $qty_receive;  
+    })
+
+    ->editColumn('date_receive', function ($kedatangan)
+    {
+        if ($kedatangan->date_receive != null) {
+            $date_receive = $kedatangan->date_receive;
+        }else{
+            $date_receive = '-';
+        }
+
+        return $date_receive;  
+    })
+
+    ->rawColumns(['price' => 'price', 'qty_receive' => 'qty_receive', 'date_receive' => 'date_receive'])
     ->make(true);
 }
 

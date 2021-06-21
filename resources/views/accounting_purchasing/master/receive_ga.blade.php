@@ -416,14 +416,16 @@
 
 		$('.qty').each(function(index, value) {
 			ids = $(this).attr('id').split('_');
-			arr_params.push({
-				'id' : ids[2], 
-				'qty' : $(this).val(), 
-				'date' : $('#date_receive_'+ids[2]).val(), 
-				'surat_jalan' : $('#surat_jalan_'+ids[2]).val(),
-				'no_po' : $('#no_po_'+ids[2]).val(),
-				'no_item' : $('#no_item_'+ids[2]).val(),
-			});
+			if ($(this).val() != ""){
+				arr_params.push({
+					'id' : ids[2], 
+					'qty' : $(this).val(), 
+					'date' : $('#date_receive_'+ids[2]).val(), 
+					'surat_jalan' : $('#surat_jalan_'+ids[2]).val(),
+					'no_po' : $('#no_po_'+ids[2]).val(),
+					'no_item' : $('#no_item_'+ids[2]).val(),
+				});
+			}
 		});
 
 		var data = {

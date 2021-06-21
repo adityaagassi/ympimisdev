@@ -137,6 +137,49 @@
 			<div class="col-xs-3 pull-right" align="right" style="padding: 0px;">
 			</div>
 		</div>
+
+
+
+		<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-top: 0%;">
+			
+	    <hr style="color:red"> 
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="col-md-3" style="padding:0">
+						<div class="form-group">
+							<label style="color:white">Pilih Tanggal Terima</label>
+							<div class="input-group date">
+								<div class="input-group-addon">
+									<i class="fa fa-calendar"></i>
+								</div>
+								<input type="text" class="form-control pull-right" id="tanggal" name="tanggal" onchange="fetchTable()">
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+
+			<table class="table table-bordered" id="itemtable">
+				<thead>
+					<tr>
+						<th style="width:15%; background-color: #673ab7; text-align: center; color: white; padding:0;font-size: 25px;" colspan="9" id='po_title'>Forecast / Prediksi Kedatangan Barang</th>
+					</tr>
+					<tr>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">NO PO</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">NO PR</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">DETAIL ITEM</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">QTY</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">GOODS PRICE</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">QTY RECEIVE</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">RECEIVE DATE</th>
+						<th style="text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">SURAT JALAN</th>
+					</tr>
+				</thead>
+				<tbody id="po_body">
+				</tbody>
+			</table>
+		</div>
 	</div>
 </section>
 
@@ -146,11 +189,12 @@
 <script src="{{ url("js/jsQR.js")}}"></script>
 <script src="{{ url("js/jquery.numpad.js")}}"></script>
 <script>
-	$.ajaxSetup({
+		$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
+
 
 	var vdo;
 	
@@ -159,6 +203,14 @@
 		$('#no_po').blur();
 
 		$('#confirm').hide();
+
+		$('#tanggal').datepicker({
+        	autoclose: true,
+        	todayHighlight: true,
+      		format: "yyyy-mm-dd"
+        });
+
+        fetchTable();
 
 	});
 
@@ -391,14 +443,16 @@
 
 		$('.qty').each(function(index, value) {
 			ids = $(this).attr('id').split('_');
-			arr_params.push({
-				'id' : ids[2], 
-				'qty' : $(this).val(), 
-				'date' : $('#date_receive_'+ids[2]).val(), 
-				'surat_jalan' : $('#surat_jalan_'+ids[2]).val(),
-				'no_po' : $('#no_po_'+ids[2]).val(),
-				'no_item' : $('#no_item_'+ids[2]).val(),
-			});
+			if ($(this).val() != ""){
+				arr_params.push({
+					'id' : ids[2], 
+					'qty' : $(this).val(), 
+					'date' : $('#date_receive_'+ids[2]).val(), 
+					'surat_jalan' : $('#surat_jalan_'+ids[2]).val(),
+					'no_po' : $('#no_po_'+ids[2]).val(),
+					'no_item' : $('#no_item_'+ids[2]).val(),
+				});
+			}
 		});
 
 		var data = {
@@ -409,7 +463,7 @@
 			$.post('{{ url("fetch/ga/update_receive_kantin") }}', data, function(result, status, xhr){
 				if (result.status) {
 					openSuccessGritter('Success', result.message);
-
+					fetchTable();
 					$("#po_body").empty();
 					$('#confirm').hide();
 					$("#loading").hide();
@@ -423,7 +477,93 @@
 		}else{
 			$("#loading").hide();
 		}
-		
+	}
+
+	function fetchTable(){
+		$('#itemtable').DataTable().destroy();
+
+		var tanggal = $('#tanggal').val();
+
+		var data = {
+			tanggal:tanggal
+		}
+
+		var table = $('#itemtable').DataTable({
+			'dom': 'Bfrtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			"pageLength": 10,
+			'buttons': {
+				// dom: {
+				// 	button: {
+				// 		tag:'button',
+				// 		className:''
+				// 	}
+				// },
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+					// text: '<i class="fa fa-print"></i> Show',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				}
+				]
+			},
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': true,
+			'order': [],
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url('fetch/ga/outstanding_kedatangan_kantin') }}",
+				"data" : data
+			},
+			"columns": [
+			{ "data": "no_po"},
+			{ "data": "no_pr"},
+			{ "data": "nama_item"},
+			{ "data": "qty"},
+			{ "data": "goods_price","className" : "text-right"},
+			{ "data": "qty_receive"},
+			{ "data": "date_receive"},
+			{ "data": "surat_jalan"}
+			]
+		});
+
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
