@@ -197,20 +197,24 @@
 					<tbody>
 						<?php $no = 1; ?>
 						@foreach($ng_lists2 as $nomor => $ng_list)
-						<?php if ($no % 2 === 0 ) {
-							$color = 'style="background-color: #fffcb7"';
-						} else {
-							$color = 'style="background-color: #ffd8b7"';
-						}
-						?>
-						<input type="hidden" id="loopMiddleBody" value="{{$loop->count}}">
-						<tr <?php echo $color ?>>
-							<td id="minusMiddleBody" onclick="minusMiddleBody({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">-</td>
-							<td id="ngMiddleBody{{$nomor+1}}" style="font-size: 15px;">{{ $ng_list->ng_name }}</td>
-							<td id="plusMiddleBody" onclick="plusMiddleBody({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">+</td>
-							<td style="font-weight: bold; font-size: 30px; background-color: rgb(100,100,100); color: yellow;"><span id="countMiddleBody{{$nomor+1}}">0</span></td>
-						</tr>
-						<?php $no+=1; ?>
+						<?php if ($ng_list->ng_name == 'Labium NG' || $ng_list->ng_name == 'NG Hot Stamp' || $ng_list->ng_name == 'NG Top Side'){ ?>
+							
+						<?php }else{ ?>
+							<?php if ($no % 2 === 0 ) {
+								$color = 'style="background-color: #fffcb7"';
+							} else {
+								$color = 'style="background-color: #ffd8b7"';
+							}
+							?>
+							<input type="hidden" id="loopMiddleBody" value="{{$loop->count}}">
+							<tr <?php echo $color ?>>
+								<td id="minusMiddleBody" onclick="minusMiddleBody({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">-</td>
+								<td id="ngMiddleBody{{$nomor+1}}" style="font-size: 15px;">{{ $ng_list->ng_name }}</td>
+								<td id="plusMiddleBody" onclick="plusMiddleBody({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">+</td>
+								<td style="font-weight: bold; font-size: 30px; background-color: rgb(100,100,100); color: yellow;"><span id="countMiddleBody{{$nomor+1}}">0</span></td>
+							</tr>
+							<?php $no+=1; ?>
+						<?php } ?>
 						@endforeach
 					</tbody>
 				</table>

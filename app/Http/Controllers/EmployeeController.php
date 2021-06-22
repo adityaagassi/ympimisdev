@@ -3164,11 +3164,11 @@ public function detailPresence(Request $request){
 public function indexAbsence()
 {
      $dept = DB::SELECT("SELECT
-               department_shortname 
+          department_shortname 
           FROM
-               departments 
+          departments 
           ORDER BY
-               department_shortname");
+          department_shortname");
 
      return view('employees.report.absence',array(
           'title' => 'Absence',
@@ -3237,16 +3237,16 @@ public function fetchAbsence(Request $request)
      $titleChart = date('j F Y',strtotime($tgl));
 
      $sections = DB::SELECT("SELECT DISTINCT
-               ( section ),
-               department_shortname,
-               employee_syncs.department
+          ( section ),
+          department_shortname,
+          employee_syncs.department
           FROM
-               employee_syncs
-               LEFT JOIN departments ON departments.department_name = employee_syncs.department 
+          employee_syncs
+          LEFT JOIN departments ON departments.department_name = employee_syncs.department 
           WHERE
-               department IS NOT NULL 
+          department IS NOT NULL 
           ORDER BY
-               department");
+          department");
 
      $response = array(
           'status' => true,
@@ -3867,9 +3867,7 @@ public function fetchDataKaizen()
      }
 
      $kzn = KaizenForm::leftJoin('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
-     ->leftJoin('employee_syncs','employee_syncs.employee_id', '=', 'kaizen_forms.employee_id')
-     ->select('kaizen_forms.id','kaizen_forms.employee_id','employee_name','title','area','kaizen_forms.section','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3')
-     ->whereNull('employee_syncs.end_date');
+     ->select('kaizen_forms.id','kaizen_forms.employee_id','employee_name','title','area','kaizen_forms.section','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3');
 
      if ($_GET['area'][0] != "") {
           $areas = implode("','", $_GET['area']);
@@ -3910,73 +3908,16 @@ public function fetchDataKaizen()
           $kzn = $kzn->whereRaw('area in (\''.$dprt3.'\')');
      }
 
-     $kzn->get();
+     $kzn = $kzn->get();
 
-     return DataTables::of($kzn)
-     ->addColumn('fr_stat', function($kzn){
-          if ($kzn->status == -1) {
-               if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief'  || $_GET['position'] == 'Deputy General Manager' || $_GET['position'] == 'Deputy Foreman' || Auth::id() == 53 || Auth::id() == 80 || Auth::id() == 2580 || Auth::id() == 81) {
-                    return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/foreman").'">Unverified</a>';
-               } else {
-                    return '<span class="label bg-yellow">Unverified</span>';
-               }
-          }
-          else if ($kzn->status == 1){
-               if ($kzn->foreman_point_1 != '' && $kzn->foreman_point_2 != '' && $kzn->foreman_point_3 != '') {
-                    return '<span class="label bg-green"><i class="fa fa-check"></i> Verified</span>';
-               } else {
-                    return '<span class="label bg-yellow">Unverified</span>';
-               }
-          }
-          else if ($kzn->status == 2) {
-               return '<span class="label bg-green"><i class="fa fa-check"></i> Verified</span>';
-          }
-          else if ($kzn->status == 3) {
-               return '<span class="label bg-blue"><i class="fa fa-envelope-o"></i>&nbsp; Noted</span>';
-          }
-          else {
-               return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
-          }
+     $emp = EmployeeSync::whereNull('end_date')->select('employee_id')->get();
 
-     })
-     ->addColumn('action', function($kzn){
-          return '<button onClick="cekDetail(\''.$kzn->id.'\')" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Details</button>';
-     })
-     ->addColumn('mg_stat', function($kzn){
-          if ($kzn->foreman_point_1 != '' && $kzn->foreman_point_2 != '' && $kzn->foreman_point_3 != '') {
-               if ($kzn->manager_point_1 != '' && $kzn->manager_point_2 != '' && $kzn->manager_point_3 != '') {
-                    return '<span class="label bg-green"><i class="fa fa-check"></i> Verified</span>';
-               } else {
-                    if ($kzn->status == 2) {
-                         return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
-                    }
-                    else if ($kzn->status == 3) {
-                         return '<span class="label bg-blue"><i class="fa fa-envelope-o"></i>&nbsp; Noted</span>';
-                    }
-                    else {
-                         if ($_GET['position'] == 'Manager' || $_GET['position'] == 'Deputy General Manager') {
-                              return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/manager").'">Unverified</a>';     
-                         } else {
-                              return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>'; 
-                         }
-                    }
-               }
-          } else {
-               if ($kzn->status == 0) {
-                    return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
-               } else {
-// return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>';
-               }
-          }
-     })
-     ->addColumn('fr_point', function($kzn){
-          return ($kzn->foreman_point_1 * 40) + ($kzn->foreman_point_2 * 30) + ($kzn->foreman_point_3 * 30);
-     })
-     ->addColumn('mg_point', function($kzn){
-          return ($kzn->manager_point_1 * 40) + ($kzn->manager_point_2 * 30) + ($kzn->manager_point_3 * 30);
-     })
-     ->rawColumns(['fr_stat', 'mg_stat', 'fr_point', 'mg_point', 'action'])
-     ->make(true);
+     $response = array(
+          'status' => true,
+          'kaizen' => $kzn,
+          'employee' => $emp
+     );
+     return Response::json($response);
 }
 
 public function inputKaizenDetailNote(Request $request){
