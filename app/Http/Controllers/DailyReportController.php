@@ -351,15 +351,19 @@ public function indexInventoryMIS()
     $title = "MIS Inventory";
     $title_jp = "??";
 
+    $emp = EmployeeSync::whereNull('end_date')->select('employee_id', 'name')->get();
+
     return view('inventory_mis.inventory_list', array(
         'title' => $title,
         'title_jp' => $title_jp,
+        'emp' => $emp,
     ))->with('page', 'MIS Inventory');
 }
 
 public function fetchInventoryMIS()
 {
-    $inv = MisInventory::orderBy('id','desc')->get();
+    // $inv = MisInventory::orderBy('id','desc')->get();
+    $inv = db::select("select DATE_FORMAT(created_at, '%Y-%m-%d') as tanggal, category, serial_number, description, project, location, qty, used_by, `condition`  from mis_inventories order by id desc");
 
     $response = array(
         'status' => true,
@@ -372,11 +376,14 @@ public function createInventoryMIS(Request $request)
 {
 
     try {
+        $new = [];
+
         foreach ($request->get('item') as $value) {
             $inv = new MisInventory;
 
             $inv->category = $value['category'];
-            $inv->device = $value['device'];
+            // $inv->device = $value['device'];
+            $inv->serial_number = $value['serial'];
             $inv->description = $value['description'];
             $inv->project = $value['project'];
             $inv->location = $value['location'];
@@ -384,12 +391,19 @@ public function createInventoryMIS(Request $request)
             $inv->used_by = $value['pic'];
             $inv->receive_date = $request->get('receive_date');
             $inv->created_by = Auth::id();
+            $inv->condition = 'OK';
 
             $inv->save();
+
+            array_push($new, $inv->id);
         }
+
+
 
         $response = array(
             'status' => true,
+            'new' => $new
+
         );
         return Response::json($response);
     } catch (QueryException $e) {
@@ -404,10 +418,12 @@ public function createInventoryMIS(Request $request)
 public function fetchInventoryMISbyId(Request $request)
 {
     $inv = MisInventory::where('id', '=', $request->get('id'))->first();
+    $emp = EmployeeSync::whereNull('end_date')->select('employee_id', 'name')->get();
 
     $response = array(
         'status' => true,
-        'inventory' => $inv
+        'inventory' => $inv,
+        'emp' => $emp
     );
     return Response::json($response);
 }
@@ -417,14 +433,14 @@ public function updateInventoryMIS(Request $request)
     MisInventory::where('id', '=', $request->get("id_inv"))
     ->update([
         'category' => $request->get("cat_edit"),
-        'device' => $request->get("device_edit"),
+        'serial_number' => $request->get("device_edit"),
         'description' => $request->get("desc_edit"),
         'project' => $request->get('proj_edit'),
         'location' => $request->get('loc_edit'),
         'qty' => $request->get('qty_edit'),
         'used_by' => $request->get('used_by_edit'),
         'receive_date' => $request->get('receive_date_edit'),
-        'condition' => ''
+        'condition' => 'OK'
     ]);
 
 
@@ -446,36 +462,40 @@ public function deleteInventoryMIS(Request $request)
 
 public function printInventory($id)
 {
-    $printer_name = 'MIS2';
+    $printer_name = 'MIS';
 
     $connector = new WindowsPrintConnector($printer_name);
     $printer = new Printer($connector);
 
     $datas =  MisInventory::where("id", '=', $id)->first();
 
-    $data = [
-        'id' => $datas->id,
-        'cat' => $datas->category,
-        'device' => $datas->device,
-        'desc' => $datas->description,
-        'proj' => $datas->project,
-        'loc' => $datas->location,
-        'qty' => $datas->qty,
-        'used_by' => $datas->used_by,
-        'cond' => $datas->condition,
-        'rc_date' => $datas->receive_date
-    ];
-
-    $pdf = \App::make('dompdf.wrapper');
-    $pdf->getDomPDF()->set_option("enable_php", true);
-    $pdf->setPaper([0, 0, 70.8661, 232.441], 'landscape');
-    $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
-
-    $pdf->loadView('inventory_mis.mis_print', array(
-        'data' => $data
+    return view('inventory_mis.mis_print_sato', array(
+        'device_detail' => $datas,
     ));
 
-    return $pdf->download("MIS_QR.pdf");
+    // $data = [
+    //     'id' => $datas->id,
+    //     'cat' => $datas->category,
+    //     'device' => $datas->device,
+    //     'desc' => $datas->description,
+    //     'proj' => $datas->project,
+    //     'loc' => $datas->location,
+    //     'qty' => $datas->qty,
+    //     'used_by' => $datas->used_by,
+    //     'cond' => $datas->condition,
+    //     'rc_date' => $datas->receive_date
+    // ];
+
+    // $pdf = \App::make('dompdf.wrapper');
+    // $pdf->getDomPDF()->set_option("enable_php", true);
+    // $pdf->setPaper([0, 0, 70.8661, 232.441], 'landscape');
+    // $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+    // $pdf->loadView('inventory_mis.mis_print', array(
+    //     'data' => $data
+    // ));
+
+    // return $pdf->download("MIS_QR.pdf");
 
     // $img = EscposImage::load("apar-qr.png");
 
@@ -485,8 +505,10 @@ public function printInventory($id)
     // $printer->setTextSize(1, 1);
     // $printer->setJustification(Printer::JUSTIFY_LEFT);
 
-    // $printer->graphics($img);
-    // $printer->text("F-03G");
+    // // $printer->graphics($img);
+    // $printer->qrCode('RE'.$id, Printer::QR_ECLEVEL_L, 3, Printer::QR_MODEL_2);
+
+    // $printer->text("MIS-".$id);
     // $printer->feed(1);
     // $printer->cut();
     // $printer->close();

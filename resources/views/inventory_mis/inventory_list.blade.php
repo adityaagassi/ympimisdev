@@ -68,20 +68,26 @@
                <table id="table_master" class="table table-bordered table-striped table-hover" style="width: 100%">
                     <thead style="background-color: rgba(126,86,134,.7);">
                          <tr>
-                              <th>#</th>
-                              <th>Category</th>
-                              <th>Device</th>
-                              <th>Description</th>
-                              <th>Project</th>
-                              <th>Location</th>
-                              <th>Quantity</th>
-                              <th>PIC</th>
-                              <th>Action</th>
+                              <th style="width: 1%">No</th>
+                              <th style="width: 2%">Tanggal Kedatangan</th>
+                              <th style="width: 2%">Category</th>
+                              <th style="width: 3%">Serial Number</th>
+                              <th style="width: 4%">Description</th>
+                              <th style="width: 3%">Project</th>
+                              <th style="width: 3%">Location</th>
+                              <th style="width: 1%">Quantity</th>
+                              <th style="width: 3%">PIC</th>
+                              <th style="width: 1%">Condition</th>
+                              <th style="width: 2%">Action</th>
+                              <th style="width: 1%">Check</th>
                          </tr>
                     </thead>
                     <tbody id="body_master">
                     </tbody>
                     <tfoot>
+                         <th></th>
+                         <th></th>
+                         <th></th>
                          <th></th>
                          <th></th>
                          <th></th>
@@ -102,6 +108,9 @@
           <div class="modal-dialog modal-lg" style="width: 95%">
                <div class="modal-content">
                     <div class="modal-header">
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                         </button>
                          <div class="col-xs-12" style="background-color: #605ca8">
                               <h1 style="text-align: center; margin:5px; font-weight: bold; color: white">New Inventory Item</h1>
                          </div>
@@ -111,13 +120,21 @@
                               <div class="col-xs-12">
                                    <button class="btn btn-sm btn-success pull-right" onclick="add_item()"><i class="fa fa-plus"></i>&nbsp; Add</button>
 
-                                   <label>Received Date</label>
-                                   <input type="text" class="form-control" style="width:20%" id="rcv_date">
+                                   <!-- <label>Received Date</label> -->
+                                   <div class="col-xs-2" style="padding-left: 0;">
+                                        <div class="input-group date">
+                                             <div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
+                                                  <i class="fa fa-calendar"></i>
+                                             </div>
+                                             <input type="text" class="form-control datepicker" id="rcv_date" name="rcv_date" placeholder="Received Date">
+                                        </div>
+                                   </div>
+                                   <!-- <input type="text" class="form-control datepicker" style="width:10%" id="rcv_date" placeholder="Select Date"> -->
                                    <table class="table">
                                         <thead>
                                              <tr>
                                                   <th style="width: 10%">Category</th>
-                                                  <th style="width: 15%">Device</th>
+                                                  <th style="width: 15%">Serial Number</th>
                                                   <th>Description</th>
                                                   <th style="width: 15%">Project</th>
                                                   <th style="width: 15%">Location</th>
@@ -133,11 +150,31 @@
                          </div>
                     </div>
                     <div class="modal-footer">
-                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                         <button type="button" class="btn btn-success pull-right" onclick="save()"><i class="fa fa-check"></i>&nbsp;Save</button>
+                         <!-- <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button> -->
+                         <button type="button" class="btn btn-success" onclick="save()"><i class="fa fa-save" style="padding-right: 10px"></i>&nbsp;Just Save It</button>
+                         <button type="button" class="btn btn-success" onclick="printing()"><i class="fa fa-print"></i>&nbsp;Save & Print</button>
                     </div>
                </div>
           </div>
+     </div>
+
+     <div id="pilihan" class="modal fade" role="dialog">
+       <div class="modal-dialog" role="document">
+         <div class="modal-content">
+           <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+           <div class="modal-body">
+             <p>Pilih Salah Satu Aksi</p>
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-primary">Save & Print</button>
+             <button type="button" class="btn btn-primary" onclick="save()">Just Save It</button>
+           </div>
+         </div>
+       </div>
      </div>
 
      <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -162,12 +199,13 @@
 
                               <div class="col-xs-12" style="padding-bottom: 1%;">
                                    <div class="col-xs-3" align="right" style="padding: 0px;">
-                                        <span style="font-weight: bold; font-size: 16px;">Device<span class="text-red">*</span></span>
+                                        <span style="font-weight: bold; font-size: 16px;">Serial Number<span class="text-red">*</span></span>
                                    </div>
                                    <div class="col-xs-4">
-                                        <select class="form-control select3" data-placeholder="Device" name="device_edit" id="device_edit" style="width: 100% height: 35px; font-size: 15px;" required>
+                                        <!-- <select class="form-control select3" data-placeholder="Serial Number" name="device_edit" id="device_edit" style="width: 100% height: 35px; font-size: 15px;" required>
                                              <option value=""></option>
-                                        </select>
+                                        </select> -->
+                                        <input class="form-control" type="text" name="device_edit" id="device_edit" placeholder="Serial Number" style="width: 100%; height: 33px; font-size: 15px;" min="0" required>
                                    </div>
                               </div>
 
@@ -176,7 +214,7 @@
                                         <span style="font-weight: bold; font-size: 16px;">Description<span class="text-red">*</span></span>
                                    </div>
                                    <div class="col-xs-6">
-                                        <textarea class="form-control" name="desc_edit" id="desc_edit"></textarea>
+                                        <textarea class="form-control" name="desc_edit" id="desc_edit" readonly></textarea>
                                    </div>
                               </div>
 
@@ -207,7 +245,7 @@
                                         <span style="font-weight: bold; font-size: 16px;">Qty<span class="text-red">*</span></span>
                                    </div>
                                    <div class="col-xs-3">
-                                        <input class="form-control" type="number" name="qty_edit" id="qty_edit" placeholder="Jumlah Barang" style="width: 100%; height: 33px; font-size: 15px;" min="0" required>
+                                        <input class="form-control" type="number" name="qty_edit" id="qty_edit" placeholder="Jumlah Barang" style="width: 100%; height: 33px; font-size: 15px;" min="0" required readonly>
                                    </div>
                               </div>
                               <div class="col-xs-12" style="padding-bottom: 1%;">
@@ -215,7 +253,13 @@
                                         <span style="font-weight: bold; font-size: 16px;">Used By<span class="text-red">*</span></span>
                                    </div>
                                    <div class="col-xs-4">
-                                        <input type="text" name="used_by_edit" id="used_by_edit" class="form-control">
+                                        <!-- <input type="text" name="used_by_edit" id="used_by_edit" class="form-control"> -->
+                                        <select class="form-control select3" id="used_by_edit" name="used_by_edit" data-placeholder='Pilih NIK Atau Nama' style="width: 100%">
+                                             <option value="">&nbsp;</option>
+                                             @foreach($emp as $row)
+                                             <option value="{{$row->employee_id}}">{{$row->employee_id}} - {{$row->name}}</option>
+                                             @endforeach
+                                        </select>
                                    </div>
                               </div>
 
@@ -259,10 +303,14 @@
      var arr_dev = [];
      var arr_proj = [];
      var arr_loc = [];
+     var arr_pic = [];
 
      jQuery(document).ready(function() {
           $('body').toggleClass("sidebar-collapse");
           get_inv();
+
+          arr_pic = <?php echo json_encode($emp); ?>;
+
      });
 
      $('.select2').select2({
@@ -278,6 +326,13 @@
           allowClear:true,
           tags: true
      });
+
+     // $('.select4').select2({
+     //      dropdownAutoWidth : true,
+     //      dropdownParent: $("#used_by_edit"),
+     //      allowClear:true,
+     //      tags: true
+     // });
 
      $('#rcv_date').datepicker({
           autoclose: true,
@@ -304,14 +359,17 @@
                $.each(result.inventory, function(index, value){
                     body += "<tr>";
                     body += "<td>"+(index+1)+"</td>";
+                    body += "<td>"+value.tanggal+"</td>";
                     body += "<td>"+value.category+"</td>";
-                    body += "<td>"+value.device+"</td>";
+                    body += "<td>"+value.serial_number+"</td>";
                     body += "<td>"+(value.description || '')+"</td>";
                     body += "<td>"+value.project+"</td>";
                     body += "<td>"+value.location+"</td>";
                     body += "<td>"+value.qty+"</td>";
                     body += "<td>"+value.used_by+"</td>";
-                    body += "<td><button class='btn btn-primary btn-sm' onclick='openModalUpdate("+value.id+")'>Edit</button>&nbsp;<button class='btn btn-danger btn-sm' onclick='deleting("+value.id+")'>Delete</button>&nbsp;<button class='btn btn-warning btn-sm' onclick='print2("+value.id+")'><i class='fa fa-print'></i> Print</button></td>";
+                    body += "<td>"+value.condition+"</td>";
+                    body += "<td><button type='button' class='btn btn-primary btn-xs' onclick='openModalUpdate("+value.id+")'>Edit</button>&nbsp;<button class='btn btn-danger btn-xs' onclick='deleting("+value.id+")'>Delete</button>&nbsp;<button class='btn btn-warning btn-xs' onclick='print2("+value.id+")'>Print</button></td>";
+                    body += "<td><input type='checkbox' onclick='showSelected(this)'></td>";
                     body += "</tr>";
 
                     arr_ctg.push(value.category);
@@ -381,20 +439,23 @@
           var dev = "";
           var proj = "";
           var loc = "";
+          var pic = "";
 
           ctg += "<option value=''></option>";
           dev += "<option value=''></option>";
           proj += "<option value=''></option>";
           loc += "<option value=''></option>";
+          pic += "<option value=''></option>";
 
           bodi += '<tr id="'+no+'" class="item">';
           bodi += '<td>';
           bodi += '<select class="select2" style="width: 100%" data-placeholder="Category" id="cat_'+no+'"></select>';
           bodi += '</td>';
 
-          bodi += '<td>';
-          bodi += '<select class="select2" style="width: 100%" data-placeholder="Device" id="dev_'+no+'"></select>';
-          bodi += '</td>';
+          // bodi += '<td>';
+          bodi += '<td><input type="text" class="form-control" placeholder="Serial Number" id="sn_'+no+'"></td>'
+          // bodi += '<select class="select2" style="width: 100%" data-placeholder="Device" id="dev_'+no+'"></select>';
+          // bodi += '</td>';
 
           bodi += '<td><textarea class="form-control" id="desc_'+no+'" placeholder="description"></textarea></td>';
 
@@ -406,8 +467,9 @@
           bodi += '<select class="select2" style="width: 100%" data-placeholder="Location" id="loc_'+no+'"></select>';
           bodi += '</td>';
 
-          bodi += '<td><input type="number" class="form-control" placeholder="qty" id="qty_'+no+'"></td>';
-          bodi += '<td><input type="text" class="form-control" placeholder="pic" id="pic_'+no+'"></td>';
+          // bodi += '<td><input type="number" class="form-control" placeholder="qty" id="qty_'+no+'"></td>';
+          bodi += '<td><input type="number" class="form-control" value="1" id="qty_'+no+'" readonly></td>';
+          bodi += '<td><select class="select2" style="width: 100%" data-placeholder="Pilih PIC" id="pic_'+no+'"></select></td>';
           bodi += '<td><button class="btn btn-sm btn-danger" onclick="delete_item('+no+')"><i class="fa fa-trash"></i></button></td>';
 
           bodi += '</tr>';
@@ -430,10 +492,17 @@
                loc += "<option value='"+value+"'>"+value+"</option>";
           })
 
+          console.log(arr_pic);
+
+          $.each(arr_pic, function(index, value){
+               pic += "<option value='"+value.name+"'>"+value.employee_id+" - "+value.name+"</option>";
+          })
+
           $("#cat_"+no).append(ctg);
           $("#dev_"+no).append(dev);
           $("#proj_"+no).append(proj);
           $("#loc_"+no).append(loc);
+          $("#pic_"+no).append(pic);
 
           no++;
 
@@ -455,8 +524,8 @@
           $('.item').each(function(index, value) {
                var ido = $(this).attr('id');
 
-               if ($("#cat_"+ido).val() != "" && $("#dev_"+ido).val() != "") {
-                    arr_params.push({'category' : $("#cat_"+ido).val(), 'device' : $("#dev_"+ido).val(), 'description' : $("#desc_"+ido).val(), 'project' : $("#proj_"+ido).val(), 'location' : $("#loc_"+ido).val(), 'quantity' : $("#qty_"+ido).val(), 'pic' : $("#pic_"+ido).val()});
+               if ($("#cat_"+ido).val() != "" && $("#sn_"+ido).val() != "") {
+                    arr_params.push({'category' : $("#cat_"+ido).val(), 'serial' : $("#sn_"+ido).val(), 'description' : $("#desc_"+ido).val(), 'project' : $("#proj_"+ido).val(), 'location' : $("#loc_"+ido).val(), 'quantity' : $("#qty_"+ido).val(), 'pic' : $("#pic_"+ido).val()});
                } else {
 
                }
@@ -561,16 +630,40 @@
           }
      }
 
-     function printing(id) {
-          var ids = [];
+     function printing() {
+          arr_params = [];
 
-          ids.push(id);
+          $('.item').each(function(index, value) {
+               var ido = $(this).attr('id');
+
+               if ($("#cat_"+ido).val() != "" && $("#sn_"+ido).val() != "") {
+                    arr_params.push({'category' : $("#cat_"+ido).val(), 'serial' : $("#sn_"+ido).val(), 'description' : $("#desc_"+ido).val(), 'project' : $("#proj_"+ido).val(), 'location' : $("#loc_"+ido).val(), 'quantity' : $("#qty_"+ido).val(), 'pic' : $("#pic_"+ido).val()});
+               } else {
+
+               }
+          });
 
           var data = {
-               id : ids
+               item : arr_params,
+               receive_date : $('#rcv_date').val()
           }
 
-          window.open('{{ url("print/inventory_mis/") }}/'+id, '_blank');
+          var ids = [];
+
+          $.post('{{ url("post/inventory_mis/item") }}', data, function(result, status, xhr) {
+               for(var i = 0; i < result.new.length;i++){
+                    ids.push(result.new[i]);
+               }
+               // window.open('{{ url("print/inventory_mis/") }}/'+ ids[i], '_blank');
+               location.href('{{ url("print/inventory_mis/") }}/'+ ids[i]);
+
+               openSuccessGritter('Success','New Item Added');
+               $('#modalCreate').modal('hide');
+               get_inv();
+          });
+          
+          for(var i = 0; i< ids.length;i++){
+          }
      }
 
 

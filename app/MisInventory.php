@@ -10,7 +10,7 @@ class MisInventory extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'category', 'device', 'description', 'project', 'location','qty','used_by', 'remark', 'receive_date', 'condition', 'created_by'
+		'category', 'serial_number', 'device', 'description', 'project', 'location','qty','used_by', 'remark', 'receive_date', 'condition', 'created_by', 'id_order'
 	];
 
 	public function user()
