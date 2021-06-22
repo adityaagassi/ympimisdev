@@ -897,6 +897,58 @@ class SkillMapController extends Controller
         }
     }
 
+    public function fetchSkillResumeOperator(Request $request)
+    {
+        try {
+            $resumes = DB::SELECT("SELECT
+                skill_maps.employee_id,
+                skill_maps.skill_code,
+                skill_maps.process,
+                skills.skill,
+                skill_maps.`value`,
+                skills.`value` AS required,
+                employee_syncs.`name` 
+            FROM
+                skill_maps
+                LEFT JOIN employee_syncs ON employee_syncs.employee_id = skill_maps.employee_id
+                LEFT JOIN skills ON skills.skill_code = skill_maps.skill_code 
+            WHERE
+                skill_maps.location = '".$request->get('location')."' 
+                AND skills.location = '".$request->get('location')."'");
+
+            $emp = DB::SELECT("SELECT
+                skill_employees.employee_id,
+                employee_syncs.`name` 
+            FROM
+                skill_employees
+                LEFT JOIN employee_syncs ON employee_syncs.employee_id = skill_employees.employee_id 
+            WHERE
+                location = '".$request->get('location')."'");
+
+            $skills = DB::SELECT("SELECT
+                skill_code,
+                skill 
+            FROM
+                skills 
+            WHERE
+                location = 'maintenance-ut'");
+            $response = array(
+                'status' => true,
+                'resumes' => $resumes,
+                'skills' => $skills,
+                'emp' => $emp,
+                'message' => 'Get Skill Success.',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
     public function inputSkillEvaluation(Request $request)
     {
         try {

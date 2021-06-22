@@ -76,6 +76,7 @@
 			<button class="btn btn-warning" style="padding-left: 10px;font-weight: bold;" onclick="showModalSkillMaster();">Skill Master</button>
 			<button class="btn btn-primary" onclick="showModalEmployeeAdjustment();" style="font-weight: bold;">Employee Adjustment</button>
 			<button class="btn btn-success" onclick="showModalResume();" style="font-weight: bold;">Resume</button>
+			<button class="btn btn-info" onclick="showModalResumeOperator();" style="font-weight: bold;">Resume By Operator</button>
 			<div class="pull-right">
 				<div class="input-group">
 					<select class="form-control select4" multiple="multiple" id="processSelect" data-placeholder="Select Process" onchange="changeProcess()">
@@ -452,6 +453,34 @@
 								</tbody>
 							</table>
 						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="col-xs-12">
+						<div class="row" id="footer_resume">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalResumeOperator">
+	<div class="modal-dialog modal-lg" style="width: 1200px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center style="background-color: #ffac26;color: white">
+					<span style="font-weight: bold; font-size: 3vw;">Skill Resume By Operator</span><br>
+				</center>
+				<hr>
+				<div class="modal-body" style="min-height: 100px; padding-bottom: 5px;">
+					<div class="col-xs-12">
+						<div class="row" style="padding-top: 20px;overflow-x: scroll;">
+							<table id="tableResumeOperator" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+								
+							</table>
+						</div>						
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -2142,6 +2171,177 @@ function fillTableMaster() {
 					    enabled: false
 					},
 
+				});
+			}else{
+				audio_error.play();
+				alert('Attempt to retrieve data failed');
+			}
+		})
+	}
+
+	function showModalResumeOperator() {
+		var data = {
+			location:'{{$location}}'
+		}
+		$.get('{{ url("fetch/skill_resume_operator") }}',data, function(result, status, xhr){
+			if (result.status) {
+				// $('#tableResumeOperator').DataTable().clear();
+				// $('#tableResumeOperator').DataTable().destroy();
+				$('#tableResumeOperator').html("");
+				var tableData = "";
+				var emps = [];
+				var indexemp = 0;
+				$.each(result.emp, function(key, value) {
+					emps.push(value.employee_id+'_'+value.name);
+					indexemp++;
+				});
+
+				tableData += '<thead style="background-color: rgb(126,86,134); color: #FFD700;">';
+					tableData += '<tr>';
+						tableData += '<th>No.</th>';
+						tableData += '<th>Skill Code</th>';
+						tableData += '<th>Skill</th>';
+						// tableData += '<th colspan="'+indexemp+'">Nama Karyawan</th>';
+						for(var i = 0; i< emps.length;i++){
+							tableData += '<th>'+emps[i].split('_')[0]+'<br>'+emps[i].split('_')[1].split(' ').slice(0,2).join(' ')+'</th>';
+						}
+						tableData += '<th style="background-color:#333fa6">Nilai Skill >= 3</th>';
+						tableData += '<th style="background-color:#333fa6">Nilai Skill = 1</th>';
+						tableData += '<th style="background-color:#333fa6">Nilai Skill = 2</th>';
+						tableData += '<th style="background-color:#333fa6">Nilai Skill = 3</th>';
+						tableData += '<th style="background-color:#333fa6">Nilai Skill = 4</th>';
+						tableData += '<th style="background-color:#a65633">Presentase Nilai >= 3</th>';
+						tableData += '<th style="background-color:#a65633">Presentase Nilai 1-4</th>';
+										// <th>Jumlah orang dengan nilai skill 2</th>
+										// <th>Jumlah orang dengan nilai skill 3</th>
+										// <th>Jumlah orang dengan nilai skill 4</th>
+										// <th>Prosentase kekuatan proses dengan skill 3</th>
+										// <th>Prosentase kekuatan proses dengan skill 1-4</th>
+					tableData += '</tr>';
+					// tableData += '<tr>';
+					
+					// tableData += '</tr>';
+				tableData += '</thead>';
+				tableData += '<tbody id="bodyTableResumeOperator">';
+
+				var arr_morethan3 = [];
+				var arr_equal1 = [];
+				var arr_equal2 = [];
+				var arr_equal3 = [];
+				var arr_equal4 = [];
+
+				var index = 1;
+
+				$.each(result.skills, function(key, value) {
+					// var jumlah_all = ((value.jumlah_satu + value.jumlah_dua + value.jumlah_tiga +value.jumlah_empat)/value.jumlah_orang) * 100;
+					tableData += '<tr>';
+					tableData += '<td>'+ index +'</td>';
+					tableData += '<td>'+ value.skill_code +'</td>';
+					tableData += '<td>'+ value.skill +'</td>';
+					var morethan3 = 0;
+					var equal1 = 0;
+					var equal2 = 0;
+					var equal3 = 0;
+					var equal4 = 0;
+					for(var i = 0; i < emps.length; i++){
+						$.each(result.resumes, function(key2, value2) {
+							if (value2.employee_id == emps[i].split('_')[0]) {
+								if (value2.skill_code == value.skill_code) {
+									tableData += '<td>'+ value2.value +'</td>';
+									if (parseInt(value2.value) == 1) {
+										equal1++;
+									}else if (parseInt(value2.value) == 2) {
+										equal2++;
+									}else if (parseInt(value2.value) == 3) {
+										equal3++;
+										morethan3++;
+									}else if (parseInt(value2.value) == 4) {
+										equal4++;
+										morethan3++;
+									}
+								}
+							}
+						});
+					}
+					arr_morethan3.push(morethan3);
+					arr_equal1.push(equal1);
+					arr_equal2.push(equal2);
+					arr_equal3.push(equal3);
+					arr_equal4.push(equal4);
+					tableData += '<td>'+ morethan3 +'</td>';
+					tableData += '<td>'+ equal1 +'</td>';
+					tableData += '<td>'+ equal2 +'</td>';
+					tableData += '<td>'+ equal3 +'</td>';
+					tableData += '<td>'+ equal4 +'</td>';
+					var prs_morethan3 = (morethan3 / emps.length) * 100;
+					var prs_all = ((equal1+equal2+equal3+equal4) / emps.length) * 100;
+					tableData += '<td>'+ prs_morethan3.toFixed(2) +' %</td>';
+					tableData += '<td>'+ prs_all.toFixed(2) +' %</td>';
+					// tableData += '<td>'+ Math.round(value.persen_lebih_tiga) +' %</td>';
+					// tableData += '<td>'+ Math.round(jumlah_all) +' %</td>';
+					tableData += '</tr>';
+					index++;
+
+					// skills.push(value.skill_code);
+					// nilais.push({y: parseInt(value.average), name: value.skill});
+				});
+
+				tableData += '</tbody>';
+				$('#tableResumeOperator').append(tableData);
+
+				$('#modalResumeOperator').modal('show');
+
+				var table = $('#tableResumeOperator').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						}
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true	,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
 				});
 			}else{
 				audio_error.play();

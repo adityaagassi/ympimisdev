@@ -1977,6 +1977,9 @@ Route::get('payment_request/approvegm/{id}', 'AccountingController@paymentapprov
 Route::get('payment_request/receiveacc/{id}', 'AccountingController@paymentreceiveacc');
 Route::get('payment_request/reject/{id}', 'AccountingController@paymentreject');
 
+//Cash Payment
+Route::get('index/cash_payment', 'AccountingController@IndexCashPayment');
+
 
 Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
@@ -4552,6 +4555,7 @@ Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 	Route::get('get/skill_employee', 'SkillMapController@getSkillEmployee');
 
 	Route::get('fetch/skill_resume', 'SkillMapController@fetchSkillResume');
+	Route::get('fetch/skill_resume_operator', 'SkillMapController@fetchSkillResumeOperator');
 
 	Route::get('fetch/skill_evaluation', 'SkillMapController@fetchSkillEvaluation');
 	Route::post('input/skill_evaluation', 'SkillMapController@inputSkillEvaluation');
@@ -4866,8 +4870,9 @@ Route::group(['nav' => 'S63', 'middleware' => 'permission'], function(){
 	Route::get('stock/grafik/aktual', 'StockAktualController@FatchMonitoring');
 	Route::get('stock/aktual/home', 'StockAktualController@AuditStockAktualHome');
 	Route::get('stock/aktual/list', 'StockAktualController@FatchListStock');
-	Route::get('stock/aktual/edit/{id}', 'StockAktualController@EditListStock');
+	Route::get('stock/aktual/edit', 'StockAktualController@EditListStock');
 	Route::post('stock/aktual/update', 'StockAktualController@UpdateStock');
+	Route::post('stock/aktual/update/ideal', 'StockAktualController@UpdateStockIdeal');
 	Route::get('stock/aktual/resume', 'StockAktualController@UpdateStockResume');
 	Route::get('stock/ideal/stock', 'StockAktualController@UploadMasterIdeal');
 	Route::post('stock/ideal/import', 'StockAktualController@ImportMasterIdeal');
