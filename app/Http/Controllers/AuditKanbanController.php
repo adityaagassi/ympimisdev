@@ -39,6 +39,7 @@ class AuditKanbanController extends Controller{
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
         $frequency = $activityList->frequency;
+        $remark = $activityList->remark;
 
         $point_check = AuditKanbanPointCheck::orderBy('audit_kanban_point_checks.point_check_index')->get();
 
@@ -48,6 +49,7 @@ class AuditKanbanController extends Controller{
             'activity_alias' => $activity_alias,
             'id' => $id,
             'frequency' => $frequency,
+            'remark' => $remark,
             'point_check' => $point_check,
             'point_check2' => $point_check,
             'leader' => $leader,
@@ -79,7 +81,7 @@ class AuditKanbanController extends Controller{
                     $last = "'".$date_to."'";
                 }
             }
-            $audit_kanban = AuditKanban::select('audit_kanbans.*','audit_kanban_point_checks.*','audit_kanbans.id as id_audit_kanban')
+            $audit_kanban = AuditKanban::select('audit_kanbans.*','audit_kanban_point_checks.*','audit_kanbans.id as id_audit_kanban','activity_lists.remark')
             ->leftjoin('audit_kanban_point_checks','audit_kanban_point_checks.id','audit_kanbans.point_check_id')
             ->leftjoin('activity_lists','activity_lists.id','audit_kanbans.activity_list_id')
             ->where('audit_kanbans.check_date','>=',$first)

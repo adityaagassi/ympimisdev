@@ -140,7 +140,7 @@
 				var aktivitas = "";
 				$.each(result.activity_list, function(key, value) {
 					aktivitas += '<div class="col-xs-4">';
-					aktivitas += '<a class="btn btn-primary" href="{{url("index/production_report/activity/")}}/'+value.id+'" style="margin-bottom: 10px;white-space: normal;width: 100%;font-size: 17px">'+value.activity_name+'<br><b style="font-size: 15px">'+value.leader_dept+'</b></a>';
+					aktivitas += '<a class="btn btn-primary" href="{{url("index/production_report/activity/")}}/'+value.id+'" style="margin-bottom: 10px;white-space: normal;width: 100%;font-size: 17px">'+value.activity_name+'<br><b style="font-size: 15px">'+value.leader_dept+'</b><br><b style="font-size: 15px">'+(value.remark || "")+'</b></a>';
 					aktivitas += '</div>';
 			        if(value.activity_type == "Laporan Aktivitas"){
 			        	aktivitas += '<div class="col-xs-4">';

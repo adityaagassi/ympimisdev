@@ -101,7 +101,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		<span style="font-size: 20px">Audit Kanban - {{ $leader }} <small class="text-purple">かんばん監査</small></span>
+		<span style="font-size: 20px">Audit Kanban {{ $remark }} - {{ $leader }} <small class="text-purple">かんばん監査</small></span>
 		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
 	        Buat Audit
 	    </button>
@@ -229,6 +229,7 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="width: 1%">Check Date</th>
+										<th style="width: 1%">Location</th>
 										<th style="width: 4%">Point Check</th>
 										<th style="width: 1%">Condition</th>
 										<th style="width: 1%">Send Status</th>
@@ -529,6 +530,7 @@
 				for(var i = 0; i< result.audit_kanban.length;i++){
 					bodyAudit += '<tr>';
 					bodyAudit += '<td>'+result.audit_kanban[i].check_date+'</td>';
+					bodyAudit += '<td>'+result.audit_kanban[i].remark+'</td>';
 					bodyAudit += '<td>'+result.audit_kanban[i].point_check_name+'<br>'+result.audit_kanban[i].point_check_jp+'</td>';
 					if (result.audit_kanban[i].condition == 'OK') {
 						bodyAudit += '<td style="background-color:#c5ffb8">'+result.audit_kanban[i].condition+'</td>';
