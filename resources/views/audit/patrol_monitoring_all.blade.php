@@ -145,7 +145,7 @@
               </div>
             </div>
             <div class="col-xs-2">
-              <button type="submit" class="btn btn-success form-control" style="width: 100%"><i class="fa fa-download"></i> Download Data</button>
+              <button type="submit" class="btn btn-success form-control" style="width: 100%"><i class="fa fa-file-excel-o"></i> &nbsp;&nbsp;Download Data</button>
             </div>
 
           </div>
@@ -941,6 +941,8 @@
   function penanganan(id) {
 
     $('#modalPenanganan').modal("show");
+    $("#penanganan").val("");
+    $("#bukti_penanganan").val("");
 
     var data = {
       id : id
