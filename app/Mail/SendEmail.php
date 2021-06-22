@@ -554,6 +554,13 @@ class SendEmail extends Mailable
             ->priority(1)
             ->subject('File Approval Pengganti Adagio (異なるセクションへの人事異動の承認)')
             ->view('mails.send_email_done');
+        }
+
+        if($this->remark == 'barang_mis'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('Penerimaan Barang MIS')
+            ->view('mails.barang_mis');
         }   
 
         if($this->remark == 'highest_covid'){

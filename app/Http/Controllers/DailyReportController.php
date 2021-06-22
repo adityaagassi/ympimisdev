@@ -363,7 +363,7 @@ public function indexInventoryMIS()
 public function fetchInventoryMIS()
 {
     // $inv = MisInventory::orderBy('id','desc')->get();
-    $inv = db::select("select DATE_FORMAT(created_at, '%Y-%m-%d') as tanggal, category, serial_number, description, project, location, qty, used_by, `condition` from mis_inventories where deleted_at is null order by id desc");
+    $inv = db::select("select id, DATE_FORMAT(created_at, '%Y-%m-%d') as tanggal, category, serial_number, description, project, location, qty, used_by, `condition` from mis_inventories where deleted_at is null order by id desc");
 
     $response = array(
         'status' => true,
