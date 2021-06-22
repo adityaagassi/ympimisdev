@@ -34,6 +34,8 @@ use App\AccInvoiceReceiveReport;
 use App\AccInvoicePaymentTerm;
 use App\AccPaymentRequest;
 
+use App\MisInventory;
+
 use App\EmployeeSync;
 use App\UtilityItemNumber;
 use App\UtilityOrder;
@@ -12189,6 +12191,37 @@ public function transfer_approvalto($id){
                     ]);
 
                     $receive->save();
+
+                    $like = $receive->no_po;
+
+                    if (strpos($like, 'IT') !== false) {
+                        $inventory = MisInventory::create([
+                        'description' => $receive->nama_item,
+                        'qty' => $receive->qty_receive,
+                        'created_by' => $receive->created_by,
+                        'condition' => 'OK',
+                        'id_order' => $receive->id
+                    ]);
+
+                    $inventory->save();
+
+                    $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where employee_id = 'PI0103002' or employee_id = 'PI0906001'";
+                    $mailtoo = DB::select($mails);
+
+                    $mailscc = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where department = 'Management Information System Department'
+                                and employee_id not in('PI0103002', 'PI0906001') and end_date is null";
+                    $mailtoocc = DB::select($mailscc);
+
+                    $isimail = "select mis_inventories.id, mis_inventories.description, mis_inventories.qty, mis_inventories.`condition`, users.`name` as nama, mis_inventories.created_at as tanggal, acc_receives.no_po as no_po, acc_receives.no_item as no_item, acc_receives.nama_item from mis_inventories join users on mis_inventories.created_by = users.id 
+                        join acc_receives on mis_inventories.id_order = acc_receives.id where mis_inventories.id = ".$inventory->id;                
+
+                    $inventory = db::select($isimail);
+                    Mail::to($mailtoo)->cc($mailtoocc)->send(new SendEmail($inventory, 'barang_mis'));
+                    }
+
+
+
+                    
 
                     // $budget_log = AccBudgetHistory::where('po_number','=',$itm['no_po'])
                     // ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$itm['no_item'])
