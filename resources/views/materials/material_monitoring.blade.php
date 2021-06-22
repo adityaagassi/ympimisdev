@@ -116,7 +116,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="materialModal" style="overflow-y:auto;">
+<div class="modal fade" id="materialModal" style="overflow-y:auto; z-index: 10000;">
 	<div class="modal-dialog" style="width:90%;">
 		<div class="modal-content">
 			<div class="modal-header">
