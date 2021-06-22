@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <link type='text/css' rel="stylesheet" href="{{ url("css/bootstrap-datetimepicker.min.css")}}">
 <style type="text/css">
-	
 	input {
 		line-height: 22px;
 	}
@@ -47,7 +46,6 @@
 	input[type=number] {
 		-moz-appearance: textfield;
 	}
-	
 </style>
 @stop
 @section('header')
