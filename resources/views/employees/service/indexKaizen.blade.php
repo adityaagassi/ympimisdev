@@ -335,11 +335,13 @@
 			user:user
 		}
 
-		var body = "";
 
 		$.get("{{ url('fetch/kaizen/') }}", data, function(result, status, xhr){
-			$('#tableKaizen').DataTable().destroy();
+			$('#tableList').DataTable().clear();
+			$('#tableList').DataTable().destroy();
 			$("#bodyKaizen").empty();
+			var body = "";
+			
 			$.each(result.kaizen, function(key, value) {
 				if(jQuery.inArray(value.employee_id, result.employee) !== -1) {
 					body += "<tr>";
