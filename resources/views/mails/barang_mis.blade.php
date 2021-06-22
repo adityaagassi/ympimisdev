@@ -92,31 +92,31 @@ table tr:hover td {
 	<table class="table table-bordered" style="border:1px solid black; width: 100%; font-family: arial; border-collapse: collapse; text-align: left;" cellspacing="0">
 	<tbody>
 		  <tr>
-            <td colspan="1" style="border:1px solid black; font-size: 13px;width: 18%; font-weight: bold">Tanggal Diterima</td>
-            <td colspan="1"style="border:1px solid black; font-size: 12px;">{{ $tanggal }}</td>
-            <td colspan="1" style="border:1px solid black; font-size: 13px;width: 18%; font-weight: bold">No PO</td>
-            <td colspan="1"style="border:1px solid black; font-size: 12px;">{{ $no_po }}</td>
+            <td colspan="1" style="border:1px solid black; font-size: 13px;width: 25%; font-weight: bold">Tanggal Diterima</td>
+            <td colspan="1"style="border:1px solid black; font-size: 12px; width: 25%">{{ $tanggal }}</td>
+            <td colspan="1" style="border:1px solid black; font-size: 13px;width: 25%; font-weight: bold">No PO</td>
+            <td colspan="1"style="border:1px solid black; font-size: 12px; width: 25%">{{ $no_po }}</td>
           </tr>
           <tr>
-            <td colspan="1" style="border:1px solid black; font-size: 13px;width: 18%; font-weight: bold">Nama Item</td>
+            <td colspan="1" style="border:1px solid black; font-size: 13px; font-weight: bold">Nama Item</td>
             <td colspan="1"style="border:1px solid black; font-size: 12px;">{{ $nama_item }}</td>
-            <td colspan="1" style="border:1px solid black; font-size: 13px;width: 18%; font-weight: bold">Kode Item</td>
+            <td colspan="1" style="border:1px solid black; font-size: 13px; font-weight: bold">Kode Item</td>
             <td colspan="1"style="border:1px solid black; font-size: 12px;">{{ $no_item }}</td>
           </tr>
 		  <tr>
-            <td colspan="2" style="border:1px solid black; font-size: 13px;width: 18%; font-weight: bold">Description Item</td>
+            <td colspan="2" style="border:1px solid black; font-size: 13px; font-weight: bold">Description Item</td>
             <td colspan="2"style="border:1px solid black; font-size: 12px;">{{ $description }}</td>
           </tr>
           <tr>
-          	<td colspan="2" style="border:1px solid black; font-size: 13px;width: 18%; font-weight: bold">Jumlah Item</td>
+          	<td colspan="2" style="border:1px solid black; font-size: 13px; font-weight: bold">Jumlah Item</td>
           	<td colspan="2" style="border:1px solid black; font-size: 12px;">{{ $qty }}</td>
           </tr>
           <tr>
-          	<td colspan="2" style="border:1px solid black; font-size: 13px;width: 18%; font-weight: bold">Kondisi Item</td>
+          	<td colspan="2" style="border:1px solid black; font-size: 13px; font-weight: bold">Kondisi Item</td>
           	<td colspan="2" style="border:1px solid black; font-size: 12px;">{{ $condition }}</td>
           </tr>
           <tr>
-            <td colspan="2" style="border:1px solid black; font-size: 13px;width: 18%; font-weight: bold">Nama Penerima</td>
+            <td colspan="2" style="border:1px solid black; font-size: 13px; font-weight: bold">Nama Penerima</td>
             <td colspan="2" style="border:1px solid black; font-size: 12px;">{{ $nama }}</td>
           </tr>
 	</tbody>            	
