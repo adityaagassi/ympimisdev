@@ -113,24 +113,35 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="modalDetailTitle"></h4>
+				<div style="background-color: #fcba03;text-align: center;">
+					<h4 class="modal-title" style="font-weight: bold;padding: 10px;font-size: 20px" id="modalDetailTitle"></h4>
+				</div>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
-					<center>
+					<!-- <center>
 						<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
-					</center>
+					</center> -->
 					<table class="table table-hover table-bordered table-striped" id="tableDetail">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
 								<th style="width: 1%;">#</th>
+								<th style="width: 9%;">Code</th>
+								<th style="width: 3%;">Product</th>
 								<th style="width: 3%;">Material</th>
-								<th style="width: 9%;">Description</th>
-								<th style="width: 3%;">Stock/Day</th>
-								<th style="width: 3%;">Act. Stock</th>
-								<th style="width: 3%;">Stock</th>
+								<th style="width: 3%;">Cav</th>
+								<th style="width: 9%;">Employee</th>
+								<th style="width: 3%;">At</th>
+								<th style="width: 3%;">NG Name</th>
+								<th style="width: 3%;">Qty</th>
 							</tr>
 						</thead>
 						<tbody id="tableDetailBody">
 						</tbody>
+						<tfoot style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th colspan="8">TOTAL</th>
+								<th id="total_all"></th>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -362,7 +373,7 @@
 	};
 	Highcharts.setOptions(Highcharts.theme);
 
-	
+	var detail_all = [];
 
 	function fetchChart(){
 
@@ -376,6 +387,11 @@
 			if(result.status){
 
 				//HEAD
+				detail_all_hj = [];
+				detail_all_mj = [];
+				detail_all_fj = [];
+				detail_all_bj = [];
+
 				var ngname = [];
 				var ngcount = [];
 				var ngall = [];
@@ -387,6 +403,20 @@
 							ngname.push(ngs[j]);
 							ngcount.push(counts[j]);
 							ngall.push(ngs[j]+'_'+counts[j]);
+							detail_all_hj.push({
+								serial_number: result.resumes[i].serial_number,
+								operator_kensa: result.resumes[i].operator_kensa,
+								name: result.resumes[i].name,
+								name: result.resumes[i].name,
+								ng_name: ngs[j],
+								ng_count: counts[j],
+								part_code: result.resumes[i].part_code,
+								created_at: result.resumes[i].created_at,
+								product: result.resumes[i].product,
+								material_number: result.resumes[i].material_number,
+								part_name: result.resumes[i].part_name,
+								cavity: result.resumes[i].cavity,
+							});
 						}
 					}
 				}
@@ -410,6 +440,7 @@
 				}
 				var datas = [];
 				for (var i = 0; i < ngnames.length; i++) {
+					// datas.push({y: ngcounts[i], key: ngnames[i]});
 					datas.push([ngnames[i], ngcounts[i]]);
 				}
 
@@ -492,13 +523,13 @@
 							cursor: 'pointer',
 							point: {
 								events: {
-									click: function () {
-										// ShowModal(this.category,result.date);
+									click: function (e) {
+										ShowModal(e.point.name,'HJ');
 									}
 								}
 							},
 							dataLabels: {
-								enabled: true,
+									enabled: true,
 								format: '{point.y}',
 								style:{
 									fontSize: '1vw'
@@ -551,6 +582,19 @@
 							ngname.push(ngs[j]);
 							ngcount.push(counts[j]);
 							ngall.push(ngs[j]+'_'+counts[j]);
+							detail_all_mj.push({
+								serial_number: result.resumes[i].serial_number,
+								operator_kensa: result.resumes[i].operator_kensa,
+								name: result.resumes[i].name,
+								ng_name: ngs[j],
+								ng_count: counts[j],
+								part_code: result.resumes[i].part_code,
+								created_at: result.resumes[i].created_at,
+								product: result.resumes[i].product,
+								material_number: result.resumes[i].material_number,
+								part_name: result.resumes[i].part_name,
+								cavity: result.resumes[i].cavity,
+							});
 						}
 					}
 				}
@@ -656,8 +700,8 @@
 							cursor: 'pointer',
 							point: {
 								events: {
-									click: function () {
-										ShowModal(this.category,result.date);
+									click: function (e) {
+										ShowModal(e.point.name,'MJ');
 									}
 								}
 							},
@@ -715,6 +759,19 @@
 							ngname.push(ngs[j]);
 							ngcount.push(counts[j]);
 							ngall.push(ngs[j]+'_'+counts[j]);
+							detail_all_fj.push({
+								serial_number: result.resumes[i].serial_number,
+								operator_kensa: result.resumes[i].operator_kensa,
+								name: result.resumes[i].name,
+								ng_name: ngs[j],
+								ng_count: counts[j],
+								part_code: result.resumes[i].part_code,
+								created_at: result.resumes[i].created_at,
+								product: result.resumes[i].product,
+								material_number: result.resumes[i].material_number,
+								part_name: result.resumes[i].part_name,
+								cavity: result.resumes[i].cavity,
+							});
 						}
 					}
 				}
@@ -820,8 +877,8 @@
 							cursor: 'pointer',
 							point: {
 								events: {
-									click: function () {
-										ShowModal(this.category,result.date);
+									click: function (e) {
+										ShowModal(e.point.name,'FJ');
 									}
 								}
 							},
@@ -879,6 +936,19 @@
 							ngname.push(ngs[j]);
 							ngcount.push(counts[j]);
 							ngall.push(ngs[j]+'_'+counts[j]);
+							detail_all_bj.push({
+								serial_number: result.resumes[i].serial_number,
+								operator_kensa: result.resumes[i].operator_kensa,
+								name: result.resumes[i].name,
+								ng_name: ngs[j],
+								ng_count: counts[j],
+								part_code: result.resumes[i].part_code,
+								created_at: result.resumes[i].created_at,
+								product: result.resumes[i].product,
+								material_number: result.resumes[i].material_number,
+								part_name: result.resumes[i].part_name,
+								cavity: result.resumes[i].cavity,
+							});
 						}
 					}
 				}
@@ -984,8 +1054,8 @@
 							cursor: 'pointer',
 							point: {
 								events: {
-									click: function () {
-										ShowModal(this.category,result.date);
+									click: function (e) {
+										ShowModal(e.point.name,'BJ');
 									}
 								}
 							},
@@ -1035,6 +1105,103 @@
 				alert('Attempt to retrieve data failed');
 			}
 		});
+}
+
+function ShowModal(ng_name,part_code) {
+	$('#tableDetailBody').html('');
+	var bodyDetail = '';
+	var modalDetailTitle = '';
+	var total = 0;
+	if (part_code === 'HJ') {
+		var index = 1;
+		for (var i = 0; i < detail_all_hj.length; i++) {
+			if (ng_name === detail_all_hj[i].ng_name) {
+				bodyDetail += '<tr>';
+				bodyDetail += '<td>'+index+'</td>';
+				bodyDetail += '<td>'+detail_all_hj[i].serial_number+'</td>';
+				bodyDetail += '<td>'+detail_all_hj[i].product+'</td>';
+				bodyDetail += '<td>'+detail_all_hj[i].material_number+'<br>'+detail_all_hj[i].part_name+'</td>';
+				bodyDetail += '<td>'+detail_all_hj[i].cavity+'</td>';
+				bodyDetail += '<td>'+detail_all_hj[i].operator_kensa+'<br>'+detail_all_hj[i].name+'</td>';
+				bodyDetail += '<td>'+detail_all_hj[i].created_at+'</td>';
+				bodyDetail += '<td>'+detail_all_hj[i].ng_name+'</td>';
+				bodyDetail += '<td>'+detail_all_hj[i].ng_count+'</td>';
+				bodyDetail += '</tr>';
+				index++;
+				total = total + parseInt(detail_all_hj[i].ng_count);
+			}
+		}
+		modalDetailTitle = 'Head YRS / Head YRF NG Resume';
+	}
+	if (part_code === 'MJ') {
+		var index = 1;
+		for (var i = 0; i < detail_all_mj.length; i++) {
+			if (ng_name === detail_all_mj[i].ng_name) {
+				bodyDetail += '<tr>';
+				bodyDetail += '<td>'+index+'</td>';
+				bodyDetail += '<td>'+detail_all_mj[i].serial_number+'</td>';
+				bodyDetail += '<td>'+detail_all_mj[i].product+'</td>';
+				bodyDetail += '<td>'+detail_all_mj[i].material_number+'<br>'+detail_all_mj[i].part_name+'</td>';
+				bodyDetail += '<td>'+detail_all_mj[i].cavity+'</td>';
+				bodyDetail += '<td>'+detail_all_mj[i].operator_kensa+'<br>'+detail_all_mj[i].name+'</td>';
+				bodyDetail += '<td>'+detail_all_mj[i].created_at+'</td>';
+				bodyDetail += '<td>'+detail_all_mj[i].ng_name+'</td>';
+				bodyDetail += '<td>'+detail_all_mj[i].ng_count+'</td>';
+				bodyDetail += '</tr>';
+				index++;
+				total = total + parseInt(detail_all_mj[i].ng_count);
+			}
+		}
+		modalDetailTitle = 'Middle / Body YRF NG Resume';
+	}
+	if (part_code === 'FJ') {
+		var index = 1;
+		for (var i = 0; i < detail_all_fj.length; i++) {
+			if (ng_name === detail_all_fj[i].ng_name) {
+				bodyDetail += '<tr>';
+				bodyDetail += '<td>'+index+'</td>';
+				bodyDetail += '<td>'+detail_all_fj[i].serial_number+'</td>';
+				bodyDetail += '<td>'+detail_all_fj[i].product+'</td>';
+				bodyDetail += '<td>'+detail_all_fj[i].material_number+'<br>'+detail_all_fj[i].part_name+'</td>';
+				bodyDetail += '<td>'+detail_all_fj[i].cavity+'</td>';
+				bodyDetail += '<td>'+detail_all_fj[i].operator_kensa+'<br>'+detail_all_fj[i].name+'</td>';
+				bodyDetail += '<td>'+detail_all_fj[i].created_at+'</td>';
+				bodyDetail += '<td>'+detail_all_fj[i].ng_name+'</td>';
+				bodyDetail += '<td>'+detail_all_fj[i].ng_count+'</td>';				
+				bodyDetail += '</tr>';
+				index++;
+				total = total + parseInt(detail_all_fj[i].ng_count);
+			}
+		}
+		modalDetailTitle = 'Foot NG Resume';
+	}
+	if (part_code === 'BJ') {
+		var index = 1;
+		for (var i = 0; i < detail_all_bj.length; i++) {
+			if (ng_name === detail_all_bj[i].ng_name) {
+				bodyDetail += '<tr>';
+				bodyDetail += '<td>'+index+'</td>';
+				bodyDetail += '<td>'+detail_all_bj[i].serial_number+'</td>';
+				bodyDetail += '<td>'+detail_all_bj[i].product+'</td>';
+				bodyDetail += '<td>'+detail_all_bj[i].material_number+'<br>'+detail_all_bj[i].part_name+'</td>';
+				bodyDetail += '<td>'+detail_all_bj[i].cavity+'</td>';
+				bodyDetail += '<td>'+detail_all_bj[i].operator_kensa+'<br>'+detail_all_bj[i].name+'</td>';
+				bodyDetail += '<td>'+detail_all_bj[i].created_at+'</td>';
+				bodyDetail += '<td>'+detail_all_bj[i].ng_name+'</td>';
+				bodyDetail += '<td>'+detail_all_bj[i].ng_count+'</td>';
+				bodyDetail += '</tr>';
+				index++;
+				total = total + parseInt(detail_all_bj[i].ng_count);
+			}
+		}
+		modalDetailTitle = 'Block / Stopper YRF NG Resume';
+	}
+
+	$('#total_all').html(total);
+
+	$('#tableDetailBody').append(bodyDetail);
+	$('#modalDetailTitle').html(modalDetailTitle);
+	$('#modalDetail').modal('show');
 }
 
 function dynamicSort(property) {

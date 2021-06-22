@@ -8133,18 +8133,27 @@ class RecorderProcessController extends Controller
           $now = $request->get('tanggal');
         }
         $resumes = DB::SELECT("SELECT
+          rc_kensas.serial_number,
+          rc_kensas.operator_kensa,
+          employee_syncs.`name`,
           ng_name,
           ng_count,
-          part_code 
+          part_code,
+          rc_kensas.created_at,
+          rc_kensas.product,
+          rc_kensas.material_number,
+          injection_parts.part_name,
+          rc_kensas.cavity 
         FROM
-          rc_kensas 
-          LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
+          rc_kensas
+          LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number
+          LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensas.operator_kensa 
         WHERE
           rc_kensas.serial_number NOT LIKE '%Z%' 
-          AND DATE( rc_kensas.created_at ) = '".$now."'
-          AND ng_name IS NOT NULL
+          AND DATE( rc_kensas.created_at ) = '".$now."' 
+          AND ng_name IS NOT NULL 
           AND injection_parts.deleted_at IS NULL 
-        AND injection_parts.remark = 'injection'");
+          AND injection_parts.remark = 'injection'");
 
         $dateTitle = date('d M Y',strtotime($now));
 
