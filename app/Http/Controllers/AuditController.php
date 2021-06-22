@@ -1208,8 +1208,9 @@ public function detailPenanganan(Request $request){
 
       ob_clean();
 
-      Excel::create('Audit List '.$time, function($excel) use ($data){
+      Excel::create('Report '.$category.' '.$request->get('date'), function($excel) use ($data){
           $excel->sheet('Data', function($sheet) use ($data) {
+            $sheet->setAutoSize(true);
             return $sheet->loadView('audit.audit_excel', $data);
         });
       })->export('xlsx');
