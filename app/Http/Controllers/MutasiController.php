@@ -733,6 +733,10 @@ class MutasiController extends Controller
                                 $chief = 'PI9903003';
                                 $nama_chief = 'Slamet Hariadi';
                             }
+                            else if($request->get('section') == 'Assembly CL . Tanpo . Case Process Section'){
+                                $chief = 'PI9707008';
+                                $nama_chief = 'Imbang Prasetyo';
+                            }
                         }
                     }
         try {
