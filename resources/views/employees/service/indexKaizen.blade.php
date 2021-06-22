@@ -337,11 +337,11 @@
 
 
 		$.get("{{ url('fetch/kaizen/') }}", data, function(result, status, xhr){
-			$('#tableList').DataTable().clear();
-			$('#tableList').DataTable().destroy();
+			$('#tableKaizen').DataTable().clear();
+			$('#tableKaizen').DataTable().destroy();
 			$("#bodyKaizen").empty();
 			var body = "";
-			console.log("{{ Auth::id() }}");
+			
 			$.each(result.kaizen, function(key, value) {
 				if(jQuery.inArray(value.employee_id, result.employee) !== -1) {
 					body += "<tr>";
