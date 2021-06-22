@@ -26,6 +26,7 @@ class QaIncomingLog extends Model
 		'total_ng',
 		'ng_ratio',
 		'status_lot',
+		'hpl',
 		'report_evidence',
 		'send_email_status',
 		'send_email_at',

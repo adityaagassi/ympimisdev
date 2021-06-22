@@ -287,6 +287,8 @@ class QualityAssuranceController extends Controller
   			$ng_ratio = $request->get('ng_ratio');
   			$status_lot = $request->get('status_lot');
 
+        $materials = QaMaterial::where('material_number',$material_number)->first();
+
 			 $log = QaIncomingLog::create([
   	        'incoming_check_code' => $incoming_check_code,
             'inspector_id' => $inspector,
@@ -305,6 +307,7 @@ class QualityAssuranceController extends Controller
     				'total_ok' => $total_ok,
     				'total_ng' => $total_ng,
     				'ng_ratio' => $ng_ratio,
+            'hpl' => $materials->hpl,
     				'status_lot' => $status_lot,
             'created_by' => Auth::id()
         ]);
