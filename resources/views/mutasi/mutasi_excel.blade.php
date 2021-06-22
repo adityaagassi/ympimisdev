@@ -51,6 +51,11 @@
                         $middle = $nama[1];
                         $last = $nama[2];
                     }
+                    else{
+                        $first = $nama[0];
+                        $middle = $nama[1];
+                        $last = $nama[2];   
+                    }
                 ?>
                 <td>{{ $first }}</td>
                 <td>{{ $middle }}</td>
