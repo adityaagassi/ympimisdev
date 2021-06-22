@@ -144,7 +144,7 @@
 									<th>Action</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id="bodyKaizen">
 							</tbody>
 						</table>
 					</div>
@@ -326,85 +326,113 @@
 	});
 
 	function fill_table(pos, area, stat, filter, user) {
-		$('#tableKaizen').DataTable().destroy();
-		var table2 = $('#tableKaizen').DataTable({
-			'dom': 'Bfrtip',
-			'responsive': true,
-			'lengthMenu': [
-			[ 10, 25, 50, -1 ],
-			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-			],
-			'buttons': {
-				buttons:[
-				{
-					extend: 'pageLength',
-					className: 'btn btn-default',
-				},
-				{
-					extend: 'copy',
-					className: 'btn btn-success',
-					text: '<i class="fa fa-copy"></i> Copy',
-					exportOptions: {
-						columns: ':not(.notexport)'
+
+		var data = {
+			position: pos,
+			area: area, 
+			status: stat,
+			filter: filter,
+			user:user
+		}
+
+		var body = "";
+
+		$.get("{{ url('fetch/kaizen/') }}", data, function(result, status, xhr){
+			$('#tableKaizen').DataTable().destroy();
+			$("#bodyKaizen").empty();
+			$.each(result.kaizen, function(key, value) {
+				body += "<tr>";
+				body += "<td>"+value.id+"</td>";
+				body += "<td>"+value.propose_date+"</td>";
+				body += "<td>"+value.employee_id+"</td>";
+				body += "<td>"+value.employee_name+"</td>";
+				body += "<td>"+value.section+"</td>";
+				body += "<td>"+value.title+"</td>";
+				body += "<td>"+value.area+"</td>";
+
+				//Foreman Status
+				if (value.status == '-1') {
+					if (pos == 'Foreman' || pos == 'Manager' || pos == 'Chief' || pos == 'Deputy General Manager' || pos == 'Deputy Foreman' || '{{ Auth::id() }}' == 53 || '{{ Auth::id() }}' == 80 ||  '{{ Auth::id() }}' == 2580 ||  '{{ Auth::id() }}' == 81) {
+
+						body += '<td><a class="label bg-yellow btn" href="{{ url("index/kaizen/detail") }}'+'/detail/'+value.id+'/foreman">Unverified</a></td>';
+					} else {
+						body += '<td><span class="label bg-yellow">Unverified</span></td>';
 					}
-				},
-				{
-					extend: 'excel',
-					className: 'btn btn-info',
-					text: '<i class="fa fa-file-excel-o"></i> Excel',
-					exportOptions: {
-						columns: ':not(.notexport)'
+				} else if (value.status == '1') {
+					if (value.foreman_point_1 != '' || value.foreman_point_2 != '' || value.foreman_point_3 != '') {
+						body += '<td><span class="label bg-green"><i class="fa fa-check"></i> Verified</span></td>';
+					} else {
+						body += '<td><span class="label bg-yellow">Unverified</span></td>';
 					}
-				},
-				{
-					extend: 'print',
-					className: 'btn btn-warning',
-					text: '<i class="fa fa-print"></i> Print',
-					exportOptions: {
-						columns: ':not(.notexport)'
+				} else if (value.status == 2) {
+					body += '<td><span class="label bg-green"><i class="fa fa-check"></i> Verified</span></td>';
+				} else if (value.status == 3) {
+					body += '<td><span class="label bg-blue"><i class="fa fa-envelope-o"></i>&nbsp; Noted</span></td>';
+				} else {
+					body += '<td><span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span></td>';
+				}
+
+
+				// MANAGER STATUS
+				if (value.foreman_point_1 != '' && value.foreman_point_2 != '' && value.foreman_point_3 != '') {
+					if (value.manager_point_1 != '' && value.manager_point_2 != '' && value.manager_point_3 != '') {
+						body += '<td><span class="label bg-green"><i class="fa fa-check"></i> Verified</span></td>';
+					} else {
+						if (value.status == 2) {
+							body += '<td><span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span></td>';
+						} else if (value.status == 3) {
+							body += '<td><span class="label bg-blue"><i class="fa fa-envelope-o"></i>&nbsp; Noted</span></td>';
+						} else {
+							if (pos == 'Manager' || pos == 'Deputy General Manager') {
+								body += '<td><a class="label bg-yellow btn" href="{{ url("index/kaizen/detail") }}/'+value.id+'manager">Unverified</a></td>';
+							} else {
+								body += '<td><span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span></td>';
+							}
+						} 
+					} 
+				} else {
+					if (value.status == 0) {
+						body += '<td><span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span></td>';
 					}
+				}
+
+				body += "<td>"+((value.foreman_point_1 * 40) + (value.foreman_point_2 * 30) + (value.foreman_point_3 * 30) )+"</td>";
+				body += "<td>"+((value.manager_point_1 * 40) + (value.manager_point_2 * 30) + (value.manager_point_3 * 30) )+"</td>";
+				body += '<td><button onClick="cekDetail(\''+value.id+'\')" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Details</button></td>';
+				body += "</tr>";
+			})
+
+			$("#bodyKaizen").append(body);
+
+			var table = $('#tableKaizen').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ 10, 25, 50, -1 ],
+				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					]
 				},
-				]
-			},
-			'paging'        : true,
-			'lengthChange'  : true,
-			'searching'     : true,
-			'ordering'      : true,
-			'info'        : true,
-			'order'       : [],
-			'autoWidth'   : true,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
-			"bAutoWidth": false,
-			"processing": true,
-			"serverSide": true,
-			"ajax": {
-				"type" : "get",
-				"data": { position: pos, area: area, status: stat, filter: filter, user:user},
-				"url" : "{{ url('fetch/kaizen/') }}"
-			},
-			"columns": [
-			{ "data": "id" },
-			{ "data": "propose_date" },
-			{ "data": "employee_id" },
-			{ "data": "employee_name" },
-			{ "data": "section" },
-			{ "data": "title" },
-			{ "data": "area" },
-			{ "data": "fr_stat" },
-			{ "data": "mg_stat" },
-			{ "data": "fr_point" },
-			{ "data": "mg_point" },
-			{ "data": "action" }
-			],
-			"columnDefs": [
-			{ "width": "2%", "targets": 0 },
-			{ "width": "5%", "targets": [1,2] },
-			{ "width": "13%", "targets": 3 },
-			{ "width": "10%", "targets": 4 },
-			{ "width": "5%", "targets": [6,7,8,9,10,11] },
-			]
-		});
+				'paging': true,
+				'lengthChange': true,
+				'searching': true,
+				'ordering': true,
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true,
+				"order": [[ 1, 'asc' ]]
+			});
+		})
+
 	}
 
 	$(window).on('pageshow', function(){
