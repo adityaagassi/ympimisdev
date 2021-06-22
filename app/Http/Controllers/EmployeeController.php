@@ -3911,11 +3911,16 @@ public function fetchDataKaizen()
      $kzn = $kzn->get();
 
      $emp = EmployeeSync::whereNull('end_date')->select('employee_id')->get();
+     $emp_arr = [];
+
+     foreach ($emp as $ep) {
+          array_push($emp_arr, $ep->employee_id);
+     }
 
      $response = array(
           'status' => true,
           'kaizen' => $kzn,
-          'employee' => $emp
+          'employee' => $emp_arr
      );
      return Response::json($response);
 }
