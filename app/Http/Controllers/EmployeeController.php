@@ -1211,13 +1211,15 @@ public function indexKaizenApprovalResume()
           }
      }
 
-     $q_data = "select bagian.*, IFNULL(kz.count,0) as count  from 
+     $q_data = "SELECT bagian.*, IFNULL(kz.count,0) as count  from 
      (select fr.employee_id, `name`, position, fr.department, struktur.section from
      (select employee_id, `name`, position, department, section from employee_syncs where end_date is null and position in ('foreman', 'chief', 'Deputy Foreman')) as fr
      left join 
      (select department, section from employee_syncs where department is not null and section is not null group by department, section) as struktur on fr.department = struktur.department) as bagian
      left join
-     (select count(id) as count, area from kaizen_forms where `status` = -1 and deleted_at is null group by area) as kz
+     (select count(kaizen_forms.id) as count, area from kaizen_forms 
+     left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
+      where `status` = -1 and kaizen_forms.deleted_at is null and employee_syncs.end_date is null group by area) as kz
      on bagian.section = kz.area
      ".$d."
      order by `name` desc";

@@ -341,7 +341,7 @@
 			$('#tableKaizen').DataTable().destroy();
 			$("#bodyKaizen").empty();
 			var body = "";
-			
+
 			$.each(result.kaizen, function(key, value) {
 				if(jQuery.inArray(value.employee_id, result.employee) !== -1) {
 					body += "<tr>";
@@ -357,7 +357,7 @@
 					if (value.status == '-1') {
 						if (pos == 'Foreman' || pos == 'Manager' || pos == 'Chief' || pos == 'Deputy General Manager' || pos == 'Deputy Foreman' || '{{ Auth::id() }}' == 53 || '{{ Auth::id() }}' == 80 ||  '{{ Auth::id() }}' == 2580 ||  '{{ Auth::id() }}' == 81) {
 
-							body += '<td><a class="label bg-yellow btn" href="{{ url("index/kaizen/detail") }}'+'/detail/'+value.id+'/foreman">Unverified</a></td>';
+							body += '<td><a class="label bg-yellow btn" href="{{ url("index/kaizen/detail") }}'+'/'+value.id+'/foreman">Unverified</a></td>';
 						} else {
 							body += '<td><span class="label bg-yellow">Unverified</span></td>';
 						}
