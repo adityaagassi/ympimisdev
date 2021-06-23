@@ -3430,6 +3430,7 @@ class ProductionReportController extends Controller
                     WHERE
                         audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' )
                         and audit_guidances.deleted_at is null 
+                        ".$department_id."
                     ) AS plan,
                     (
                     SELECT
@@ -3441,6 +3442,7 @@ class ProductionReportController extends Controller
                         audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
                         AND `status` = 'Sudah Dikerjakan' 
                         AND audit_guidances.deleted_at IS NULL 
+                        ".$department_id."
                     ) AS done,
                     (
                     SELECT
@@ -3452,6 +3454,7 @@ class ProductionReportController extends Controller
                         audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
                         AND `status` = 'Belum Dikerjakan' 
                         AND audit_guidances.deleted_at IS NULL 
+                        ".$department_id."
                     ) AS not_yet,
                     (
                     SELECT
@@ -3465,6 +3468,7 @@ class ProductionReportController extends Controller
                         AND `status` = 'Sudah Dikerjakan' 
                         AND audit_guidances.deleted_at IS NULL 
                         AND audit_report_activities.`condition` = 'Tidak Sesuai' 
+                        ".$department_id."
                     ) AS tidak_sesuai,
                     (
                     SELECT
@@ -3478,6 +3482,7 @@ class ProductionReportController extends Controller
                         AND `status` = 'Sudah Dikerjakan' 
                         AND audit_guidances.deleted_at IS NULL 
                         AND audit_report_activities.`handling` = 'Training Ulang IK' 
+                        ".$department_id."
                     ) AS training_ulang,
                     (
                     SELECT
@@ -3491,6 +3496,7 @@ class ProductionReportController extends Controller
                         AND `status` = 'Sudah Dikerjakan' 
                         AND audit_guidances.deleted_at IS NULL 
                         AND audit_report_activities.`handling` = 'Revisi IK' 
+                        ".$department_id."
                     ) AS revisi_ik,
                     (
                     SELECT
@@ -3504,6 +3510,7 @@ class ProductionReportController extends Controller
                         AND `status` = 'Sudah Dikerjakan' 
                         AND audit_guidances.deleted_at IS NULL 
                         AND audit_report_activities.`handling` = 'Pembuatan Jig / Repair Jig' 
+                        ".$department_id."
                     ) AS jig,
                     (
                     SELECT
@@ -3517,6 +3524,7 @@ class ProductionReportController extends Controller
                         AND `status` = 'Sudah Dikerjakan' 
                         AND audit_guidances.deleted_at IS NULL 
                         AND audit_report_activities.`handling` = 'IK Tidak Digunakan' 
+                        ".$department_id."
                     ) AS obsolete 
                 FROM
                     weekly_calendars 
@@ -3554,6 +3562,13 @@ class ProductionReportController extends Controller
             }
             $kondisi = $request->get('kondisi');
 
+            $department_id = "";
+            if ($request->get('department') != "") {
+                $department_id = 'AND department_id = "'.$request->get('department').'"';
+            }else if($request->get('department') == "All" || $request->get('department') == ""){
+                $department_id = "";
+            }
+
             $datass = [];
 
             if ($kondisi == 'Belum Dikerjakan') {
@@ -3565,7 +3580,8 @@ class ProductionReportController extends Controller
                 WHERE 
                     `month` = '".$month."' 
                     AND `status` = '".$kondisi."'
-                    and audit_guidances.deleted_at is null");
+                    and audit_guidances.deleted_at is null
+                    ".$department_id."");
             }elseif ($kondisi == 'Sudah Dikerjakan') {
                 $datas = DB::SELECT("SELECT
                     *,audit_guidances.id as id_guide
@@ -3576,7 +3592,7 @@ class ProductionReportController extends Controller
                 WHERE 
                     `month` = '".$month."' 
                     AND `status` = '".$kondisi."'
-                    and audit_guidances.deleted_at is null");
+                    and audit_guidances.deleted_at is null ".$department_id."");
 
                 foreach ($datas as $key) {
                     $dd = DB::SELECT("SELECT
@@ -3615,7 +3631,8 @@ class ProductionReportController extends Controller
                 WHERE 
                     `month` = '".$month."' 
                     AND `handling` = '".$kondisi."' 
-                    and audit_guidances.deleted_at is null");
+                    and audit_guidances.deleted_at is null
+                    ".$department_id."");
 
                 foreach ($datas as $key) {
                     $dd = DB::SELECT("SELECT
@@ -3654,7 +3671,8 @@ class ProductionReportController extends Controller
                 WHERE 
                     `month` = '".$month."' 
                     AND `handling` = '".$kondisi."'
-                    and audit_guidances.deleted_at is null");
+                    and audit_guidances.deleted_at is null
+                    ".$department_id."");
 
                 foreach ($datas as $key) {
                     $dd = DB::SELECT("SELECT
@@ -3693,7 +3711,8 @@ class ProductionReportController extends Controller
                 WHERE 
                     `month` = '".$month."' 
                     AND `handling` = '".$kondisi."'
-                    and audit_guidances.deleted_at is null");
+                    and audit_guidances.deleted_at is null
+                    ".$department_id."");
 
                 foreach ($datas as $key) {
                     $dd = DB::SELECT("SELECT
@@ -3732,7 +3751,8 @@ class ProductionReportController extends Controller
                 WHERE 
                     `month` = '".$month."' 
                     AND `handling` = '".$kondisi."'
-                    and audit_guidances.deleted_at is null");
+                    and audit_guidances.deleted_at is null
+                    ".$department_id."");
 
                 foreach ($datas as $key) {
                     $dd = DB::SELECT("SELECT
