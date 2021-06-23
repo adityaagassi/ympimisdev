@@ -433,7 +433,7 @@ public function updateInventoryMIS(Request $request)
     MisInventory::where('id', '=', $request->get("id_inv"))
     ->update([
         'category' => $request->get("cat_edit"),
-        'serial_number' => $request->get("device_edit"),
+        'serial_number' => $request->get("serial_edit"),
         'description' => $request->get("desc_edit"),
         'project' => $request->get('proj_edit'),
         'location' => $request->get('loc_edit'),

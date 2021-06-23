@@ -146,7 +146,7 @@ class ActivityListController extends Controller
         $emp = EmployeeSync::where('employee_id',$emp_id)->first();
 
         if($emp->position == 'Leader'){
-          $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('leader_dept',$name)->where('activity_name','!=','Null')->where('frequency',$frequency)->where('remark',null)->get();
+          $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('leader_dept',$name)->where('activity_name','!=','Null')->where('frequency',$frequency)->get();
         }
         else{
           $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->where('frequency',$frequency)->distinct()->get();

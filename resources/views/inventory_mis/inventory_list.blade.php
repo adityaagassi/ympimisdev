@@ -131,6 +131,7 @@
                                    </div>
                                    <!-- <input type="text" class="form-control datepicker" style="width:10%" id="rcv_date" placeholder="Select Date"> -->
                                    <table class="table">
+                                        <!-- <input type="hidden" name="id" id="id"> -->
                                         <thead>
                                              <tr>
                                                   <th style="width: 10%">Category</th>
@@ -191,7 +192,7 @@
                                    </div>
                                    <div class="col-xs-4">
                                         <input type="hidden" name="id_inv" id="id_inv">
-                                        <select class="form-control select3" data-placeholder="Pilih Category" id="cat_edit" name="cat_edit" style="width: 100% height: 35px; font-size: 15px;" required>
+                                        <select class="form-control select3" data-placeholder="Pilih Category" id="cat_edit" name="cat_edit" style="width: 100% height: 35px; font-size: 15px;">
                                              <option value=""></option>
                                         </select>
                                    </div>
@@ -205,7 +206,7 @@
                                         <!-- <select class="form-control select3" data-placeholder="Serial Number" name="device_edit" id="device_edit" style="width: 100% height: 35px; font-size: 15px;" required>
                                              <option value=""></option>
                                         </select> -->
-                                        <input class="form-control" type="text" name="device_edit" id="device_edit" placeholder="Serial Number" style="width: 100%; height: 33px; font-size: 15px;" min="0" required>
+                                        <input class="form-control" type="text" name="serial_edit" id="serial_edit" placeholder="Serial Number" style="width: 100%; height: 33px; font-size: 15px;" min="0" >
                                    </div>
                               </div>
 
@@ -223,7 +224,7 @@
                                         <span style="font-weight: bold; font-size: 16px;">Project<span class="text-red">*</span></span>
                                    </div>
                                    <div class="col-xs-4">
-                                        <select class="form-control select3" data-placeholder="Pilih Project" name="proj_edit" id="proj_edit" style="width: 100% height: 35px; font-size: 15px;" required>
+                                        <select class="form-control select3" data-placeholder="Pilih Project" name="proj_edit" id="proj_edit" style="width: 100% height: 35px; font-size: 15px;">
                                              <option value=""></option>
                                         </select>
                                    </div>
@@ -234,7 +235,7 @@
                                         <span style="font-weight: bold; font-size: 16px;">Location<span class="text-red">*</span></span>
                                    </div>
                                    <div class="col-xs-4">
-                                        <select class="form-control select3" data-placeholder="Pilih Location" name="loc_edit" id="loc_edit" style="width: 100% height: 35px; font-size: 15px;" required>
+                                        <select class="form-control select3" data-placeholder="Pilih Location" name="loc_edit" id="loc_edit" style="width: 100% height: 35px; font-size: 15px;">
                                              <option value=""></option>
                                         </select>
                                    </div>
@@ -245,7 +246,7 @@
                                         <span style="font-weight: bold; font-size: 16px;">Qty<span class="text-red">*</span></span>
                                    </div>
                                    <div class="col-xs-3">
-                                        <input class="form-control" type="number" name="qty_edit" id="qty_edit" placeholder="Jumlah Barang" style="width: 100%; height: 33px; font-size: 15px;" min="0" required readonly>
+                                        <input class="form-control" type="number" name="qty_edit" id="qty_edit" placeholder="Jumlah Barang" style="width: 100%; height: 33px; font-size: 15px;" min="0" readonly>
                                    </div>
                               </div>
                               <div class="col-xs-12" style="padding-bottom: 1%;">
@@ -373,7 +374,7 @@
                     body += "</tr>";
 
                     arr_ctg.push(value.category);
-                    arr_dev.push(value.device);
+                    arr_dev.push(value.serial_number);
                     arr_proj.push(value.project);
                     arr_loc.push(value.location);
                })
@@ -546,7 +547,7 @@
      function openModalUpdate(id) {
           $("#id_inv").val(id);
           var ctg = "";
-          var dev = "";
+          // var dev = "";
           var proj = "";
           var loc = "";
 
@@ -554,9 +555,9 @@
                ctg += "<option value='"+value+"'>"+value+"</option>";
           })
 
-          $.each(arr_dev, function(index, value){
-               dev += "<option value='"+value+"'>"+value+"</option>";
-          })
+          // $.each(arr_dev, function(index, value){
+          //      dev += "<option value='"+value+"'>"+value+"</option>";
+          // })
 
           $.each(arr_proj, function(index, value){
                proj += "<option value='"+value+"'>"+value+"</option>";
@@ -567,7 +568,7 @@
           })
 
           $("#cat_edit").append(ctg);
-          $("#device_edit").append(dev);
+          // $("#serial_edit").append(dev);
           $("#proj_edit").append(proj);
           $("#loc_edit").append(loc);
 
@@ -578,7 +579,7 @@
                $("#updateModal").modal('show');
 
                $("#cat_edit").val(result.inventory.category).trigger('change');
-               $("#device_edit").val(result.inventory.device).trigger('change');
+               $("#serial_edit").val(result.inventory.serial_number);
                $("#desc_edit").val(result.inventory.description);
                $("#proj_edit").val(result.inventory.project).trigger('change');
                $("#loc_edit").val(result.inventory.location).trigger('change');
@@ -624,7 +625,6 @@
 
                $.post('{{ url("delete/inventory_mis") }}', data, function(result, status, xhr) {
                     openSuccessGritter("Success", "Success Delete Item");
-
                     get_inv();
                })
           }
