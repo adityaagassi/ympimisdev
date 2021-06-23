@@ -164,7 +164,7 @@
 </section>
 @endsection
 @section('scripts')
-<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/pareto.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
