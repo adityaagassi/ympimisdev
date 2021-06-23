@@ -30,6 +30,7 @@
                 <th style="font-weight: bold;">Lot Number</th>
                 <th style="font-weight: bold;">Material</th>
                 <th style="font-weight: bold;">Desc</th>
+                <th style="font-weight: bold;">HPL</th>
                 <th style="font-weight: bold;">Qty Rec</th>
                 <th style="font-weight: bold;">Qty Check</th>
                 <th style="font-weight: bold;">Defect</th>
@@ -86,6 +87,7 @@
                     <td> {{$datas->lot_number}} </td>
                     <td> {{$datas->material_number}} </td>
                     <td> {{$datas->material_description}} </td>
+                    <td> {{$datas->hpl}} </td>
                     <td> {{$datas->qty_rec}} </td>
                     <td> {{$datas->qty_check}} </td>
                     <?php if ($datas->ng_name != null && count($ng_name) > 0) { ?>

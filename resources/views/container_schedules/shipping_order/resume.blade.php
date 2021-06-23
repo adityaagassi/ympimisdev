@@ -29,7 +29,6 @@
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
 	}
-	
 </style>
 @stop
 @section('header')
@@ -507,8 +506,10 @@
 				var persen_teus_not_yet = 100-persen_teus_port-persen_teus_etd;
 
 
-				var fix_port = Math.round((total_teus_at_port/(total_teus_at_port + total_teus_etd_sub)) * 100);
-				var fix_etd_sub = 100 - fix_port;
+				// var fix_port = Math.round((total_teus_at_port/(total_teus_at_port + total_teus_etd_sub)) * 100);
+				// var fix_etd_sub = 100 - fix_port;
+				var fix_port = Math.round((total_teus_at_port/total_teus_confirmed) * 100);
+				var fix_etd_sub = parseInt(persen_teus_port + persen_teus_etd) - fix_port;
 
 
 

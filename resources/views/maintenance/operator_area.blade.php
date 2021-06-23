@@ -348,7 +348,7 @@
     $.get('{{ url("fetch/maintenance/operator/position") }}', function(result, status, xhr) {
       if (result.status) {
         $.each(result.loc_temp, function(index, value){
-          if (value.employee_id == "{{ Auth::user()->username }}") {
+          if (value.employee_id == ("{{ Auth::user()->username }}").toUpperCase()) {
             $("#this_area").css('background-color', '#2ed573');
             $("#desc").val(value.description);
             $("#loc").val(value.location);

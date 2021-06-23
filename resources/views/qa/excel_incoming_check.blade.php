@@ -29,6 +29,7 @@
                 <th style="font-weight: bold;" rowspan="2">Lot Number</th>
                 <th style="font-weight: bold;" rowspan="2">Material</th>
                 <th style="font-weight: bold;" rowspan="2">Desc</th>
+                <th style="font-weight: bold;" rowspan="2">HPL</th>
                 <th style="font-weight: bold;" rowspan="2">Qty Rec</th>
                 <th style="font-weight: bold;" rowspan="2">Qty Check</th>
                 <th style="font-weight: bold;" rowspan="2">Defect</th>
@@ -38,6 +39,7 @@
                 <th style="font-weight: bold;" rowspan="2">Lot Status</th>
             </tr>
             <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -99,6 +101,7 @@
                 <td rowspan="{{$jumlah}}"> {{$datas->lot_number}} </td>
                 <td rowspan="{{$jumlah}}"> {{$datas->material_number}} </td>
                 <td rowspan="{{$jumlah}}"> {{$datas->material_description}} </td>
+                <td rowspan="{{$jumlah}}"> {{$datas->hpl}} </td>
                 <td rowspan="{{$jumlah}}"> {{$datas->qty_rec}} </td>
                 <td rowspan="{{$jumlah}}"> {{$datas->qty_check}} </td>
                 <?php if ($datas->ng_name != null) { ?>

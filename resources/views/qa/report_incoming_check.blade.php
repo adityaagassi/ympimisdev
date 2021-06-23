@@ -446,6 +446,7 @@
 		tableData += '<th>Lot Number</th>';
 		tableData += '<th>Material</th>';
 		tableData += '<th>Desc</th>';
+		tableData += '<th>HPL</th>';
 		tableData += '<th>Qty Rec</th>';
 		tableData += '<th>Qty Check</th>';
 		tableData += '<th>Defect</th>';
@@ -536,6 +537,7 @@
 						tableData += '<td>'+ value.lot_number +'</td>';
 						tableData += '<td>'+ value.material_number +'</td>';
 						tableData += '<td>'+ value.material_description +'</td>';
+						tableData += '<td>'+ value.hpl +'</td>';
 						tableData += '<td>'+ value.qty_rec +'</td>';
 						tableData += '<td>'+ value.qty_check +'</td>';
 						if (value.ng_name != null) {
