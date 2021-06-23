@@ -576,7 +576,12 @@ td{
           body += '<td style="width: 10%">'+ result.data[i].judul +'</td>';
           body += '<td style="width: 1%"><a href="javascript:void(0)" data-toggle="modal" class="btn btn-md btn-success" onClick="sosialisasi('+ result.data[i].id +')"><i class="fa fa-user"></i> <i class="fa fa-exchange"></i> <i class="fa fa-users"></i></a> </td>';
           body += '<td style="width: 1%">'+ result.data[i].jumlah +'</td>';
-          body += '<td style="width: 1%; font-weight: bold;"><a href="{{url("index/form_experience/print")}}/'+ result.data[i].id +'" type="button" class="btn btn-warning btn-md" target="_blank"><i class="fa fa-file-pdf-o"></i></a></td>';
+          if ("{{ Auth::user()->username }}" == result.data[i].employee_id) {
+            body += '<td style="width: 1%; font-weight: bold;"><a href="{{url("index/form_experience/edit")}}/'+ result.data[i].id +' type="button" class="btn btn-primary btn-md" target="_blank""><i class="fa fa-pencil"></i>  </a> <a href="{{url("index/form_experience/print")}}/'+ result.data[i].id +'" type="button" class="btn btn-warning btn-md" target="_blank"><i class="fa fa-file-pdf-o"></i></a></td>';
+          }
+          else{
+            body += '<td style="width: 1%; font-weight: bold;"><a href="{{url("index/form_experience/print")}}/'+ result.data[i].id +'" type="button" class="btn btn-warning btn-md" target="_blank"><i class="fa fa-file-pdf-o"></i></a></td>';
+          }
           body += '</tr>';
         }
 
