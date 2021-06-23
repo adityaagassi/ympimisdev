@@ -639,7 +639,8 @@
 	function checkMaterial(material_number) {
 		if (material_number.length === 7) {
 			var data = {
-				material_number:material_number
+				material_number:material_number,
+				location:'{{$location}}'
 			}
 			$.get('{{ url("fetch/qa/check_material") }}', data, function(result, status, xhr){
 				if(result.status){

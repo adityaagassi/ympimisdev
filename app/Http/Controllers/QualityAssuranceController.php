@@ -125,7 +125,7 @@ class QualityAssuranceController extends Controller
   	public function fetchCheckMaterial(Request $request)
   	{
   		try {
-  			$material = QaMaterial::where('material_number',$request->get('material_number'))->first();
+  			$material = QaMaterial::where('material_number',$request->get('material_number'))->where('s_loc','like','%'.$request->get('location').'%')->first();
   			if (count($material) > 0) {
   				$response = array(
 	                'status' => true,
