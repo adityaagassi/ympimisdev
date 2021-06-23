@@ -215,7 +215,7 @@
                                         <span style="font-weight: bold; font-size: 16px;">Description<span class="text-red">*</span></span>
                                    </div>
                                    <div class="col-xs-6">
-                                        <textarea class="form-control" name="desc_edit" id="desc_edit" readonly></textarea>
+                                        <textarea class="form-control" name="desc_edit" id="desc_edit"></textarea>
                                    </div>
                               </div>
 
