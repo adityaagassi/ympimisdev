@@ -157,14 +157,14 @@
             <div class="row">
               <div class="col-xs-7">
                 <div class="form-group">
-                  <label for="date"><span class="text-red">*</span>Judul <span class="text-purple">件名</span></label>
+                  <label for="date">Judul <span class="text-purple">件名</span></label>
                   <input type="hidden" value="{{csrf_token()}}" name="_token" />
                   <?php if(isset($judul)) { ?>
                     <input type="hidden" name="sakurentsu_number" value="{{ $judul->sakurentsu_number }}">
                   <?php } else { ?>
                     <input type="hidden" name="sakurentsu_number" value="">
                   <?php } ?>
-                  <input type="text" class="form-control input-lg" id="title_name" placeholder="Title" <?php if(isset($judul)) echo 'value = "'.$judul->title.'"'; ?>>
+                  <input type="text" class="form-control input-lg" id="title_name" placeholder="Title">
                 </div>
               </div>
             </div>
@@ -172,7 +172,7 @@
             <div class="row">
               <div class="col-xs-4">
                 <div class="form-group">
-                  <label for="date"><span class="text-red">*</span>Nama Produk / Nama Mesin <span class="text-purple">製品名 / 設備名</span></label>
+                  <label for="date">Nama Produk / Nama Mesin <span class="text-purple">製品名 / 設備名</span></label>
                   <input type="text" class="form-control" name="product_name" id="product_name" placeholder="Input Product Name / Machine Name">
                 </div>
               </div>
@@ -181,7 +181,7 @@
             <div class="row">
               <div class="col-xs-4">
                 <div class="form-group">
-                  <label for="date"><span class="text-red">*</span>Nama Proses <span class="text-purple">工程名</span></label>
+                  <label for="date">Nama Proses <span class="text-purple">工程名</span></label>
                   <input type="text" class="form-control" name="proccess_name" id="proccess_name" placeholder="Input Process Name">
                 </div>
               </div>
@@ -190,7 +190,7 @@
             <div class="row">
               <div class="col-xs-4">
                 <div class="form-group">
-                  <label for="date"><span class="text-red">*</span>Nama Unit <span class="text-purple">班　名</span></label>
+                  <label for="date">Nama Unit <span class="text-purple">班　名</span></label>
                   <input type="text" class="form-control" name="unit_name" id="unit_name" placeholder="Input Unit Name">
                 </div>
               </div>
@@ -199,7 +199,7 @@
             <div class="row">
               <div class="col-xs-4">
                 <div class="form-group">
-                  <p><b><span class="text-red">*</span>Klasifikasi Perubahan 3M <span class="text-purple">3M変更区分</span></b></p>
+                  <p><b>Klasifikasi Perubahan 3M <span class="text-purple">3M変更区分</span></b></p>
                   <label class="radio-inline">
                     <input type="radio" name="category" value="Metode">Metode <span class="text-purple">工法</span>
                   </label>
@@ -216,7 +216,7 @@
             <div class="row">
               <div class="col-xs-6">
                 <div class="form-group">
-                  <label for="related_department"><span class="text-red">*</span>Related Department <span class="text-purple">関係部門</span></label>
+                  <label for="related_department">Related Department <span class="text-purple">関係部門</span></label>
                   <select class="form-control" name="related_department[]" id="related_department" data-placeholder="Select Related Department" multiple="">
                     @foreach($departemen as $dpr)
                     <option value="{{ $dpr->department }}">{{ $dpr->department }}</option>
@@ -229,7 +229,7 @@
             <div class="row">
               <div class="col-xs-12">
                 <div class="form-group">
-                  <label><span class="text-red">*</span>Isi dan Alasan Perubahan <span class="text-purple">変更内容・変更理由</span></label>
+                  <label>Isi dan Alasan Perubahan <span class="text-purple">変更内容・変更理由</span></label>
                   <textarea id="isi" name="isi"></textarea>
                 </div>
               </div>
@@ -238,7 +238,7 @@
             <div class="row">
               <div class="col-xs-12">
                 <div class="form-group">
-                  <label><span class="text-red">*</span>Keuntungan Perubahan <span class="text-purple">変更することによるメリット</span></label>
+                  <label>Keuntungan Perubahan <span class="text-purple">変更することによるメリット</span></label>
                   <textarea id="keuntungan" name="keuntungan"></textarea>
                 </div>
               </div>
@@ -247,7 +247,7 @@
             <div class="row">
               <div class="col-xs-12">
                 <div class="form-group">
-                  <label><span class="text-red">*</span>Pengecekan kualitas sebelumnya (Tgl・metode・jumlah・pengecek,dll) <span class="text-purple">事前の品質確認　（日時・方法・数量・確認者等）</span></label>
+                  <label>Pengecekan kualitas sebelumnya (Tgl・metode・jumlah・pengecek,dll) <span class="text-purple">事前の品質確認　（日時・方法・数量・確認者等）</span></label>
                   <textarea id="kualitas_before" name="kualitas_before"></textarea>
                 </div>
               </div>
@@ -256,31 +256,25 @@
             <div class="row">
               <div class="col-xs-12">
                 <div class="form-group">
-                  <label><span class="text-red">*</span>Tanggal mulai・Tgl rencana perubahan <span class="text-purple">開始日・切替予定日</span> <br> ※alasan bila menjadi after request <span class="text-purple">※事後申請となった場合はその理由</span></label>
-                  <div class="input-group date">
-                    <div class="input-group-addon bg-purple" style="border: none;">
-                      <i class="fa fa-calendar"></i>
-                    </div>
-                    <input type="text" style="width: 20%" class="form-control datepicker" name="tgl_rencana" id="tgl_rencana" placeholder="Select Planned Start Date">
-                  </div>
-                  <input type="text" class="form-control" name="tgl_rencana_note" id="tgl_rencana_note" placeholder="Input Note Planned Date">
+                  <label>Tanggal mulai・Tgl rencana perubahan <span class="text-purple">開始日・切替予定日</span> <br> ※alasan bila menjadi after request <span class="text-purple">※事後申請となった場合はその理由</span></label>
+                  <input type="text" class="form-control" name="tgl_rencana" id="tgl_rencana" placeholder="Input Planned Start Date">
                 </div>
               </div>
             </div>
 
-          <!--   <div class="row">
+            <div class="row">
               <div class="col-xs-12">
                 <div class="form-group">
                   <label>Item khusus <span class="text-purple">特記事項</span></label>
                   <textarea id="item_khusus" name="item_khusus"></textarea>
                 </div>
               </div>
-            </div> -->
+            </div>
 
             <div class="row">
               <div class="col-xs-12">
                 <div class="form-group">
-                  <label><span class="text-red">*</span>Lampiran <span class="text-purple">添付</span></label>
+                  <label>Lampiran <span class="text-purple">添付</span></label>
                   <p><button type="button" class="btn btn-success btn-xs" onclick="add_att()"><i class="fa fa-plus"></i></button></p>
                   <table>
                     <tr id="lampiran_div">
@@ -371,20 +365,10 @@
         height: 100
       });
 
-      // CKEDITOR.replace('item_khusus' ,{
-      //   filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-      //   height: 150
-      // });
-
-
-      var judul = "";
-      judul = '<?php if(isset($judul)) { echo json_encode($judul); } ?>';
-      console.log(judul);
-
-      if (judul != "") {
-        $("input[name='category'][value='"+judul.remark+"']").prop('checked', true);
-        $("input[name='category']").prop('disabled', true);
-      }
+      CKEDITOR.replace('item_khusus' ,{
+        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+        height: 150
+      });
 
     });
 
@@ -426,9 +410,7 @@
       benefit = CKEDITOR.instances.keuntungan.getData();
       kualitas_before = CKEDITOR.instances.kualitas_before.getData();
       planned_date = $("#tgl_rencana").val();
-      planned_date_note = $("#tgl_rencana_note").val();
-
-      // special_item = CKEDITOR.instances.item_khusus.getData();
+      special_item = CKEDITOR.instances.item_khusus.getData();
       related_department = $("#related_department").val();
       sakurentsu_number = $("#sk_number").val();
 
@@ -448,8 +430,7 @@
       formData.append('benefit', benefit);
       formData.append('kualitas_before', kualitas_before);
       formData.append('planned_date', planned_date);
-      formData.append('planned_date_note', planned_date_note);
-      // formData.append('special_item', special_item);
+      formData.append('special_item', special_item);
       formData.append('sakurentsu_number', sakurentsu_number);
       formData.append('related_department', related_department);
       formData.append('file_datas', $("#lampiran").prop('files')[0]);
@@ -472,7 +453,7 @@
           console.log(response.status);
           $("#loading").hide();
           openSuccessGritter('Success', '3M Has Been Created Successfully');
-          setTimeout( function() {window.location.replace("{{ url('index/sakurentsu/list_3m') }}")}, 2000);
+          // setTimeout( function() {window.location.replace("{{ url('index/sakurentsu/list_3m') }}")}, 2000);
 
         },
         error: function (response) {

@@ -158,7 +158,7 @@
             parent.val(currentContent);
             keyboardShiftify();
             parent.focus();
-           // cari(parent.attr("id"));
+           cari(parent.attr("id"));
            
 
         };

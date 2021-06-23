@@ -28,7 +28,7 @@
 					</tr>
 					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 2%; border:1px solid black;">Period</th>
-						<th style="width: 5%; border:1px solid black;">Department</th>
+						<th style="width: 5%; border:1px solid black;">Dept</th>
 						<th style="width: 2%; border:1px solid black;">ID</th>
 						<th style="width: 6%; border:1px solid black;">Name</th>
 						<th style="width: 3%; border:1px solid black;">Grade</th>
@@ -60,7 +60,7 @@
 					</tr>
 					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 2%; border:1px solid black;">Period</th>
-						<th style="width: 5%; border:1px solid black;">Department</th>
+						<th style="width: 5%; border:1px solid black;">Dept</th>
 						<th style="width: 2%; border:1px solid black;">ID</th>
 						<th style="width: 6%; border:1px solid black;">Name</th>
 						<th style="width: 3%; border:1px solid black;">Grade</th>

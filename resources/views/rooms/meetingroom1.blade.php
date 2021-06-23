@@ -29,7 +29,7 @@
 		-moz-transform-origin: 0 0;*/
 		position:absolute; 
 		clip:rect(0px,1110px,800px,50px);
-		top:-50px; left:-250px;
+		top:-50px; left:-50px;
 	}
 	
 </style>

@@ -19,10 +19,10 @@
 		<div class="col-xs-4" style="text-align: center; color: red;">
 
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Warehouse <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url('index/reed/resin_receive') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Resin Reception</a>
-			<!-- <a href="{{ url('index/reed/label_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Label Verification</a> -->
+			<a href="{{ url('index/reed/resin_receive') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Resin Receive</a>
+			<a href="{{ url('index/reed/label_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Label Verification</a>
 			<a href="{{ url('index/reed/store_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Store Verification</a>
-			<a href="{{ url('index/reed/warehouse_delivery') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Resin Delivery</a>
+			<!-- <a href="{{ url('index/reed/label_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Warehouse Delivery</a> -->
 			
 
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Molding <i class="fa fa-angle-double-down"></i></span>
@@ -30,8 +30,6 @@
 			
 
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Injection Process <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url('index/reed/injection_resin_receive') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Resin Reception</a>
-			<a href="{{ url('index/reed/injection_order') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Create Injection Order</a>
 			<a href="{{ url('index/reed/injection_verification') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Injection Verification</a>
 			<a href="{{ url('index/reed/injection_delivery') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">After Injection Delivery</a>
 

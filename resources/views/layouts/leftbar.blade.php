@@ -406,6 +406,7 @@
   </li>
   @endif
 
+
   @if(in_array('S46', $navs))
   @if(isset($head) && $head == "Accounting")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
@@ -753,23 +754,6 @@
         <a href="{{ url("payment_request") }}"><i class="fa fa-money"></i>Create Payment</a>
       </li>
 
-    </ul>
-  </li>
-  @endif
-
-  @if(in_array('S45', $navs))
-  @if(isset($head) && $head == "Cash Payment")<li class="treeview active">@else<li class="treeview">@endif
-    <a href="#">
-      <i class="fa fa-money"></i> <span>Cash Payment</span>
-      <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-      </span>
-    </a>
-
-    <ul class="treeview-menu">
-      @if(isset($page) && $page == "Cash Payment")<li class="active">@else<li>@endif
-        <a href="{{ url("index/cash_payment") }}"><i class="fa fa-shopping-cart"></i>Request Cash Payment</a>
-      </li>
     </ul>
   </li>
   @endif
@@ -1666,11 +1650,7 @@
    <i class="fa fa-angle-left pull-right"></i>
  </span>
 </a>
-
 <ul class="treeview-menu">
-  @if(isset($page) && $page == "Request Produksi new")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/request/produksi") }}"><i class="fa fa-newspaper-o"></i> <span>RequesT Produksi new</span></a>
-</li>
  @if(isset($page) && $page == "Display Job")<li class="active">@else<li>@endif
   <a href="{{ secure_url("/index/display/job") }}"><i class="fa fa-tv"></i> <span>Display Job</span></a>
 </li>

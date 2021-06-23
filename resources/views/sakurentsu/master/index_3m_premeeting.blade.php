@@ -165,7 +165,7 @@
                 <div class="form-group">
                   <label for="date">Judul <span class="text-purple">件名</span></label>
                   <input type="hidden" value="{{csrf_token()}}" name="_token" />
-                  <!-- <input type="hidden" name="stat" value="3"> -->
+                  <input type="hidden" name="stat" value="3">
                   <input type="text" class="form-control input-lg" id="title_name" placeholder="Title" name="title_name">
                   <input type="text" class="form-control input-lg" id="title_name_trans" placeholder="Translate Title" name="title_name_trans">
                   <input type="hidden" class="form-control" id="id" name="id">
@@ -262,13 +262,7 @@
               <div class="col-xs-12">
                 <div class="form-group">
                   <label>Tanggal mulai・Tgl rencana perubahan <span class="text-purple">開始日・切替予定日</span> <br> ※alasan bila menjadi after request <span class="text-purple">※事後申請となった場合はその理由</span></label>
-                  <div class="input-group date">
-                    <div class="input-group-addon bg-purple" style="border: none;">
-                      <i class="fa fa-calendar"></i>
-                    </div>
-                    <input type="text" style="width: 20%" class="form-control datepicker" name="tgl_rencana" id="tgl_rencana" placeholder="Select Planned Start Date">
-                  </div>
-                  <input type="text" class="form-control" name="tgl_rencana_note" id="tgl_rencana_note" placeholder="Input Note Planned Date">
+                  <input type="text" class="form-control" id="tgl_rencana" placeholder="Input Planned Start Date" name="tgl_rencana">
                 </div>
               </div>
             </div>
@@ -754,8 +748,8 @@
 
         <div class="row">
           <div class="col-xs-12">
-            <button type="submit" class="btn btn-success pull-right" style="margin-top: 5px; width: 100%" id="save_3m"><i class="fa fa-check"></i>&nbsp; SAVE 3M & SEND EMAIL PIC DOCUMENT</button>
-            <!-- <button type="button" class="btn btn-primary pull-right" style="margin-top: 5px; margin-right: 5px" id="email_doc" onclick="modal_email()"><i class="fa fa-envelope"></i>&nbsp; Email PIC Document</button> -->
+            <button type="submit" class="btn btn-success pull-right" style="margin-top: 5px" id="save_3m"><i class="fa fa-check"></i>&nbsp; SAVE 3M</button>
+            <button type="button" class="btn btn-primary pull-right" style="margin-top: 5px; margin-right: 5px" id="email_doc" onclick="modal_email()"><i class="fa fa-envelope"></i>&nbsp; Email PIC Document</button>
           </div>
         </div>
       </form>
@@ -811,7 +805,7 @@
           </table>
 
           <button class="btn btn-danger pull-left" data-dismiss="modal"><i class="fa fa-close"></i>&nbsp; Cancel</button>
-          <button class="btn btn-primary pull-right" onclick="sendMail()"><i class="fa fa-envelope"></i>&nbsp;Save & Send</button>
+          <button class="btn btn-primary pull-right" onclick="sendMail()"><i class="fa fa-envelope"></i>&nbsp; Send Mail(s)</button>
         </div>
       </div>
     </div>
@@ -980,7 +974,6 @@ function fillData() {
   $("#keuntungan").val(datas.benefit);
   $("#kualitas_before").val(datas.check_before);
   $("#tgl_rencana").val(datas.started_date);
-  $("#tgl_rencana_note").val(datas.date_note);
   $("#item_khusus").val(datas.special_items);
   $("input[name='bom_change'][value='"+datas.bom_change+"']").prop('checked', true);
 
@@ -988,7 +981,7 @@ function fillData() {
     tb_lamp = "";
     $("#table_lampiran").empty();
 
-    $.each(datas.att.split("|"), function(index,value){
+    $.each(datas.att.split(":"), function(index,value){
       tb_lamp += "<tr>";
       tb_lamp += "<td><a href='"+"{{ url('/uploads/sakurentsu/three_m/att/') }}/"+value+"' target='_blank'><i class='fa fa-file-pdf-o'></i>&nbsp;"+value+"</a><td>";
       tb_lamp += "</tr>";
@@ -1001,34 +994,92 @@ function fillData() {
 $('#main_form').on('submit', function (e) {
   e.preventDefault();
 
-  $("#modal_email").modal('show');
+  var formData = new FormData();
+  formData.append('id', $("#id").val());
+  formData.append('product', $("#product_name").val());
+  formData.append('proccess', $("#proccess_name").val());
+  formData.append('title', $("#title").val());
+  formData.append('unit_name', $("#unit_name").val());
+  formData.append('category', $("input[name='category']:checked").val());
+  formData.append('content', CKEDITOR.instances.isi.getData());
+  formData.append('benefit', CKEDITOR.instances.keuntungan.getData());
+  formData.append('kualitas_before', CKEDITOR.instances.kualitas_before.getData());
+  formData.append('planned_date', $("#tgl_rencana").val());
+  formData.append('special_item', CKEDITOR.instances.item_khusus.getData());
+  formData.append('sakurentsu_number', $("#sk_number").val());
+  formData.append('related_department', $("#related_department").val());
+  formData.append('bom_change', $("input[name='bom_change']:checked").val());
+  formData.append('stat', 3);
+  // formData.append('file', $("#lampiran").prop('files')[0]);
+  for (var i = 1; i <= 17; i++) {
+    formData.append('doc_'+i, $("input[name='doc_"+i+"']:checked").val());
+    formData.append('doc_name_'+i, $("input[name='doc_name_"+i+"']").val());
+    formData.append('doc_note_'+i, $("input[name='doc_note_"+i+"']").val());
+    formData.append('doc_target_'+i, $("input[name='doc_target_"+i+"']").val());
+    formData.append('doc_finish_'+i, $("input[name='doc_finish_"+i+"']").val());
+    formData.append('doc_pic_'+i, $("#doc_pic_"+i).val());
+  }
 
-  $("#bodyDetail").empty();
-  body = "";
 
-  $('.doc').each(function(index, value) {
-    var ido = $(this).attr('name');
-    var num = ido.split('_')[1];
-
-    if ($(this).is(':checked') && $('input[name="'+ido+'"]:checked').val() == "NEED") {    
-
-      body += "<tr>";
-
-      body += "<td>"+$("input[name='doc_name_"+num+"']").val()+"</td>";
-      body += "<td>"+$("input[name='doc_note_"+num+"']").val()+"</td>";
-      body += "<td>"+$("input[name='doc_target_"+num+"']").val()+"</td>";
-      body += "<td>"+$("#doc_pic_"+num+" option:selected").val()+"</td>";
-      body += "</tr>";
-
-      console.log($("#doc_pic_"+num+" option:selected"));
-      console.log(num);
-    }
+  $.each($('input[name="file[]"]'),function(i, obj) {
+    $.each(obj.files,function(j,file){
+      formData.append('file['+i+']['+j+']', file);
+    })
   });
 
-  $("#bodyDetail").append(body);
+  var url = "{{ url('post/sakurentsu/3m/premeeting')}}";
+  // var formData = new FormData(this); 
+    // build the ajax call
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: formData,
+      success: function (response) {
+        openSuccessGritter('Success', response.message);
+        console.log(response.message);
+      },
+      error: function (response) {
+            // handle error response
+            openErrorGritter('Error', response.message);
+            console.log(response.message);
+          },
+          contentType: false,
+          processData: false
+        });
+  })
 
-})
+// $("#save_3m").click(function() {
+//   arr_doc = [];
 
+//   for (var i = 1; i <= 17; i++) {
+//     arr_doc.push({
+//       'doc' : $("input[name='doc_"+i+"']:checked").val(),
+//       'doc_note' : $("input[name='doc_note_"+i+"']").val(),
+//       'doc_target' : $("input[name='doc_target_"+i+"']").val(),
+//       'doc_finish' : $("input[name='doc_finish_"+i+"']").val(),
+//       'doc_pic' : $("input[name='doc_pic_"+i+"']").val(),
+//       'doc_name' : $("input[name='doc_name_"+i+"']").val()
+//     })
+//   }
+
+//   var data = {
+//     id : $("#id").val(),
+//     title_name : $("#title_name").val(),
+//     product_name : $("#product_name").val(),
+//     proccess_name : $("#proccess_name").val(),
+//     unit_name : $("#unit_name").val(),
+//     related_department : $("#related_department").val(),
+//     category : $('input[name="category"]:checked').val(),
+//     isi : CKEDITOR.instances.isi.getData(),
+//     keuntungan : CKEDITOR.instances.keuntungan.getData(),
+//     kualitas_before : CKEDITOR.instances.kualitas_before.getData(),
+//     tgl_rencana : $("#tgl_rencana").val(),
+//     bom_change : $('input[name="bom_change"]:checked').val(),
+//     item_khusus : CKEDITOR.instances.item_khusus.getData(),
+//     lampiran : tgl_rencana : $("#tgl_rencana").val(),
+//     docs : arr_doc
+//   }
+// })
 
 $(".btn-upload").click(function() {
   var ido = $(this).attr('id').split('_')[1];
@@ -1212,74 +1263,18 @@ function modal_email() {
 }
 
 function sendMail() {
-  var formData = new FormData();
-  formData.append('id', $("#id").val());
-  formData.append('product', $("#product_name").val());
-  formData.append('proccess', $("#proccess_name").val());
-  formData.append('title', $("#title_name").val());
-  formData.append('title_jp', $("#title_name_trans").val());
-  formData.append('unit_name', $("#unit_name").val());
-  formData.append('category', $("input[name='category']:checked").val());
-  formData.append('content', CKEDITOR.instances.isi.getData());
-  formData.append('benefit', CKEDITOR.instances.keuntungan.getData());
-  formData.append('kualitas_before', CKEDITOR.instances.kualitas_before.getData());
-  formData.append('planned_date', $("#tgl_rencana").val());
-  formData.append('planned_date_note', $("#tgl_rencana_note").val());
-  formData.append('special_item', CKEDITOR.instances.item_khusus.getData());
-  formData.append('sakurentsu_number', $("#sk_number").val());
-  formData.append('related_department', $("#related_department").val());
-  formData.append('bom_change', $("input[name='bom_change']:checked").val());
-  // formData.append('stat', 3);
-  // formData.append('file', $("#lampiran").prop('files')[0]);
-  for (var i = 1; i <= 17; i++) {
-    formData.append('doc_'+i, $("input[name='doc_"+i+"']:checked").val());
-    formData.append('doc_name_'+i, $("input[name='doc_name_"+i+"']").val());
-    formData.append('doc_note_'+i, $("input[name='doc_note_"+i+"']").val());
-    formData.append('doc_target_'+i, $("input[name='doc_target_"+i+"']").val());
-    formData.append('doc_finish_'+i, $("input[name='doc_finish_"+i+"']").val());
-    formData.append('doc_pic_'+i, $("#doc_pic_"+i).val());
-  }
-
-
-  $.each($('input[name="file[]"]'),function(i, obj) {
-    $.each(obj.files,function(j,file){
-      formData.append('file['+i+']['+j+']', file);
-    })
-  });
-
-  var url = "{{ url('post/sakurentsu/3m/premeeting')}}";
-  var data2 = {
+  var data = {
     three_m_id : $("#id").val()
   }
 
-  $.ajax({
-    url: url,
-    type: 'POST',
-    data: formData,
-    success: function (response) {
-      if (response.doc.length > 0) {
-        $.post('{{ url("mail/sakurentsu/3m/document") }}', data2, function(result2, status2, xhr2){
-          if (result2.status) {
-            $("#modal_email").modal('hide');
-            openSuccessGritter('Success', '3M has been Saved and Document Reminder has been Informed to PIC Document');
-            $("#save_3m").hide();
-          } else {
-            openErrorGritter('Error', result2.message);
-          }
-        })
-      } else {
-        $("#modal_email").modal('hide');
-        openSuccessGritter('Success', '3M has been Saved');
-        $("#save_3m").hide();
-      }
-    },
-    error: function (response) {
-      openErrorGritter('Error', response.message);
-      console.log(response.message);
-    },
-    contentType: false,
-    processData: false
-  });
+  $.post('{{ url("mail/sakurentsu/3m/document") }}', data, function(result, status, xhr){
+    if (result.status) {
+      $("#modal_email").modal('hide');
+      openSuccessGritter('Success', 'Document Reminder has been Informed to PIC Document');
+    } else {
+      openErrorGritter('Error', result.message);
+    }
+  })
 }
 
 var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

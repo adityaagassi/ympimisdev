@@ -369,10 +369,7 @@ function drawDetail(category) {
         return 0
     }
 
-    trouble_all = trouble_all.sort(comparator);
-
-    console.log(trouble_all);
-
+    trouble_all = trouble_all.sort(comparator)
 
     $.each(trouble_all, function(index, value){
       if (value.machine_group == category) {
