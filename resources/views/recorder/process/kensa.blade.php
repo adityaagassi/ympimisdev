@@ -237,20 +237,24 @@
 					<tbody>
 						<?php $no = 1; ?>
 						@foreach($ng_lists3 as $nomor => $ng_list)
-						<?php if ($no % 2 === 0 ) {
-							$color = 'style="background-color: #fffcb7"';
-						} else {
-							$color = 'style="background-color: #ffd8b7"';
-						}
-						?>
-						<input type="hidden" id="loopFootStopper" value="{{$loop->count}}">
-						<tr <?php echo $color ?>>
-							<td id="minusFootStopper" onclick="minusFootStopper({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">-</td>
-							<td id="ngFootStopper{{$nomor+1}}" style="font-size: 15px;">{{ $ng_list->ng_name }}</td>
-							<td id="plusFootStopper" onclick="plusFootStopper({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">+</td>
-							<td style="font-weight: bold; font-size: 30px; background-color: rgb(100,100,100); color: yellow;"><span id="countFootStopper{{$nomor+1}}">0</span></td>
-						</tr>
-						<?php $no+=1; ?>
+						<?php if ($ng_list->ng_name == 'Labium NG' || $ng_list->ng_name == 'NG Hot Stamp' || $ng_list->ng_name == 'NG Top Side'){ ?>
+							
+						<?php }else{ ?>
+							<?php if ($no % 2 === 0 ) {
+								$color = 'style="background-color: #fffcb7"';
+							} else {
+								$color = 'style="background-color: #ffd8b7"';
+							}
+							?>
+							<input type="hidden" id="loopFootStopper" value="{{$loop->count}}">
+							<tr <?php echo $color ?>>
+								<td id="minusFootStopper" onclick="minusFootStopper({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">-</td>
+								<td id="ngFootStopper{{$nomor+1}}" style="font-size: 15px;">{{ $ng_list->ng_name }}</td>
+								<td id="plusFootStopper" onclick="plusFootStopper({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">+</td>
+								<td style="font-weight: bold; font-size: 30px; background-color: rgb(100,100,100); color: yellow;"><span id="countFootStopper{{$nomor+1}}">0</span></td>
+							</tr>
+							<?php $no+=1; ?>
+						<?php } ?>
 						@endforeach
 					</tbody>
 				</table>
@@ -273,20 +277,24 @@
 					<tbody>
 						<?php $no = 1; ?>
 						@foreach($ng_lists4 as $nomor => $ng_list)
-						<?php if ($no % 2 === 0 ) {
-							$color = 'style="background-color: #fffcb7"';
-						} else {
-							$color = 'style="background-color: #ffd8b7"';
-						}
-						?>
-						<input type="hidden" id="loopBlock" value="{{$loop->count}}">
-						<tr <?php echo $color ?>>
-							<td id="minusBlock" onclick="minusBlock({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">-</td>
-							<td id="ngBlock{{$nomor+1}}" style="font-size: 15px;">{{ $ng_list->ng_name }}</td>
-							<td id="plusBlock" onclick="plusBlock({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">+</td>
-							<td style="font-weight: bold; font-size: 30px; background-color: rgb(100,100,100); color: yellow;"><span id="countBlock{{$nomor+1}}">0</span></td>
-						</tr>
-						<?php $no+=1; ?>
+						<?php if ($ng_list->ng_name == 'Labium NG' || $ng_list->ng_name == 'NG Hot Stamp' || $ng_list->ng_name == 'NG Top Side'){ ?>
+							
+						<?php }else{ ?>
+							<?php if ($no % 2 === 0 ) {
+								$color = 'style="background-color: #fffcb7"';
+							} else {
+								$color = 'style="background-color: #ffd8b7"';
+							}
+							?>
+							<input type="hidden" id="loopBlock" value="{{$loop->count}}">
+							<tr <?php echo $color ?>>
+								<td id="minusBlock" onclick="minusBlock({{$nomor+1}})" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">-</td>
+								<td id="ngBlock{{$nomor+1}}" style="font-size: 15px;">{{ $ng_list->ng_name }}</td>
+								<td id="plusBlock" onclick="plusBlock({{$nomor+1}})" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 30px; cursor: pointer;" class="unselectable">+</td>
+								<td style="font-weight: bold; font-size: 30px; background-color: rgb(100,100,100); color: yellow;"><span id="countBlock{{$nomor+1}}">0</span></td>
+							</tr>
+							<?php $no+=1; ?>
+						<?php } ?>
 						@endforeach
 					</tbody>
 				</table>
