@@ -218,7 +218,7 @@
 					var series = [];
 
 					$.each(result.material_defect, function(key,value){
-						categories.push(value.ng_name.replace(/(.{13})..+/, "$1&hellip;"));
+						categories.push(value.ng_name);
 						series.push(parseInt(value.count));
 					});
 
