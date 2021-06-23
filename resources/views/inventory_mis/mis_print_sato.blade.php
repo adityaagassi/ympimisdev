@@ -5,6 +5,14 @@
 </head>
 <body >
 	<style type="text/css">
+		@page  
+		{ 
+			size: auto;   /* auto is the initial value */ 
+
+			/* this affects the margin in the printer settings */ 
+			margin: 0mm 0mm 0mm 0mm;
+		} 
+
 		table {
 			font-family: 'calibri';
 			border-collapse: collapse;
@@ -153,7 +161,7 @@
 		"footerStrLeft": "",
 		"footerStrCenter": "",
 		"footerStrRight": "",
-		"printerName" : "SATO CG408"
+		"printerName" : "ZDesigner ZD230-203dpi ZPL"
 	};
 
 	function tutup() {
