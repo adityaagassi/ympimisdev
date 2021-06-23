@@ -55,6 +55,11 @@
 		font-size: 20px;
 	}
 
+	#item_code {
+		text-align: center;
+		font-weight: bold;
+	}
+
 	#loading, #error { display: none; }
 </style>
 @stop
@@ -86,20 +91,37 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;" id="op"></td>
-						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;" id="op2"></td>
+						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;" id="op">{{ strtoupper(Auth::user()->username) }}</td>
+						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;" id="op2">{{ Auth::user()->name }}</td>
+					</tr>
+
+					<tr>
+						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Kode Mesin</td>
+						<td style="background-color: rgb(204,255,255); text-align: center; color: #000000;">
+							<div class="input-group">
+								<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 20px;">
+									<i class="fa fa-qrcode"></i>
+								</div>
+								<input class="form-control" placeholder="Scan Kode Mesin" id="item_code">
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-qrcode"></i> Scan QR</button>
+								</span>
+							</div>
+
+						</td>
 					</tr>
 
 					<tr>
 						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Item Cek</td>
 						<td style="background-color: rgb(204,255,255); text-align: center; color: #000000;">
-							<select class="select2" data-placeholder="Pilih Kategori Mesin" style="width: 20%" id="item_cat" onchange="getMachineByCat(this)">
-								<option value=""></option>
-							</select>
+							<input type="text" id="machine_desc" class="form-control" placeholder="Nama Mesin" readonly>
+						</td>
+					</tr>
 
-							<select class="select2" data-placeholder="Pilih Item Cek" style="width: 70%" id="item_check" onchange="get_period(this)">
-								<option value=""></option>
-							</select>
+					<tr>
+						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Lokasi Item</td>
+						<td style="background-color: rgb(204,255,255); text-align: center; color: #000000;">
+							<input type="text" id="location" class="form-control" placeholder="Lokasi Mesin" readonly>
 						</td>
 					</tr>
 
@@ -164,32 +186,39 @@
 				</tbody>
 			</table>
 			<br>
-			<button class="btn btn-success" style="width: 100%; display: none; font-weight: bold;" id="btn_check" onclick="check2()"><i class="fa fa-check"></i> CEK</button>
+			<button class="btn btn-success" style="width: 100%; display: none; font-weight: bold;" id="btn_check" onclick="check2()"><i class="fa fa-check"></i> KONFIRMASI</button>
 		</div>
 	</div>
 </div>
 
 </section>
 
-<div class="modal fade" id="modalOperator">
-	<div class="modal-dialog modal-sm">
+<div class="modal fade" id="scanModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<div class="modal-body table-responsive no-padding">
-					<div class="form-group">
-						<label>Operator</label>
-						<select class="form-control" id="operator" style="width: 100%; text-align: center;" onchange="getval(this)" data-placeholder="Pilih Operator">
-							<option value=""></option>
-							@foreach($mtc_op as $mtc)
-							<option value="{{ $mtc->employee_id }}">{{ $mtc->name }}</option>
-							@endforeach
-						</select>
-					</div>
+				<h4 class="modal-title text-center"><b>SCAN QR HERE</b></h4>
+			</div>
+			<div class="modal-body">
+				<div id='scanner' class="col-xs-12">
+					<div class="col-xs-12">
+						<div id="loadingMessage">
+							🎥 Unable to access video stream (please make sure you have a webcam enabled)
+						</div>
+						<canvas style="width: 100%;" id="canvas" hidden></canvas>
+						<div id="output" hidden>
+							<div id="outputMessage">No QR code detected.</div>
+						</div>
+					</div>									
 				</div>
+
+				<p style="visibility: hidden;">camera</p>
+				<input type="hidden" id="apar_code">
 			</div>
 		</div>
 	</div>
 </div>
+
 
 <div class="modal fade" id="modalNotGood">
 	<div class="modal-dialog modal-lg">
@@ -243,6 +272,8 @@
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/jquery.numpad.js") }}"></script>
+<script src="{{ url("js/jsQR.js")}}"></script>
+
 
 <script>
 	$.ajaxSetup({
@@ -266,11 +297,6 @@
 	jQuery(document).ready(function() {
 		arr_ids = [];
 		$('body').toggleClass("sidebar-collapse");
-		$('#modalOperator').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
-		$('#operator').val('');
 
 		$('.numpad').numpad({
 			hidePlusMinusButton : true,
@@ -278,7 +304,6 @@
 		});
 
 		$('.select2').select2();
-		$('#operator').select2();
 
 		arr_item = <?php echo json_encode($item_check); ?>;
 		console.log(arr_item);
@@ -362,7 +387,7 @@
 
 	function check_change(elem) {
 		var data = {
-			item_no : $("#item_check").val(),
+			item_no : $("#machine_desc").val(),
 		};
 
 		var period = $(elem).val();
@@ -370,35 +395,37 @@
 		var body = "";
 		arr_ids = [];
 
-		$.each(machine_check_list, function(index, value){
-			if (value.remark == period) {
-				arr_ids.push(value.id);
+		$.get('{{ url("fetch/maintenance/plan/checkList") }}', data, function(result, status, xhr) {
+			$.each(result.datas, function(index, value){
+				if (value.remark == period) {
+					arr_ids.push(value.id);
 
-				body += "<tr>";
-				body += "<td id='item_"+value.id+"'>"+value.item_check+"</td>";				
-				body += "<td id='substance_"+value.id+"'>"+value.substance+"</td>";
-				body += "<td>"+value.remark+"</td>";
-				body += "<td style='padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;'>";
-				if (value.essay_category == "1") {
-					body += '<input id="qty_'+value.id+'" style="text-align: center;" type="number" class="form-control numpad" placeholder="value" onchange="fill_value(this)"><span style="display:none" id="min_'+value.id+'">'+value.lower_limit+'</span><span style="display:none" id="max_'+value.id+'">'+value.upper_limit+'</span><input type="checkbox" style="display:none" class="check" id="check_'+value.id+'">';
-				} else {
-					body += "<div class='radio'><label><input type='radio' class='check rdo' name='nm_"+value.id+"' id='check_"+value.id+"' value='OK'>OK</label></div></td>";
+					body += "<tr>";
+					body += "<td id='item_"+value.id+"'>"+value.item_check+"</td>";
+					body += "<td id='substance_"+value.id+"'>"+value.substance+"</td>";
+					body += "<td>"+value.remark+"</td>";
+					body += "<td style='padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;'>";
+					if (value.essay_category == "1") {
+						body += '<input id="qty_'+value.id+'" style="text-align: center;" type="number" class="form-control numpad" placeholder="value" onchange="fill_value(this)"><span style="display:none" id="min_'+value.id+'">'+value.lower_limit+'</span><span style="display:none" id="max_'+value.id+'">'+value.upper_limit+'</span><input type="checkbox" style="display:none" class="check rdo" id="check_'+value.id+'" checked>';
+					} else {
+						body += "<div class='radio'><label><input type='radio' class='check rdo' name='nm_"+value.id+"' id='check_"+value.id+"' value='OK'>OK</label></div></td>";
+					}
+
+					body += "<td style='padding: 0px; background-color: #ffccff; text-align: center; color: #000000; font-size: 20px;'><div class='radio'><label><input type='radio' class='check rdo' name='nm_"+value.id+"' id='ng_"+value.id+"' onclick='openModalNG("+value.id+")' value='NG'>NG</label></div></td>";
+
+					body += "</tr>";
 				}
+			})
 
-				body += "<td style='padding: 0px; background-color: #ffccff; text-align: center; color: #000000; font-size: 20px;'><div class='radio'><label><input type='radio' class='check rdo' name='nm_"+value.id+"' id='ng_"+value.id+"' onclick='openModalNG("+value.id+")' value='NG'>NG</label></div></td>";
+			$("#body_check_list").append(body);
 
-				body += "</tr>";
-			}
+			$('.numpad').numpad({
+				hidePlusMinusButton : true,
+				decimalSeparator : '.'
+			});
+
+			$("#btn_check").show();
 		})
-
-		$("#body_check_list").append(body);
-
-		$('.numpad').numpad({
-			hidePlusMinusButton : true,
-			decimalSeparator : '.'
-		});
-
-		$("#btn_check").show();
 	}
 
 	// ===========================================================================
@@ -501,8 +528,28 @@
 
 	function check2() {
 		if ($('.rdo:checked').length !== ($('.rdo').length) / 2) {
-			alert("not all checked");
+			openErrorGritter('Error', 'Semua Poin Cek Harus Dipilih');
 			return false;
+		}
+
+		var cek_val = [];
+
+		if ($('.numpad').length > 0) {
+			var stat = 0;
+			$('.numpad').each(function() {
+				if (this.value == '') {
+					stat = 1;
+				} else {
+					idx = $(this).attr('id');
+					cek_val.push({id : idx, 'value' : this.value});
+				}
+			});
+
+			if (stat == 1) {
+				openErrorGritter('Error', 'Semua Poin Cek Harus Diisi');
+				return false;
+			}
+
 		}
 
 		var radio_val = [];
@@ -519,7 +566,8 @@
 			item_check : $("#item_check").val(),
 			period : $("#cek_period").val(),
 			ng : radio_val,
-			ids : arr_ids
+			ids : arr_ids,
+			val : cek_val
 		}
 
 		$("#loading").show();
@@ -529,9 +577,6 @@
 				$("#loading").hide();
 				openSuccessGritter('Sukses', 'Pengecekan berhasil ditambahkan');
 
-				$("#item_cat").val("").trigger('change.select2');
-				$("#item_check").val("").trigger('change.select2');
-				$("#cek_period").val("").trigger('change.select2');
 				$("#body_check_list").empty();
 				$("#btn_check").hide();
 			} else {
@@ -546,23 +591,27 @@
 	function save_tmp() {
 		var ido = $("#tmp_id").val();
 
-		console.log($("#deskripsi").val());
-		console.log($('#pic_before').get(0).files.length);
-		console.log($("input[name='keterangan']").is(':checked'));
-
 		if ($("#deskripsi").val() == '' || $('#pic_before').get(0).files.length === 0 || !$("input[name='keterangan']").is(':checked')) {
 			openErrorGritter('Error', 'Harap Melengkapi Kolom');
 			return false;
+		}
+
+		if ($("#qty_"+ido).length == 0) {
+			cek_val = "NG";
+		} else {
+			cek_val = $("#qty_"+ido).val();
 		}
 
 		var data = {
 			id : ido,
 			desc : $("#deskripsi").val(),
 			before : $("#img_before").attr('src'),
-			after : $("#img_after").attr('src')
+			after : $("#img_after").attr('src'),
+			keterangan : $('input[name="keterangan"]:checked').val(),
+			cek_val : cek_val
 		}
 
-		$.post('{{ url("post/maintenance/pm/session") }}', data, function(result, status, xhr) {
+		$.post('{{ url("post/maintenance/pm/ng") }}', data, function(result, status, xhr) {
 			if (result.status) {
 				$("#modalNotGood").modal('hide');
 			} else {
@@ -582,6 +631,9 @@
 	});
 
 	function openModalNG(id) {
+		$("input:radio[name='keterangan']").each(function(i) {
+			this.checked = false;
+		});
 		$("#judul_ng").text("");
 		$("#deskripsi").val("");
 		$("#pic_before").val("");
@@ -599,18 +651,12 @@
 			id : id
 		}
 
-		$.get('{{ url("get/maintenance/pm/session") }}', data, function(result, status, xhr) {
-			console.log(result);
-			if (result.desc) {
-				$("#deskripsi").val(result.desc);
-			}
-
-			if (result.before) {
-				$("#img_before").attr('src', result.before);
-			}
-
-			if (result.after) {
-				$("#img_after").attr('src', result.after);
+		$.get('{{ url("get/maintenance/pm/ng") }}', data, function(result, status, xhr) {
+			if (result.datas) {
+				$("#deskripsi").val(result.datas.description);
+				$("#img_before").attr('src', result.datas.photo_before);
+				$("#img_after").attr('src', result.datas.photo_after);
+				$("input[name='keterangan'][value='"+result.datas.remark+"']").prop('checked', true);
 			}
 		})
 
@@ -634,6 +680,127 @@
 			}
 
 			reader.readAsDataURL(input.files[0]);
+		}
+	}
+
+	function stopScan() {
+		$('#scanModal').modal('hide');
+	}
+
+	function videoOff() {
+		vdo.pause();
+		vdo.src = "";
+		vdo.srcObject.getTracks()[0].stop();
+	}
+
+	$( "#scanModal" ).on('shown.bs.modal', function(){
+		showCheck('123');
+	});
+
+	$('#scanModal').on('hidden.bs.modal', function () {
+		videoOff();
+	});
+
+	function showCheck(kode) {
+		var video = document.createElement("video");
+		vdo = video;
+		var canvasElement = document.getElementById("canvas");
+		var canvas = canvasElement.getContext("2d");
+		var loadingMessage = document.getElementById("loadingMessage");
+
+		var outputContainer = document.getElementById("output");
+		var outputMessage = document.getElementById("outputMessage");
+
+		function drawLine(begin, end, color) {
+			canvas.beginPath();
+			canvas.moveTo(begin.x, begin.y);
+			canvas.lineTo(end.x, end.y);
+			canvas.lineWidth = 4;
+			canvas.strokeStyle = color;
+			canvas.stroke();
+		}
+
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+			video.srcObject = stream;
+			video.setAttribute("playsinline", true);
+			video.play();
+			requestAnimationFrame(tick);
+		});
+
+		function tick() {
+			loadingMessage.innerText = "⌛ Loading video..."
+			if (video.readyState === video.HAVE_ENOUGH_DATA) {
+				loadingMessage.hidden = true;
+				canvasElement.hidden = false;
+
+				canvasElement.height = video.videoHeight;
+				canvasElement.width = video.videoWidth;
+				canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+				var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+				var code = jsQR(imageData.data, imageData.width, imageData.height, {
+					inversionAttempts: "dontInvert",
+				});
+
+				if (code) {
+					drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+					drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+					drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+					drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+					outputMessage.hidden = true;
+
+					document.getElementById("item_code").value = code.data;
+
+					checkCode(video, code.data);
+
+				} else {
+					outputMessage.hidden = false;
+				}
+			}
+			requestAnimationFrame(tick);
+		}
+
+		$('#scanner').show();
+	}
+
+	function checkCode(video, code) {
+		var stat = false;
+		var arr_selected = [];
+		var period = [];
+
+		$.each(arr_item, function(index, value){
+			if (value.machine_id == code) {
+				arr_selected = value;
+				stat = true;
+				period.push(value.remark);
+			}
+		})
+
+		if (stat) {
+			$('#scanner').hide();
+			$('#scanModal').modal('hide');
+
+			if (video != '') {
+				videoOff();
+			}
+
+			openSuccessGritter('Success', 'QR Code Successfully');
+
+			$("#machine_desc").val(arr_selected.machine_name);
+			$("#location").val(arr_selected.location);
+
+			var prd = "";
+			$("#cek_period").empty();
+
+			prd += "<option value=''></option>";
+			$.each(period, function(index2, value2){
+				prd += "<option value='"+value2+"'>"+value2+"</option>";
+			});
+
+			$("#cek_period").append(prd);
+
+		} else {
+			openErrorGritter('Error', 'QR Code Not Registered');
+			// audio_error.play();
 		}
 	}
 

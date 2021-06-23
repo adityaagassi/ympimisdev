@@ -263,7 +263,13 @@
             <div class="col-xs-12">
               <div class="form-group">
                 <label><span class="text-red">*</span>Tanggal mulai・Tgl rencana perubahan <span class="text-purple">開始日・切替予定日</span> <br> ※alasan bila menjadi after request <span class="text-purple">※事後申請となった場合はその理由</span></label>
-                <input type="text" class="form-control" id="tgl_rencana" placeholder="Input Planned Start Date" name="tgl_rencana">
+                <div class="input-group date">
+                  <div class="input-group-addon bg-purple" style="border: none;">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <input type="text" style="width: 20%" class="form-control datepicker" name="tgl_rencana" id="tgl_rencana" placeholder="Select Planned Start Date">
+                </div>
+                <input type="text" class="form-control" name="tgl_rencana_note" id="tgl_rencana_note" placeholder="Input Note Planned Date">
               </div>
             </div>
           </div>
@@ -391,6 +397,7 @@
       $("#keuntungan").val(datas.benefit);
       $("#kualitas_before").val(datas.check_before);
       $("#tgl_rencana").val(datas.started_date);
+      $("#tgl_rencana_note").val(datas.date_note);
     }
 
     function save_3m() {
@@ -403,16 +410,20 @@
         keuntungan : $("#keuntungan").val(),
         kualitas_before : CKEDITOR.instances.kualitas_before.getData(),
         tgl_rencana : $("#tgl_rencana").val(),
+        tgl_rencana_note : $("#tgl_rencana_note").val(),
         // item_khusus : CKEDITOR.instances.item_khusus.getData(),
         id : $("#id").val()
       }
 
+      $("#loading").show();
 
       $.post('{{ url("post/sakurentsu/3m/translate") }}', data, function(result, status, xhr){
         if (result.status) {
+          $("#loading").hide();
           openSuccessGritter('Success', '3M Has Been Translated');
           setTimeout( function() {window.location.replace("{{ url('index/sakurentsu/list_sakurentsu_translate') }}")}, 2000);
         } else {
+          $("#loading").hide();
           openErrorGritter('Error', result.message);
         }
       });

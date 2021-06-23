@@ -305,7 +305,7 @@
         "bJQueryUI": true,
         "bAutoWidth": false,
         "processing": true,
-        "order": [[ 2, 'desc' ]]
+        "order": [[ 8, 'desc' ]]
       });
     })
     

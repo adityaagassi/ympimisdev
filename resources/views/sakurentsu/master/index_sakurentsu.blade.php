@@ -94,6 +94,7 @@
                     <th style="width: 1%">File</th>
                     <th style="width: 3%">Translate Date</th>
                     <th style="width: 1%">Status</th>
+                    <th style="width: 1%">Result</th>
                     <th style="width: 5%">Action</th>
                   </tr>
                 </thead>
@@ -160,7 +161,15 @@
         body += "<td>"+value.upload_date+"</td>";
         body += "<td>"+('<button class="btn btn-xs" onclick="getFileInfo('+key+',\''+value.sakurentsu_number+'\')"><i class="fa fa-paperclip"></i></button>' || '')+"</td>";
         body += "<td>"+(value.translate_date || '')+"</td>";
-        body += "<td>"+value.status+"</td>";
+
+        if (value.status == "close") {
+          color = "#5fde65";
+        } else {
+          color = "#f06c65";
+        }
+
+        body += "<td style='background-color:"+color+"'>"+value.status+"</td>";
+        body += "<td>-</td>";
         body += "<td>";
         if (value.status == 'approval') {
           body += "<a href='"+"{{ url('index/sakurentsu/detail/') }}/"+value.id+"'><button class='btn btn-xs btn-success'>Approve</button></a>";
@@ -173,6 +182,33 @@
         file.push({'sk_number' : value.sakurentsu_number, 'file' : value.file_translate});
       })
       $("#body_master").append(body);
+
+      var table = $('#master').DataTable({
+        'dom': 'Bfrtip',
+        'responsive':true,
+        'lengthMenu': [
+        [ 10, 25, 50, -1 ],
+        [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        'buttons': {
+          buttons:[
+          {
+            extend: 'pageLength',
+            className: 'btn btn-default',
+          },
+          ]
+        },
+        'paging': true,
+        'lengthChange': true,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': true,
+        "sPaginationType": "full_numbers",
+        "bJQueryUI": true,
+        "bAutoWidth": false,
+        "processing": true
+      });
     })
   }
 

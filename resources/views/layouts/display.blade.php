@@ -74,7 +74,9 @@
             <li class="dropdown user user-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 @php
-                $avatar = 'images/avatar/'.Auth::user()->avatar;
+                $foto = strtoupper(Auth::user()->avatar);
+                $avatar = 'images/avatar/'.$foto;
+                $alt = 'images/avatar/image-user.png';
                 @endphp
                 <img src="{{ url($avatar) }}" class="user-image" alt="User Image">
                 <span class="hidden-xs">{{Auth::user()->name}}</span>

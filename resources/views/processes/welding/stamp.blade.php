@@ -142,7 +142,7 @@ table.table-bordered > tfoot > tr > th{
 								<input id="model" type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 4vw" value="YTS" disabled>
 
 								<button type="button" style="width: 48%; margin-top: 5px;" class="btn btn-info" id="FG" onclick="category(id)"> INDONESIA</button>
-								<INPUT type="TEXT" style="padding: 0 0 0 0; width: 15%; height:  100%; margin-top: 5px; font-weight: bold; background-color: rgb(255,255,204); border : solid 2px; text-align: center; font-size: 20px; display: none" class="btn"   value="FG" name="category" id="category" readonly >
+								<INPUT type="TEXT" style="padding: 0 0 0 0; width: 15%; height:  100%; margin-top: 5px; font-weight: bold; background-color: rgb(255,255,204); border : solid 2px; text-align: center; font-size: 20px; display: none" class="btn"  value="FG" name="category" id="category" readonly >
 								<button type="button" style="width: 48%; margin-top: 5px;" class="btn btn-warning" id="KD" onclick="category(id)"> CHINA</button>
 								
 								<br>

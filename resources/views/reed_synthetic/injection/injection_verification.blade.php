@@ -52,7 +52,6 @@
 		<input type="hidden" id="location" value="injection">
 		<input type="hidden" id="proses" value="injection">
 		<input type="hidden" id="employee_id">
-		<input type="hidden" id="order_id">
 
 		<div class="col-xs-6 col-md-offset-3" id="field_kanban">
 			<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
@@ -62,53 +61,87 @@
 					&nbsp;
 				</span>
 			</div>
-			<input type="text" style="text-align: center; font-size: 3vw; height: 100px;" class="form-control" id="kanban" placeholder="Scan Kanban">	
+			<input type="text" style="text-align: center; font-size: 3vw; height: 100px;" class="form-control" id="order_id" placeholder="Scan Order ID">	
 		</div>
 
 
 		<div class="col-xs-12" id="picking">
-			{{-- <input id="qr_item" type="text" style="border:0; width: 100%; text-align: center; height: 20px; background-color: #3c3c3c; height: 0px;"> --}}
-
 			<input id="qr_item" type="text" style="border:0; width: 100%; text-align: center; height: 20px; color: white; background-color: #3c3c3c; height: 50px;">
+			<div class="row" style="margin-top: 1%">
+				<div class="col-xs-4" style="">
+					<div class="box">
+						<div class="box-body">
+							<table class="table table-bordered table-stripped" style="margin-bottom: 0px;">
+								<thead>
+									<tr>
+										<th colspan="2" style="font-size: 2vw; background-color: orange; border-bottom: 1px solid black;">INJECTION PROCESS</th>
+									</tr>
+									<tr>
+										<th colspan="2" style="font-size: 2vw; background-color: orange; border-bottom: 1px solid black;" id="order_id_text"></th>
+									</tr>
+									<tr>
+										<th style=" width:40%; font-size:1.5vw; background-color:#9e9e9e;">MATERIAL</th>
+										<th style=" width:60%; font-size:1.5vw; background-color:#9e9e9e">OPERATOR</th>
+									</tr>
+									<tr>
+										<th style="font-size:1.5vw; background-color:#f5f5f5; vertical-align:middle;"><span id="material"></span></th>
+										<th style="font-size:1.5vw; background-color:#f5f5f5; vertical-align:middle;"><span id="data_op"></span></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+					<div class="box">
+						<div class="box-body">
+							<table class="table table-bordered table-stripped">
+								<thead style="background-color: orange;">
+									<tr>
+										<th width="50%" style="font-size: 2vw; vertical-align: middle;">
+											<span id="hours">00</span>:
+											<span id="minutes">00</span>:
+											<span id="seconds">00</span>
+										</th>
+										<th width="50%" style="font-size: 2vw;">
+											<button id="start" onclick="startInj()" class="btn btn-success" style="font-weight: bold; font-size: 2vw; width: 100%;">START</button>
+											<button id="finish" onclick="finishInj()" class="btn btn-danger" style="font-weight: bold; font-size: 2vw; width: 100%;">FINISH</button></span>
+										</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+					<div class="box">
+						<div class="box-body">
+							<button onclick="printLabel()" class="btn btn-primary" style="font-weight: bold; font-size: 2vw; width: 100%;"><i class="fa fa-print"></i>&nbsp;&nbsp;&nbsp;PRINT LABEL</button>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-8" style="padding-left: 0px;">
+					<div class="box">
+						<div class="box-body">
+							<table id="pickingTable" class="table table-bordered table-stripped">
+								<thead style="background-color: orange;">
+									<tr>
+										<th style="width: 1%; font-size: 2vw;">#</th>
+										<th style="width: 1%; font-size: 2vw;">Jenis</th>
+										<th style="width: 5%; font-size: 2vw;">Deskripsi</th>
+										<th style="width: 1%; font-size: 2vw;">Quantity</th>
+										<th style="width: 1%; font-size: 2vw;">Actual</th>
+										<th style="width: 1%; font-size: 2vw;">Status</th>
+									</tr>
+								</thead>
+								<tbody id="pickingTableBody" style="background-color: white;">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row" style="margin-top: 1%">
+				<div class="col-xs-4" style="">
 
-			<table id="pickingTable" class="table table-bordered table-stripped">
-				<thead style="background-color: orange;">
-					<tr>
-						<th colspan="6" style="font-size: 2.5vw;">OPERATOR <span id="data_op"></span></th>
-					</tr>
-					<tr>
-						<th colspan="6" style="font-size: 2.5vw;">PICKING LIST<span id="material"></span></th>
-					</tr>
-					<tr>
-						<th style="width: 1%; font-size: 2vw;">#</th>
-						<th style="width: 1%; font-size: 2vw;">Jenis</th>
-						<th style="width: 5%; font-size: 2vw;">Deskripsi</th>
-						<th style="width: 1%; font-size: 2vw;">Quantity</th>
-						<th style="width: 1%; font-size: 2vw;">Actual</th>
-						<th style="width: 1%; font-size: 2vw;">Status</th>
-					</tr>
-				</thead>
-				<tbody id="pickingTableBody" style="background-color: white;">
-				</tbody>
-			</table>
-
-			<table class="table table-bordered table-stripped">
-				<thead style="background-color: orange;">
-					<tr>
-						<th width="50%" style="font-size: 2.5vw; vertical-align: middle;">
-							<span id="hours">00</span>:
-							<span id="minutes">00</span>:
-							<span id="seconds">00</span>
-						</th>
-						<th width="50%" style="font-size: 2.5vw;">
-							<button id="start" onclick="startInj()" class="btn btn-success" style="font-weight: bold; font-size: 3vw; width: 100%;">START</button>
-							<button id="finish" onclick="finishInj()" class="btn btn-danger" style="font-weight: bold; font-size: 3vw; width: 100%;">FINISH</button></span>
-						</th>
-					</tr>
-				</thead>
-			</table>
-
-
+				</div>
+			</div>
 		</div>
 	</div>
 </section>
@@ -180,7 +213,7 @@
 		$('#order_id').val('');
 		$('#operator').val('');
 		$('#qr_item').val('');
-		$('#kanban').val('');
+		$('#order_id').val('');
 
 	}
 
@@ -195,15 +228,15 @@
 				$.get('{{ url("scan/reed/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						$('#employee_id').val(result.employee.employee_id);
-						$('#data_op').text(" ("+result.employee.employee_id+" - "+result.employee.name+")")
+						$('#data_op').html(result.employee.employee_id+" <br> "+result.employee.name)
 						openSuccessGritter('Success!', result.message);
 						$('#modalOperator').modal('hide');
 						$('#operator').remove();
 						$('#qr_item').val('');
 
 
-						$('#kanban').val('');
-						$('#kanban').focus();
+						$('#order_id').val('');
+						$('#order_id').focus();
 
 					}
 					else{
@@ -212,7 +245,7 @@
 						$('#operator').val('');
 					}
 				});
-				
+
 			}else{
 				openErrorGritter('Error!', 'Employee ID Invalid.');
 				audio_error.play();
@@ -222,31 +255,31 @@
 	});
 
 
-	$('#kanban').keydown(function(event) {
+	$('#order_id').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($("#kanban").val().length >= 11){
+			if($("#order_id").val().length == 9){
 				selectChecksheet();
 			}
 			else{
-				openErrorGritter('Error!', 'Kanban tidak valid.');
+				openErrorGritter('Error!', 'Order ID tidak valid.');
 				audio_error.play();
-				$("#kanban").val("");
+				$("#order_id").val("");
 			}			
 		}
 	});
 
 
 	function selectChecksheet(){
-		var kanban = $('#kanban').val();
+		var order_id = $('#order_id').val();
 		var location = $('#location').val();
 		var proses = $('#proses').val();
 
-		if(kanban == ''){
+		if(order_id == ''){
 			return false;
 		}
 
 		var data = {
-			kanban : kanban, 
+			order_id : order_id, 
 			location : location,
 			proses : proses 
 		}
@@ -258,8 +291,8 @@
 				$('#picking').show();
 				$('#pickingTableBody').html("");
 
-				$('#order_id').val(result.order.id);
-				$('#material').text(" ("+result.order.material_number+" - "+result.order.material_description+")")
+				$('#material').html(result.order.material_number+"<br>"+result.order.material_description)
+				$('#order_id_text').html('ORDER ID : ' + result.order.order_id);
 
 
 				var pickingData = "";
@@ -344,8 +377,8 @@
 				}
 
 			}else{
-				$('#kanban').val("");
-				$('#kanban').focus();
+				$('#order_id').val("");
+				$('#order_id').focus();
 
 				openErrorGritter('Error!', result.message);
 				audio_error.play();

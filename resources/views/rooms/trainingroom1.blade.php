@@ -1,3 +1,4 @@
+
 @extends('layouts.display_2')
 
 @section('stylesheets')
@@ -40,13 +41,12 @@
 	<center><span style="color: white; font-size: 4vw; font-weight: bold;">TRAINING ROOM 1</span></center>
 </div>
 <center>
-	<iframe src="https://outlook.office365.com/calendar/view/day/" width="100%" id="schedule"></iframe>
-	<!-- <object type="text/html" data="https://outlook.office365.com/calendar/view/day/" width="800px" height="600px" style="overflow:auto;border:5px ridge blue"> -->
-	</object>
+	<iframe src="https://outlook.office365.com/calendar/view/day/" width="100%" id="schedule" frameborder="0"></iframe>
 </center>
 @endsection
 
 <script type="text/javascript">
+
 	window.setInterval("reloadIFrame();", 1800000);
 
 	function reloadIFrame() {

@@ -141,7 +141,7 @@
 												<option value="OK">OK</option>
 												<option value="NG">NG</option>
 											</select>
-											<input type="text" name="judgement" id="judgement" hidden>
+											<input type="text" name="judgement" id="judgement">
 										</div>
 									</div>
 								</div>

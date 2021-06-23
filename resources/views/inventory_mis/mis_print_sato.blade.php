@@ -43,6 +43,10 @@
 			padding-top: 5pt;
 		}
 
+		#dept {
+			font-size: 10pt;
+		}
+
 	</style>
 	<?php 
 	include public_path(). "/qr_generator/qrlib.php"; 
@@ -50,11 +54,12 @@
 	QRcode::png(Request::segment(3), public_path().'/mis-qr.png');
 	?>
 
-	<table style="margin-top: 1px; width: 350px;">
+	<table style="width: 350px;">
 		<tr height="">
-			<th rowspan="3" style=" width: 1%; white-space: nowrap;">
-				<img src="{{ url("mis-qr.png")}}" style="width: 50px; height: 50px;"> <br>
-				<p id="ids">{{ Request::segment(3) }}</p>
+			<th rowspan="4" style=" width: 1%; white-space: nowrap;">
+				<img src="{{ url("mis-qr.png")}}" style="width: 50px; height: 50px;"> 
+				<br>
+				<p id="ids" style="font-size: 6pt">{{ Request::segment(3) }}</p>
 			</th>
 			<th width="100px" class="desc" id="device_category"></th>
 		</tr>
@@ -62,7 +67,10 @@
 			<th style="padding-top: 0px; padding-bottom: 0px;" width="100px" class="desc" id="location"></th>
 		</tr>
 		<tr>
-			<th style="padding-top: 0px; padding-bottom: 0px;" width="100px" class="desc" id="dept">MIS - Dept</th>
+			<th style="padding-top: 0px; padding-bottom: 0px;" width="100px" id="dept"></th>
+		</tr>
+		<tr>
+			<th style="padding-top: 0px; padding-bottom: 0px; font-size: 12px" width="80px">Management Information System Department</th>
 		</tr>
 	</table>
 
@@ -74,11 +82,11 @@
 <script>
 	jQuery(document).ready(function() {		
 		initialize();
-		defineCustomPaperSize();
+		// defineCustomPaperSize();
 
-		setTimeout(function() {
-			printWindow(window, 'Label Kecil');
-		}, 5000)
+		// setTimeout(function() {
+		// 	printWindow(window, 'Label Kecil');
+		// }, 5000)
 
 	});
 
@@ -110,14 +118,15 @@
 		}
 
 		$.get('{{ url("fetch/inventory_mis") }}', data, function(result) {
-			$("#device_category").text(result.inventory.device);
+			$("#device_category").text(result.inventory.serial_number);
 			$("#location").text(result.inventory.location);
+
+			$("#dept").text(result.inventory.used_by);
 		})
 
 	}
 
 	function defineCustomPaperSize() {
-		console.log("Define custom paper size", false);
 		jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 33, 25, jsPrintSetup.kPaperSizeInches);
 		console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
 	}

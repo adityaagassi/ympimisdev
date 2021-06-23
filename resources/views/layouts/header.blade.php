@@ -20,7 +20,7 @@
               $foto = strtoupper(Auth::user()->avatar);
               $avatar = 'images/avatar/'.$foto;
               @endphp
-              <img src="{{ url($avatar) }}" class="user-image" alt="{{ url($avatar) }}">
+              <img src="{{ url($avatar) }}" class="user-image" alt="User image">
               <span class="hidden-xs">{{Auth::user()->name}}</span>
             </a>
             <ul class="dropdown-menu">

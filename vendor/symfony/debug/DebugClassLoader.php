@@ -56,7 +56,7 @@ class DebugClassLoader
             } elseif (substr($test, -\strlen($file)) === $file) {
                 // filesystem is case insensitive and realpath() normalizes the case of characters
                 self::$caseCheck = 1;
-            } elseif (false !== stripos(PHP_OS, 'darwin')) {
+            } elseif (false !== stripos(\PHP_OS, 'darwin')) {
                 // on MacOSX, HFS+ is case insensitive but realpath() doesn't normalize the case of characters
                 self::$caseCheck = 2;
             } else {
@@ -141,7 +141,7 @@ class DebugClassLoader
      */
     public function loadClass($class)
     {
-        $e = error_reporting(error_reporting() | E_PARSE | E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR);
+        $e = error_reporting(error_reporting() | \E_PARSE | \E_ERROR | \E_CORE_ERROR | \E_COMPILE_ERROR);
 
         try {
             if ($this->isFinder && !isset($this->loaded[$class])) {
@@ -149,11 +149,11 @@ class DebugClassLoader
                 if (!$file = $this->classLoader[0]->findFile($class) ?: false) {
                     // no-op
                 } elseif (\function_exists('opcache_is_script_cached') && @opcache_is_script_cached($file)) {
-                    require $file;
+                    include $file;
 
                     return;
-                } else {
-                    require $file;
+                } elseif (false === include $file) {
+                    return;
                 }
             } else {
                 \call_user_func($this->classLoader, $class);
@@ -197,7 +197,7 @@ class DebugClassLoader
             }
 
             foreach ($deprecations as $message) {
-                @trigger_error($message, E_USER_DEPRECATED);
+                @trigger_error($message, \E_USER_DEPRECATED);
             }
         }
 
@@ -317,6 +317,12 @@ class DebugClassLoader
         return $deprecations;
     }
 
+    /**
+     * @param string $file
+     * @param string $class
+     *
+     * @return array|null
+     */
     public function checkCase(\ReflectionClass $refl, $file, $class)
     {
         $real = explode('\\', $class.strrchr($file, '.'));
@@ -333,7 +339,7 @@ class DebugClassLoader
         array_splice($tail, 0, $i + 1);
 
         if (!$tail) {
-            return;
+            return null;
         }
 
         $tail = \DIRECTORY_SEPARATOR.implode(\DIRECTORY_SEPARATOR, $tail);
@@ -349,6 +355,8 @@ class DebugClassLoader
         ) {
             return [substr($tail, -$tailLen + 1), substr($real, -$tailLen + 1), substr($real, 0, -$tailLen + 1)];
         }
+
+        return null;
     }
 
     /**
@@ -396,7 +404,7 @@ class DebugClassLoader
         }
 
         if (isset($dirFiles[$file])) {
-            return $real .= $dirFiles[$file];
+            return $real.$dirFiles[$file];
         }
 
         $kFile = strtolower($file);
@@ -415,7 +423,7 @@ class DebugClassLoader
             self::$darwinCache[$kDir][1] = $dirFiles;
         }
 
-        return $real .= $dirFiles[$kFile];
+        return $real.$dirFiles[$kFile];
     }
 
     /**

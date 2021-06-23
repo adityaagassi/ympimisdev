@@ -122,7 +122,7 @@ table > thead > tr > th{
 <section class="content" style="padding-top: 0; padding-bottom: 0">
   <div class="row">
     <div class="col-md-12" style="padding: 1px !important">
-        <div class="col-md-2">
+        <div class="col-md-2" style="padding:0">
           <div class="input-group date">
             <div class="input-group-addon bg-green">
               <i class="fa fa-calendar"></i>

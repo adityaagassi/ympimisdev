@@ -160,6 +160,7 @@
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+	var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
 
 
 	$('#qr_item').keydown(function(event) {
@@ -180,6 +181,7 @@
 						$('#qr_item').focus();
 						selectChecksheet(kd_number);
 						$('#loading').hide();
+						audio_ok.play();
 						openSuccessGritter('Success', result.message);
 					}
 					else{

@@ -36,7 +36,7 @@
 						<th style="width: 1%; border:1px solid black;">Finish</th>
 						<th style="width: 1%; border:1px solid black;">Duration</th>
 						<th style="width: 1%; border:1px solid black;">Departure</th>
-						<th style="width: 15%; border:1px solid black;">Remark</th>
+						<th style="width: 4%; border:1px solid black;">Remark</th>
 					</tr>
 				</thead>
 				<tbody>

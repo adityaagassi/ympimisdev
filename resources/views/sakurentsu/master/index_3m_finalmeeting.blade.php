@@ -115,21 +115,33 @@
             <div class="col-xs-4">
               <div class="form-group">
                 <label for="sk_number">Sakurentsu Number <span class="text-purple">作連通番号</span></label>
-                <input type="text" class="form-control" id="sk_number" readonly="" value="{{ $judul->sakurentsu_number }}">
+                <?php if(isset($judul)) { ?>
+                  <input type="text" class="form-control" id="sk_number" readonly="" value="{{ $judul->sakurentsu_number }}">
+                <?php } else { ?>
+                  <input type="text" class="form-control" id="sk_number" readonly="" value="">
+                <?php } ?>
               </div>
             </div>
 
             <div class="col-xs-5">
               <div class="form-group">
                 <label for="title">Sakurentsu Title <span class="text-purple">作連通の表題</span></label>
-                <input type="text" class="form-control" id="title" readonly="" value="{{ $judul->title }}">
+                <?php if(isset($judul)) { ?>
+                  <input type="text" class="form-control" id="title" readonly="" value="{{ $judul->title }}">
+                <?php } else { ?>
+                  <input type="text" class="form-control" id="title" readonly="" value="">
+                <?php } ?>
               </div>
             </div>
 
             <div class="col-xs-3">
               <div class="form-group">
                 <label for="target">Target Date <span class="text-purple">締切</span></label>
-                <input type="text" class="form-control" id="target" readonly="" value="{{ $judul->tgl_target }}">
+                <?php if(isset($judul)) { ?>
+                  <input type="text" class="form-control" id="target" readonly="" value="{{ $judul->tgl_target }}">
+                <?php } else { ?>
+                  <input type="text" class="form-control" id="target" readonly="" value="">
+                <?php } ?>
               </div>
             </div>
           </div>
@@ -250,7 +262,13 @@
               <div class="col-xs-12">
                 <div class="form-group">
                   <label>Tanggal mulai・Tgl rencana perubahan <span class="text-purple">開始日・切替予定日</span> <br> ※alasan bila menjadi after request <span class="text-purple">※事後申請となった場合はその理由</span></label>
-                  <input type="text" class="form-control" id="tgl_rencana" placeholder="Input Planned Start Date" name="tgl_rencana">
+                  <div class="input-group date">
+                    <div class="input-group-addon bg-purple" style="border: none;">
+                      <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="text" style="width: 20%" class="form-control datepicker" name="tgl_rencana" id="tgl_rencana" placeholder="Select Planned Start Date">
+                  </div>
+                  <input type="text" class="form-control" name="tgl_rencana_note" id="tgl_rencana_note" placeholder="Input Note Planned Date">
                 </div>
               </div>
             </div>
@@ -915,7 +933,7 @@
 
     this.on('sendingmultiple', function (data, xhr, formData) {
       formData.append("id", $("#id").val());
-      formData.append("title_name", $("#title_name").val());
+      formData.append("title", $("#title_name").val());
       formData.append("title_jp", $("#title_jp").val());
       formData.append("product_name", $("#product_name").val());
       formData.append("proccess_name", $("#proccess_name").val());
@@ -926,6 +944,7 @@
       formData.append("keuntungan", CKEDITOR.instances.keuntungan.getData());
       formData.append("kualitas_before", CKEDITOR.instances.kualitas_before.getData());
       formData.append("tgl_rencana", $("#tgl_rencana").val());
+      formData.append("tgl_rencana_note", $("#tgl_rencana_note").val());
       formData.append("bom_change", $('input[name="bom_change"]:checked').val());
       formData.append("item_khusus", CKEDITOR.instances.item_khusus.getData());
 
@@ -966,6 +985,7 @@ function fillData() {
   $("#keuntungan").val(datas.benefit);
   $("#kualitas_before").val(datas.check_before);
   $("#tgl_rencana").val(datas.started_date);
+  $("#tgl_rencana_note").val(datas.date_note);
 
   $("#item_khusus").val(datas.special_items);
   $("input[name='bom_change'][value='"+datas.bom_change+"']").prop('checked', true);
@@ -991,13 +1011,15 @@ $('#main_form').on('submit', function (e) {
   formData.append('id', $("#id").val());
   formData.append('product', $("#product_name").val());
   formData.append('proccess', $("#proccess_name").val());
-  formData.append('title', $("#title").val());
+  formData.append('title', $("#title_name").val());
+  formData.append('title_jp', $("#title_jp").val());
   formData.append('unit_name', $("#unit_name").val());
   formData.append('category', $("input[name='category']:checked").val());
   formData.append('content', CKEDITOR.instances.isi.getData());
   formData.append('benefit', CKEDITOR.instances.keuntungan.getData());
   formData.append('kualitas_before', CKEDITOR.instances.kualitas_before.getData());
   formData.append('planned_date', $("#tgl_rencana").val());
+  formData.append('planned_date_note', $("#tgl_rencana_note").val());
   formData.append('special_item', CKEDITOR.instances.item_khusus.getData());
   formData.append('sakurentsu_number', $("#sk_number").val());
   formData.append('related_department', $("#related_department").val());
@@ -1057,7 +1079,7 @@ $(".btn-upload").click(function() {
         body_file += "<a href='"+"{{ url('uploads/sakurentsu/three_m/doc/') }}/"+value.file_name+"' target='_blank'><i class='fa fa-file-pdf-o'></i> "+value.file_name+"</a>";
         body_file += "</td>";
         body_file += "</tr>";
-     });
+      });
 
       $("#bodyFile").append(body_file);
 

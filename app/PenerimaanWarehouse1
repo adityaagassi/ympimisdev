@@ -1,0 +1,14 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class PenerimaanWarehouse1 extends Model
+{
+	 protected $table = "penerimaan_warehouse1";
+	protected $fillable = [
+		'id', 'nama', 'tanggal', 'tipe', 'nama_vendor'
+	];
+
+}
