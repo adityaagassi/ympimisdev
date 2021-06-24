@@ -7354,7 +7354,7 @@ class InjectionsController extends Controller
                     rc_kensas
                     LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
                 WHERE
-                    rc_kensas.serial_number = rc_kensa_initials.serial_number 
+                    rc_kensas.kensa_initial_code = rc_kensa_initials.kensa_initial_code 
                     AND ng_name IS NOT NULL 
                     AND DATE( rc_kensas.created_at ) = '".$now."' 
                     AND injection_parts.deleted_at IS NULL 
@@ -7369,7 +7369,7 @@ class InjectionsController extends Controller
                     rc_kensas
                     LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
                 WHERE
-                    rc_kensas.serial_number = rc_kensa_initials.serial_number 
+                    rc_kensas.kensa_initial_code = rc_kensa_initials.kensa_initial_code 
                     AND ng_name IS NOT NULL 
                     AND DATE( rc_kensas.created_at ) = '".$now."' 
                     AND injection_parts.deleted_at IS NULL 
@@ -7456,7 +7456,7 @@ class InjectionsController extends Controller
                     rc_kensas
                     LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
                 WHERE
-                    rc_kensas.serial_number = rc_kensa_initials.serial_number 
+                    rc_kensas.kensa_initial_code = rc_kensa_initials.kensa_initial_code 
                     AND ng_name IS NOT NULL 
                     AND DATE( rc_kensas.created_at ) >= '".$firstdayweek."' 
                     AND DATE( rc_kensas.created_at ) <= '".$lastdayweek."' 
@@ -7472,7 +7472,7 @@ class InjectionsController extends Controller
                     rc_kensas
                     LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
                 WHERE
-                    rc_kensas.serial_number = rc_kensa_initials.serial_number 
+                    rc_kensas.kensa_initial_code = rc_kensa_initials.kensa_initial_code 
                     AND ng_name IS NOT NULL 
                     AND DATE( rc_kensas.created_at ) >= '".$firstdayweek."' 
                     AND DATE( rc_kensas.created_at ) <= '".$lastdayweek."' 
