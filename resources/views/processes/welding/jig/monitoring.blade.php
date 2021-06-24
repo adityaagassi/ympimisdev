@@ -200,7 +200,7 @@
 			autoclose: true,
 			format: "yyyy-mm-dd",
 			todayHighlight: true,	
-			endDate: '<?php echo $tgl_max ?>'
+			// endDate: '<?php echo $tgl_max ?>'
 		});
 		fillList();
 		setInterval(fillList,60000);
