@@ -52,12 +52,12 @@
         <tbody>
 
             <tr>
-                <th style="border: 1px solid black">No</th>
-                <th style="border: 1px solid black">Lokasi</th>
-                <th style="border: 1px solid black">PIC</th>
-                <th style="border: 1px solid black">Poin Kategori</th>
-                <th style="border: 1px solid black">Note</th>
-                <th style="border: 1px solid black">Foto</th>
+                <th style="border: 1px solid black;">No</th>
+                <th style="border: 1px solid black;">Lokasi</th>
+                <th style="border: 1px solid black;">PIC</th>
+                <th style="border: 1px solid black;">Poin Kategori</th>
+                <th style="border: 1px solid black;">Note</th>
+                <th style="border: 1px solid black;">Foto</th>
             </tr>
 
             <?php 
@@ -68,12 +68,12 @@
             @foreach($detail as $audit)
 
             <tr>
-                <td style="width: 200px;vertical-align: middle;text-align: left">{{ $num++ }}</td>
-                <td style="width: 200px;vertical-align: middle;text-align: left">{{ $audit->lokasi }}</td>
-                <td style="width: 200px;vertical-align: middle;text-align: left">{{ $audit->auditee_name }}</td>
-                <td style="width: 200px;vertical-align: middle;text-align: left">{{ $audit->point_judul }}</td>
-                <td style="width: 200px;vertical-align: middle;text-align: left">{{ $audit->note }}</td>
-                <td style="width: 200px;vertical-align: middle;text-align: left"><img src="files/patrol/{{ $audit->foto }}" width="200"></td>
+                <td style="vertical-align: middle;text-align: left;width: 10">{{ $num++ }}</td>
+                <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->lokasi }}</td>
+                <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->auditee_name }}</td>
+                <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->point_judul }}</td>
+                <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->note }}</td>
+                <td style="vertical-align: middle;text-align: right;align-items: right;align-content: right">&nbsp;&nbsp;<img src="files/patrol/{{ $audit->foto }}" width="190"></td>
             </tr>
 
             @endforeach
