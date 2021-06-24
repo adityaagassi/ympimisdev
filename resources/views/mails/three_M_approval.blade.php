@@ -32,7 +32,7 @@
 				<?php $ids = $data["datas"]['id']; ?>
 				<?php if ($data["position"] == "PRESDIR"  || $data["position"] == "SIGNING" || $data["position"] == "SIGNING DGM" || $data["position"] == "SIGNING GM") { ?>
 					3M変更申請の承認 Approval 3M Application
-				<?php } else if ($data["position"] == "STD" || $data["position"] == "ALL" || $data["position"] == "IMPLEMENT" || $data["position"] == "TRANSLATE" || $data["position"] == "INTERPRETER" || $data["position"] == "INTERPRETER2" || $data["position"] == "DOCUMENT" || $data['position'] == "IMPLEMENT DEPT" || $data['position'] == "IMPLEMENT DGM") { ?>
+				<?php } else if ($data["position"] == "STD" || $data["position"] == "ALL" || $data["position"] == "IMPLEMENT" || $data["position"] == "TRANSLATE" || $data["position"] == "INTERPRETER" || $data["position"] == "DOCUMENT" || $data['position'] == "IMPLEMENT DEPT" || $data['position'] == "IMPLEMENT DGM") { ?>
 					3M申請書 3M Application
 				<?php } ?>
 				<br>
@@ -67,7 +67,7 @@
 			<?php  if ($data["datas"]['sakurentsu_number']) { ?>
 
 				<table style="border: hidden; width: 80%" id="sakurentsu_table">
-					<tr><th colspan="2" style="background-color: rgb(179, 117, 191);">作連通 Sakurentsu</th></tr>
+					<tr><th colspan="2" style="background-color: rgb(179, 117, 191);">Sakurentsu</th></tr>
 					<tr>
 						<th style="text-align: left; background-color: rgb(179, 117, 191);" width="35%">作連通番号 Sakurentsu Number</th>
 						<td>{{ $data["datas"]["sakurentsu_number"] }}</td>
@@ -174,10 +174,6 @@
 			<tr>
 			<?php if ($data["position"] == "PRESDIR") { $id = $data["datas"]['id']; ?>
 			<td style="border: 0px">
-			<a style="background-color: green;color: white;font-size:20px;" href="{{ url('post/sakurentsu/3m/sign/'.$id.'/presdir') }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp; <br> 承認 </a>
-			</td>
-			
-			<td style="border: 0px">
 			<a style="background-color: green;color: white;font-size:20px;" href="{{ url('detail/sakurentsu/3m/'.$id.'/presdir') }}">&nbsp;&nbsp;&nbsp; View 3M Detail & Approval &nbsp;&nbsp;&nbsp; <br> 3M変更の詳細＆承認</a>
 			</td>
 
@@ -232,7 +228,7 @@
 		<?php }  else if ($data["position"] == "IMPLEMENT STD") { $id = $data["datas"]['id']; ?>
 
 			<td style="border: 0px">
-			<a style="background-color: green;color: white;font-size:20px;" href="{{ url('index/sakurentsu/3m/implement/'.$id.'/std') }}">&nbsp;&nbsp;&nbsp; Receive 3M Implementation &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</a>
+			<a style="background-color: green;color: white;font-size:20px;" href="{{ url('index/sakurentsu/3m/implement/'.$id.'/std') }}">&nbsp;&nbsp;&nbsp; Receive 3M Implementation &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; ??? &nbsp;&nbsp;&nbsp;</a>
 			</td>
 			<td style="border: 0px">
 			<a style="background-color: #fa932d;color: white;font-size:20px;" href="{{ url('detail/sakurentsu/3m/'.$id.'/view') }}">&nbsp;&nbsp;&nbsp; 3M Detail &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; 3M変更の詳細 &nbsp;&nbsp;&nbsp;</a>
@@ -245,14 +241,6 @@
 			</td>
 
 			<?php }  else if ($data["position"] == "INTERPRETER") { $id = $data["datas"]['id']; ?>
-
-			<td style="border: 0px">
-				<?php //if($data['datas']['sakurentsu_number']) { ?>
-					<a style="background-color: green; color: white;font-size:20px;" href="{{ url('index/sakurentsu/assign/'.$data['datas']['id'].'/interpreter_tiga_em') }}">&nbsp;&nbsp;&nbsp; Assign to Staff &nbsp;&nbsp;&nbsp;</a>
-				
-			</td>
-
-			<?php }  else if ($data["position"] == "INTERPRETER2") { $id = $data["datas"]['id']; ?>
 
 			<td style="border: 0px">
 			<a style="background-color: green; color: white;font-size:20px;" href="{{ url('index/sakurentsu/3m/translate/'.$id) }}">&nbsp;&nbsp;&nbsp; Translate 3M &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; 3M翻訳 &nbsp;&nbsp;&nbsp;</a>
@@ -273,18 +261,10 @@
 			<?php }  else if ($data["position"] == "SIGNING DGM") { $id = $data["datas"]['id']; ?>
 
 			<td style="border: 0px">
-			<a style="background-color: green;color: white;font-size:20px;" href="{{ url('post/sakurentsu/3m/sign/'.$id.'/dgm') }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp; <br> 承認 </a>
-			</td>
-
-			<td style="border: 0px">
 			<a style="background-color: green;color: white;font-size:20px;" href="{{ url('detail/sakurentsu/3m/'.$id.'/dgm') }}">&nbsp;&nbsp;&nbsp; View 3M Detail & Approval &nbsp;&nbsp;&nbsp; <br> 3M変更の詳細＆承認</a>
 			</td>
 
 			<?php }  else if ($data["position"] == "SIGNING GM") { $id = $data["datas"]['id']; ?>
-
-			<td style="border: 0px">
-			<a style="background-color: green;color: white;font-size:20px;" href="{{ url('post/sakurentsu/3m/sign/'.$id.'/gm') }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp; <br> 承認 </a>
-			</td>
 
 			<td style="border: 0px">
 			<a style="background-color: green;color: white;font-size:20px;" href="{{ url('detail/sakurentsu/3m/'.$id.'/gm') }}">&nbsp;&nbsp;&nbsp; View 3M Detail & Approval &nbsp;&nbsp;&nbsp; <br> 3M変更の詳細＆承認</a>
@@ -296,7 +276,7 @@
 <br>
 <br>
 <span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br><br>
-<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size:15px; text-decoration: none;" href="{{ url('index/sakurentsu/monitoring/3m') }}">&nbsp;&nbsp;&nbsp; Sakurentsu Monitoring &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; 作連通監視 &nbsp;&nbsp;&nbsp;</a>
+<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size:15px; text-decoration: none;" href="{{ url('index/sakurentsu/monitoring/3m') }}">&nbsp;&nbsp;&nbsp; 3M Monitoring &nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; 3M変更監視 &nbsp;&nbsp;&nbsp;</a>
 </center>
 </div>
 </body>

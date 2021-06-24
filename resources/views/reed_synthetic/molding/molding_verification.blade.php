@@ -52,6 +52,7 @@
 		<input type="hidden" id="location" value="molding">
 		<input type="hidden" id="proses" value="injection">
 		<input type="hidden" id="employee_id">
+		<input type="hidden" id="order_id">
 
 		<div class="col-xs-6 col-md-offset-3" id="field_kanban">
 			<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
@@ -61,63 +62,37 @@
 					&nbsp;
 				</span>
 			</div>
-			<input type="text" style="text-align: center; font-size: 3vw; height: 100px;" class="form-control" id="order_id" placeholder="Scan Order ID">	
+			<input type="text" style="text-align: center; font-size: 3vw; height: 100px;" class="form-control" id="kanban" placeholder="Scan Kanban">	
 		</div>
 
 
-		<div class="col-xs-12" id="picking">	
+		<div class="col-xs-12" id="picking">
+			{{-- <input id="qr_item" type="text" style="border:0; width: 100%; text-align: center; height: 20px; background-color: #3c3c3c; height: 0px;"> --}}
+
 			<input id="qr_item" type="text" style="border:0; width: 100%; text-align: center; height: 20px; color: white; background-color: #3c3c3c; height: 50px;">
 
-			<div class="row" style="margin-top: 1%">
-				<div class="col-xs-4" style="">
-					<div class="box">
-						<div class="box-body">
-							<table class="table table-bordered table-stripped" style="margin-bottom: 0px;">
-								<thead>
-									<tr>
-										<th colspan="2" style="font-size: 2vw; background-color: orange; border-bottom: 1px solid black;">SETUP MOLDING</th>
-									</tr>
-									<tr>
-										<th colspan="2" style="font-size: 2vw; background-color: orange; border-bottom: 1px solid black;" id="order_id_text"></th>
-									</tr>
-									<tr>
-										<th style=" width:40%; font-size:1.5vw; background-color:#9e9e9e;">MATERIAL</th>
-										<th style=" width:60%; font-size:1.5vw; background-color:#9e9e9e">OPERATOR</th>
-									</tr>
-									<tr>
-										<th style="font-size:1.5vw; background-color:#f5f5f5; vertical-align:middle;"><span id="material"></span></th>
-										<th style="font-size:1.5vw; background-color:#f5f5f5; vertical-align:middle;"><span id="data_op"></span></th>
-									</tr>
+			<table id="pickingTable" class="table table-bordered table-stripped">
+				<thead style="background-color: orange;">
+					<tr>
+						<th colspan="6" style="font-size: 2.5vw;">OPERATOR <span id="data_op"></span></th>
+					</tr>
+					<tr>
+						<th colspan="6" style="font-size: 2.5vw;">SETUP MOLDING<span id="material"></span></th>
+					</tr>
+					<tr>
+						<th style="width: 1%; font-size: 2vw;">#</th>
+						<th style="width: 1%; font-size: 2vw;">Jenis</th>
+						<th style="width: 5%; font-size: 2vw;">Deskripsi</th>
+						<th style="width: 1%; font-size: 2vw;">Quantity</th>
+						<th style="width: 1%; font-size: 2vw;">Actual</th>
+						<th style="width: 1%; font-size: 2vw;">Status</th>
+					</tr>
+				</thead>
+				<tbody id="pickingTableBody" style="background-color: white;">
+				</tbody>
+			</table>
 
-								</thead>
-							</table>
-						</div>
-					</div>
-
-				</div>
-				<div class="col-xs-8" style="padding-left: 0px;">
-					<div class="box">
-						<div class="box-body">
-							<table id="pickingTable" class="table table-bordered table-stripped">
-								<thead style="background-color: orange;">
-									<tr>
-										<th style="width: 1%; font-size: 2vw;">#</th>
-										<th style="width: 1%; font-size: 2vw;">Jenis</th>
-										<th style="width: 5%; font-size: 2vw;">Aktivitas</th>
-										<th style="width: 1%; font-size: 2vw;">Status</th>
-									</tr>
-								</thead>
-								<tbody id="pickingTableBody" style="background-color: #f5f5f5;">
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-xs-6 col-xs-offset-3">
-				<button id="finishSetup" onclick="finishSetup()" class="btn btn-success" style="font-weight: bold; font-size: 3vw; width: 100%;"><i class="fa fa-check-square-o"></i>&nbsp;&nbsp;&nbsp;FIRST APPROVAL</button>
-			</div>
+			<button id="finishSetup" onclick="finishSetup()" class="btn btn-danger" style="font-weight: bold; font-size: 3vw; width: 100%;">SELESAI SETUP MOLDING</button>
 			
 
 
@@ -190,7 +165,7 @@
 		$('#order_id').val('');
 		$('#operator').val('');
 		$('#qr_item').val('');
-		$('#order_id').val('');
+		$('#kanban').val('');
 	}
 
 
@@ -204,15 +179,15 @@
 				$.get('{{ url("scan/reed/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						$('#employee_id').val(result.employee.employee_id);
-						$('#data_op').html(result.employee.employee_id+"<br>"+result.employee.name)
+						$('#data_op').text(" ("+result.employee.employee_id+" - "+result.employee.name+")")
 						openSuccessGritter('Success!', result.message);
 						$('#modalOperator').modal('hide');
 						$('#operator').remove();
 						$('#qr_item').val('');
 
 
-						$('#order_id').val('');
-						$('#order_id').focus();
+						$('#kanban').val('');
+						$('#kanban').focus();
 
 					}
 					else{
@@ -231,14 +206,15 @@
 	});
 
 
-	$('#order_id').keydown(function(event) {
+	$('#kanban').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($("#order_id").val().length == 9){
-				selectChecksheet($("#order_id").val());
-			}else{
-				openErrorGritter('Error!', 'Order ID tidak valid.');
+			if($("#kanban").val().length >= 11){
+				selectChecksheet($("#kanban").val());
+			}
+			else{
+				openErrorGritter('Error!', 'Kanban tidak valid.');
 				audio_error.play();
-				$("#order_id").val("");
+				$("#kanban").val("");
 			}			
 		}
 	});
@@ -251,7 +227,7 @@
 		var proses = $('#proses').val();
 
 		var data = {
-			order_id : id, 
+			kanban : id, 
 			location : location,
 			proses : proses 
 		}
@@ -263,8 +239,8 @@
 				$('#picking').show();
 				$('#pickingTableBody').html("");
 
-				$('#material').html(result.order.material_number+"<br>"+result.order.material_description);
-				$('#order_id_text').html('ORDER ID : ' + result.order.order_id);
+				$('#order_id').val(result.order.id);
+				$('#material').text(" ("+result.order.material_number+" - "+result.order.material_description+")")
 
 
 				var pickingData = "";
@@ -274,17 +250,13 @@
 
 				$.each(result.data, function(key, value){
 
-					if(key == 1){
-						pickingData += '<tr>';
-						pickingData += '<th colspan="4" style="background-color: #ffffff; font-size: 1.8vw; height:2%; text-align: center; height:40px; color: #3c3c3c; border-bottom: 1px solid;">PEMASANGAN MOLDING</th>';
-						pickingData += '</tr>';
-
-					}
-
 					pickingData += '<tr>';
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+(key+1)+'</td>';
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.picking_list+'</td>';
 					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.picking_description+'</td>';
+					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.quantity+'</td>';
+					pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px;">'+value.actual_quantity+'</td>';
+
 
 					if(value.quantity != value.actual_quantity){
 						pickingData += '<td style="font-size: 1.8vw; height:2%; vertical-align:middle; height:40px; background-color: rgb(255,204,255);">-</td>';
@@ -328,6 +300,8 @@
 		if (event.keyCode == 13 || event.keyCode == 9) {
 			$('#loading').show();
 
+			var kanban = $('#kanban').val();
+
 			var qr_item = $('#qr_item').val();
 			var order_id = $('#order_id').val();
 			var location = $('#location').val();
@@ -345,7 +319,7 @@
 					$('#qr_item').val("");
 					$('#qr_item').focus();
 
-					selectChecksheet(order_id);
+					selectChecksheet(kanban);
 
 					$('#loading').hide();
 					audio_ok.play();
@@ -363,34 +337,30 @@
 
 
 	function finishSetup(){
-		// $('#loading').show();
-		// var order_id = $('#order_id').val();
-		// var employee_id = $('#employee_id').val();
-
-		// var data = {
-		// 	order_id:order_id,
-		// 	employee_id:employee_id,
-		// }
-
-		// if(confirm("Apakah anda yakin mengakhiri proses setup molding?")){
-		// 	$.post('{{ url("fetch/reed/finish_setup_molding") }}', data, function(result, status, xhr){
-		// 		if(result.status){
-		// 			location.reload(true);
-		// 		}else{
-		// 			$('#loading').hide();
-		// 			openErrorGritter('Error!', result.message);
-		// 			audio_error.play();				
-		// 		}
-		// 	});
-		// }
-		// else{
-		// 	$('#loading').hide();
-		// 	return false;
-		// }
-
-		var employee_id = $('#employee_id').val();
+		$('#loading').show();
 		var order_id = $('#order_id').val();
-		window.open('{{ url("index/reed/molding_approval/")}}'+'/'+order_id+'/'+employee_id, '_blank');
+		var employee_id = $('#employee_id').val();
+
+		var data = {
+			order_id:order_id,
+			employee_id:employee_id,
+		}
+
+		if(confirm("Apakah anda yakin mengakhiri proses setup molding?")){
+			$.post('{{ url("fetch/reed/finish_setup_molding") }}', data, function(result, status, xhr){
+				if(result.status){
+					location.reload(true);
+				}else{
+					$('#loading').hide();
+					openErrorGritter('Error!', result.message);
+					audio_error.play();				
+				}
+			});
+		}
+		else{
+			$('#loading').hide();
+			return false;
+		}
 	}
 
 
