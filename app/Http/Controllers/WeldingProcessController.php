@@ -3968,8 +3968,7 @@ class WeldingProcessController extends Controller
 				FROM
 					jig_schedules 
 				WHERE
-					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-01-01' 
-					and jig_schedules.schedule_status = 'Open') 
+					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-01-01' ) 
 					AND LAST_DAY(
 					CONCAT( YEAR ( ".$date_now."), '-03-01' ))) AS before_kensa,
 				(
@@ -4025,8 +4024,7 @@ class WeldingProcessController extends Controller
 				FROM
 					jig_schedules 
 				WHERE
-					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-04-01' 
-					and jig_schedules.schedule_status = 'Open') 
+					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-04-01' ) 
 					AND LAST_DAY(
 					CONCAT( YEAR ( ".$date_now."), '-06-01' ))) AS before_kensa,
 				(
@@ -4082,8 +4080,7 @@ class WeldingProcessController extends Controller
 				FROM
 					jig_schedules 
 				WHERE
-					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-07-01' 
-					and jig_schedules.schedule_status = 'Open') 
+					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-07-01' ) 
 					AND LAST_DAY(
 					CONCAT( YEAR ( ".$date_now."), '-09-01' ))) AS before_kensa,
 				(
@@ -4139,8 +4136,7 @@ class WeldingProcessController extends Controller
 				FROM
 					jig_schedules 
 				WHERE
-					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-10-01' 
-					and jig_schedules.schedule_status = 'Open') 
+					jig_schedules.schedule_date BETWEEN CONCAT( YEAR ( ".$date_now."), '-10-01' ) 
 					AND LAST_DAY(
 					CONCAT( YEAR ( ".$date_now."), '-12-01' ))) AS before_kensa,
 				(
@@ -4327,7 +4323,7 @@ class WeldingProcessController extends Controller
 			$detail = [];
 
 			if ($status == 'Schedule Kensa') {
-				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date BETWEEN '".$first."' and '".$last."' and jig_schedules.schedule_status = 'Open'");
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date BETWEEN '".$first."' and '".$last."'");
 
 				foreach ($schedule as $key) {
 					$detail[$key->jig_id] = DB::SELECT("select * from jig_schedules join jig_kensa_logs on jig_kensa_logs.jig_id = jig_schedules.jig_id and DATE(finished_at) = schedule_date join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date BETWEEN '".$first."' and '".$last."' and jig_schedules.jig_id = '".$key->jig_id."'");
