@@ -314,7 +314,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			</div>
 			<div class="col-md-8" style="padding-bottom: 10px;">
 				<a href="{{ url('index/ga_control/bento') }}" class="btn btn-warning"><i class="glyphicon glyphicon-cutlery"></i>&nbsp; Order Bento &nbsp;<i class="fa fa-angle-double-right"></i></a>
-				<a href="{{ url('index/ga_control/live_cooking') }}" class="btn btn-primary"><i class="glyphicon glyphicon-cutlery"></i>&nbsp; Live Cooking &nbsp;<i class="fa fa-angle-double-right"></i></a>
+				<a href="{{ url('index/ga_control/live_cooking') }}" class="btn btn-info"><i class="glyphicon glyphicon-cutlery"></i>&nbsp; Live Cooking &nbsp;<i class="fa fa-angle-double-right"></i></a>
 				<button class="btn btn-success" onclick="questionForm()" id="btnTanya"><i class="fa fa-question-circle"></i>&nbsp; Tanya HR &nbsp;<i class="fa fa-angle-double-right"></i></button>
 				<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
