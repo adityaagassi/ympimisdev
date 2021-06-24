@@ -2039,30 +2039,25 @@ public function fetchLiveCookingEmployees(Request $request)
 		// }
 
 		$emp = DB::SELECT("SELECT
-			canteen_live_cookings.id AS id_live,
-			order_by,
-			emp_by.`name` AS name_by,
-			order_for,
-			emp_for.`name` AS name_for,
-			due_date,
-			`status`,
-			remark,
-			emp_by.department,
-			emp_by.section
-			FROM
-			canteen_live_cookings
-			LEFT JOIN employee_syncs emp_by ON emp_by.employee_id = canteen_live_cookings.order_by
-			LEFT JOIN employee_syncs emp_for ON emp_for.employee_id = canteen_live_cookings.order_for
-			WHERE
-			emp_for.name = '".$request->get('for_name')."'
-			and due_date = '".$request->get('due_date')."'
-			order by due_date");
+			* 
+		FROM
+			canteen_live_cookings 
+		WHERE
+			due_date = '".$request->get('due_date')."' 
+			AND order_for = '".$request->get('employee_id')."'");
 
-		$response = array(
-			'status' => true,
-			'employees' => $emp,
-		);
-		return Response::json($response);
+		if (count($emp) > 0) {
+			$response = array(
+				'status' => false,
+				'message' => 'Karyawan sudah mendapat Live Cooking pada tanggal tersebut.',
+			);
+			return Response::json($response);
+		}else{
+			$response = array(
+				'status' => true,
+			);
+			return Response::json($response);
+		}
 	} catch (\Exception $e) {
 		$response = array(
 			'status' => false,
@@ -2095,6 +2090,57 @@ public function inputLiveCookingOrder(Request $request)
 			);
 			return Response::json($response);
 		}
+	}
+	catch(\Exception $e){
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage(),
+		);
+		return Response::json($response);
+	}
+}
+
+public function inputLiveCookingOrderExtra(Request $request)
+{
+	try{
+		// $quotas = CanteenLiveCookingMenu::where('due_date',$request->get('due_date'))->first();
+		// if ($quotas->serving_ordered < $quotas->serving_ordered ) {
+
+		$order_lists = $request->get('order_list');
+		$order_by = $request->get('order_by');
+		$due_date = $request->get('due_date');
+
+		for ($i=0; $i < count($order_lists); $i++) { 
+			$order = explode("_", $order_lists[$i]);
+			$live_cooking = CanteenLiveCooking::create(
+				[
+					'order_by' => strtoupper($request->get('order_by')),
+					'due_date' => $due_date,
+					'order_for' => strtoupper($order[0]),
+					'status' => 'Confirmed',
+					'whatsapp_status' => '0',
+					'attendance_generate_status' => '0',
+					'remark' => 'Additional',
+					'created_by' => Auth::id()
+				]
+			);
+			$live_cooking->save();
+		}
+		
+
+		$response = array(
+			'status' => true,
+			'message' => 'Extra Order berhasil dibuat.',
+		);
+		return Response::json($response);
+		// }
+		// else{
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'message' => 'Order Anda pada tanggal '.$request->get('quota').' telah melebihi kuota.',
+		// 	);
+		// 	return Response::json($response);
+		// }
 	}
 	catch(\Exception $e){
 		$response = array(
@@ -2202,54 +2248,65 @@ public function editLiveCookingOrder(Request $request)
 			$quota = CanteenLiveCookingMenu::where('due_date',$request->get('due_date'))->first();
 			$live_cooking = CanteenLiveCooking::where('id',$request->get('id'))->first();
 			$check = CanteenLiveCooking::where('due_date',$request->get('due_date'))->where('order_for',$request->get('order_for'))->first();
-			if ($live_cooking->due_date == $request->get('due_date')) {
-				$emplama = Employee::where('employee_id',$live_cooking->order_for)->first();
-				$emplama->live_cooking = 0;
-				$emplama->save();
-
-				$empbaru = Employee::where('employee_id',$request->get('order_for'))->first();
-				$empbaru->live_cooking = 1;
-				$empbaru->save();
-
-				$live_cooking->order_by = $request->get('order_by');
-				$live_cooking->order_for = $request->get('order_for');
-				$live_cooking->save();
-				$status = true;
-				$message = 'Update Data Berhasil';
+			if (count($check) > 0) {
+				$status = false;
+				$message = 'Karyawan sudah ada di list.';
 			}else{
-				if ($quota->serving_ordered < $quota->serving_quota) {
-					$emplama = Employee::where('employee_id',$live_cooking->order_for)->first();
-					$emplama->live_cooking = 0;
-					$emplama->save();
+				if ($live_cooking->due_date == $request->get('due_date')) {
 
-					$empbaru = Employee::where('employee_id',$request->get('order_for'))->first();
-					$empbaru->live_cooking = 1;
-					$empbaru->save();
+					if ($live_cooking->remark == null) {
+						$emplama = Employee::where('employee_id',$live_cooking->order_for)->first();
+						$emplama->live_cooking = 0;
+						$emplama->save();
 
-					$quotalama = CanteenLiveCookingMenu::where('due_date',$live_cooking->due_date)->first();
-					$quotalama->serving_ordered = $quotalama->serving_ordered-1;
-					$quotalama->save();
-
-					$live_cooking->order_by = $request->get('order_by');
+						$empbaru = Employee::where('employee_id',$request->get('order_for'))->first();
+						$empbaru->live_cooking = 1;
+						$empbaru->save();
+						$live_cooking->order_by = $request->get('order_by');
+					}
 					$live_cooking->order_for = $request->get('order_for');
-					$live_cooking->due_date = $request->get('due_date');
 					$live_cooking->save();
-
-					$quota->serving_ordered = $quota->serving_ordered+1;
-					$quota->save();
-
 					$status = true;
 					$message = 'Update Data Berhasil';
 				}else{
-					$status = false;
-					$message = 'Kuota pada tanggal '.date('d F Y',strtotime($request->get('due_date'))).' telah penuh.';
+					if ($quota->serving_ordered < $quota->serving_quota) {
+
+						if ($live_cooking->remark == null) {
+							$live_cooking->order_by = $request->get('order_by');
+							$emplama = Employee::where('employee_id',$live_cooking->order_for)->first();
+							$emplama->live_cooking = 0;
+							$emplama->save();
+
+							$empbaru = Employee::where('employee_id',$request->get('order_for'))->first();
+							$empbaru->live_cooking = 1;
+							$empbaru->save();
+
+							$quotalama = CanteenLiveCookingMenu::where('due_date',$live_cooking->due_date)->first();
+							$quotalama->serving_ordered = $quotalama->serving_ordered-1;
+							$quotalama->save();
+
+							$quota->serving_ordered = $quota->serving_ordered+1;
+							$quota->save();
+						}
+						$live_cooking->order_for = $request->get('order_for');
+						$live_cooking->due_date = $request->get('due_date');
+						$live_cooking->save();
+
+						$status = true;
+						$message = 'Update Data Berhasil';
+					}else{
+						$status = false;
+						$message = 'Kuota pada tanggal '.date('d F Y',strtotime($request->get('due_date'))).' telah penuh.';
+					}
 				}
 			}
 		}else{
 			$live_cooking = CanteenLiveCooking::where('id',$request->get('id'))->first();
-			$quota = CanteenLiveCookingMenu::where('due_date',$live_cooking->due_date)->first();
-			$quota->serving_ordered = $quota->serving_ordered-1;
-			$quota->save();
+			if ($live_cooking->remark == null) {
+				$quota = CanteenLiveCookingMenu::where('due_date',$live_cooking->due_date)->first();
+				$quota->serving_ordered = $quota->serving_ordered-1;
+				$quota->save();
+			}
 			$live_cooking->forceDelete();
 			$status = true;
 			$message = 'Delete Data Berhasil';
@@ -2272,7 +2329,7 @@ public function detailLiveCooking(Request $request)
 {
 	try {
 
-		$datas = CanteenLiveCooking::select(DB::RAW('DATE_FORMAT(DATE(NOW()),"%Y-%m-%d") as date_now'),'canteen_live_cookings.id as id_live','canteen_live_cookings.*','employee_syncs.*','canteen_live_cooking_menus.*')->where('canteen_live_cookings.due_date',$request->get('due_date'))->join('employee_syncs','employee_syncs.employee_id','canteen_live_cookings.order_for')->join('canteen_live_cooking_menus','canteen_live_cooking_menus.due_date','canteen_live_cookings.due_date')->get();
+		$datas = CanteenLiveCooking::select(DB::RAW('DATE_FORMAT(DATE(NOW()),"%Y-%m-%d") as date_now'),'canteen_live_cookings.id as id_live','canteen_live_cookings.*','employee_syncs.*','canteen_live_cooking_menus.*','canteen_live_cookings.remark as additional')->where('canteen_live_cookings.due_date',$request->get('due_date'))->join('employee_syncs','employee_syncs.employee_id','canteen_live_cookings.order_for')->join('canteen_live_cooking_menus','canteen_live_cooking_menus.due_date','canteen_live_cookings.due_date')->get();
 
 		$response = array(
 			'status' => true,
@@ -2306,7 +2363,7 @@ public function reportLiveCooking(Request $request)
 			$dateto = $request->get('dateto');
 		}
 
-		$datas = CanteenLiveCooking::select('canteen_live_cookings.id as id_live','canteen_live_cookings.*','employee_syncs.*','canteen_live_cooking_menus.*','general_attendances.attend_date')
+		$datas = CanteenLiveCooking::select('canteen_live_cookings.id as id_live','canteen_live_cookings.*','employee_syncs.*','canteen_live_cooking_menus.*','general_attendances.attend_date','canteen_live_cookings.remark as additional')
 			// ->where('canteen_live_cookings.due_date',$request->get('due_date'))
 		->join('employee_syncs','employee_syncs.employee_id','canteen_live_cookings.order_for')
 		->join('canteen_live_cooking_menus','canteen_live_cooking_menus.due_date','canteen_live_cookings.due_date')

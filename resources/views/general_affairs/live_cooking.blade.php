@@ -309,6 +309,82 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="modalCreateGa">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center><h3 style="background-color: #00a65a; font-weight: bold; padding: 3px; margin-top: 0; color: white;">Create Your Extra Order</h3>
+				</center>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
+					<form class="form-horizontal">
+						<input type="hidden" id="nowDateGa" value="{{ date("Y-m-d") }}">
+						<input type="hidden" id="lastDateGa" value="{{ date("Y-m-t") }}">
+						<input type="hidden" id="firstDateGa" value="{{ date("Y-m-01") }}">
+						<input type="hidden" id="total_dayGa" value="{{ $total_day }}">
+						<input type="hidden" id="month_nowGa" value="{{ $month_now }}">
+						<input type="hidden" id="roleGa" value="{{ $role }}">
+						<div class="col-md-10 col-md-offset-1" style="padding-bottom: 5px;">
+							<div class="form-group">
+								<label for="" class="col-sm-3 control-label">Employee<span class="text-red"> :</span></label>
+								<div class="col-sm-4">
+									<input class="form-control" type="text" id="addUserGa" value="{{ strtoupper(Auth::user()->username) }}" disabled>
+								</div>
+								<div class="col-sm-5" style="padding-left: 0px;">
+									<input class="form-control" type="text" id="addUserNameGa" value="{{ Auth::user()->name }}" disabled>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="" class="col-sm-3 control-label">Date<span class="text-red"> :</span></label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control datepicker" id="addDateGa" placeholder="Select Date" value="{{date('Y-m-d')}}" readonly>
+								</div>
+							</div>
+							<div class="form-group">
+								<label style="padding-top: 0;" for="" class="col-sm-3 control-label">Ordered For<span class="text-red"> :</span></label>
+								<div class="col-sm-9">
+									<select class="form-control select2" name="addEmployeeGa" id="addEmployeeGa" data-placeholder="Select Employee" style="width: 100%;">
+										<option></option>
+										@foreach($employees as $employee)
+										<option value="{{ $employee->employee_id }}_{{ $employee->name }}_{{ $employee->grade_code }}">{{ $employee->employee_id }} - {{ $employee->name }}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+							<a class="btn btn-primary pull-right" id="addCartBtnGa" onclick="addCartGa('param')">Add To <i class="fa fa-shopping-cart"></i></a>
+						</div>
+					</form>
+					<div class="col-xs-12" style="padding-top: 10px;">
+						<div class="row">
+							<span style="font-weight: bold; font-size: 1.2vw;"><i class="fa fa-shopping-cart"></i> Cart List</span>
+							<table class="table table-hover table-bordered table-striped" id="tableOrderGa">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 1%;">ID</th>
+										<th style="width: 5%;">Name</th>
+										<th style="width: 1%;">Date</th>
+										<th style="width: 1%;">Action</th>
+									</tr>
+								</thead>
+								<tbody id="tableOrderGaBody">
+								</tbody>
+								<tfoot style="background-color: RGB(252, 248, 227);">
+									<tr>
+										<td>Total: </td>
+										<td id="countTotalGa"></td>
+										<td></td>
+										<td></td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+					<button class="btn btn-success pull-right" style="font-weight: bold; font-size: 2vw; width: 100%;" onclick="confirmOrderGa()">CONFIRM ORDER</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <!-- <div class="modal fade" id="modalEdit">
 	<div class="modal-dialog modal-md">
 		<div class="modal-content">
@@ -363,6 +439,7 @@
 								<th style="width: 1%;">Date</th>
 								<th style="width: 1%;">Menu</th>
 								<?php if ($role == 'GA' || $role == 'MIS'): ?>
+									<th style="width: 1%;">Additional</th>
 									<th style="width: 1%;">Action</th>
 								<?php endif ?>
 							</tr>
@@ -396,6 +473,7 @@
 								</div>
 							</form>
 							<div class="col-xs-4">
+								<input type="hidden" name="" id="editType">
 								<button class="btn btn-success" style="font-weight: bold; font-size: 1.3vw;width: 100%" onclick="cancelEdit()"><i class="fa fa-close"></i> CANCEL</button>
 							</div>
 							<div class="col-xs-4">
@@ -462,6 +540,7 @@
 								<th style="width: 5%;">Group</th>
 								<th style="width: 1%;">Date</th>
 								<th style="width: 1%;">Menu</th>
+								<th style="width: 1%;">Additional</th>
 								<th style="width: 1%;">Kehadiran</th>
 								<th style="width: 2%;">Waktu</th>
 							</tr>
@@ -553,6 +632,8 @@
 
 		fetchOrderList();
 	});
+	var employees = [];
+	var count = 0;
 
 	function modalUploadMenu() {
 		$('#modalUploadMenu').modal('show');
@@ -606,24 +687,36 @@
 		}
 	}
 
-	function openModalCreate(cat, d, id,color){
-		// if(cat == 'new'){
-		// 	if ($('#total_day').val() <= 7 && $('#month_now').val() != d.split('-')[0]+'-'+d.split('-')[1] && d > $("#nowDate").val() && id != 'Libur 休日') {
-		// 		$('#addDate').val(d);
-		// 		$('#addDate').prop('disabled', true);
+	function openModalCreate(cat, d, id,color,id_live){
+		employees= [];
+		if(cat == 'new'){
+			// if ($('#total_day').val() <= 7 && $('#month_now').val() != d.split('-')[0]+'-'+d.split('-')[1] && d > $("#nowDate").val() && id != 'Libur 休日') {
+			if (id != 'Libur 休日') {
+				if ($('#role').val() == 'GA' || $('#role').val() == 'MIS') {
+					$('#addDateGa').val(d);
+					$('#addDateGa').prop('disabled', true);
 
-		// 		$('#addCartBtn').removeClass('disabled');
-		// 		$('#addCartBtn').removeAttr('disabled','disabled');
+					$('#addCartBtnGa').removeClass('disabled');
+					$('#addCartBtnGa').removeAttr('disabled','disabled');
 
-		// 		$('#editOrderBtn').removeClass('disabled');
-		// 		$('#editOrderBtn').removeAttr('disabled','disabled');
-		// 		$('#modalCreate').modal('show');
-		// 	}
-		// }
+					// $('#editOrderBtn').removeClass('disabled');
+					// $('#editOrderBtn').removeAttr('disabled','disabled');
+					$('#modalCreateGa').modal('show');
+				}
+			}
+		}
 		if(cat == 'detail'){
 
-			if (color === "#d2ff8a" || color === "#ff1744") {
+			if (color === "#ff1744") {
 				
+			}else if(color === "#d2ff8a"){
+				// console.log(cat);
+				// console.log(d);
+				// console.log(id);
+				// console.log(color);
+				// console.log(id_live);
+				$('#modalDetail').modal('show');
+				openModalEdit(id_live,id.split(' - ')[0],d,'editName');
 			}else{
 				// if ($('#role').val() == 'GA' || $('#role').val() == 'MIS') {
 					$('#divEdit').hide();
@@ -633,6 +726,62 @@
 				// }
 			}
 		}
+	}
+
+	function addCartGa(){
+		var now_date = $('#nowDateGa').val();
+		var date = $('#addDateGa').val();
+
+		var str = $('#addEmployeeGa').val();
+		var employee_id = str.split("_")[0];
+		var employee_name = str.split("_")[1];
+		var grade_code = str.split("_")[2];
+
+		if(date == "" || str == ""){
+			audio_error.play();
+			openErrorGritter('Error!','Please Select Date & Employee<br>日付と従業員を選定してください');
+			return false;
+		}
+
+		if($.inArray(employee_id+'_'+date+'_'+grade_code, employees) != -1){
+			audio_error.play();
+			openErrorGritter('Error!','Karyawan sudah ada di list.');
+			return false;
+		}
+
+		var data = {
+			employee_id:employee_id,
+			due_date:$("#addDateGa").val()
+		}
+		$.get('{{ url("fetch/ga_control/live_cooking_employees") }}',data, function(result, status, xhr){
+			if(result.status){
+				var tableOrder = "";
+
+				tableOrder += "<tr id='"+employee_id+'_'+date+'_'+grade_code+"'>";
+				tableOrder += "<td>"+employee_id+"</td>";
+				tableOrder += "<td>"+employee_name+"</td>";
+				tableOrder += "<td>"+date+"</td>";
+				tableOrder += "<td><a href='javascript:void(0)' onclick='remOrder(id)' id='"+employee_id+'_'+date+'_'+grade_code+"' class='btn btn-danger btn-sm' style='margin-right:5px;'><i class='fa fa-trash'></i></a></td>";
+				tableOrder += "</tr>";
+
+				employees.push(employee_id+'_'+date+'_'+grade_code);
+				count += 1;
+
+				$('#countTotalGa').text(count);
+				$('#tableOrderGaBody').append(tableOrder);
+			}else{
+				audio_error.play();
+				openErrorGritter('Error!',result.message);
+				return false;
+			}
+		});
+	}
+
+	function remOrder(id){
+		employees.splice( $.inArray(id), 1 );
+		count -= 1;
+		$('#countTotalGa').text(count);
+		$('#'+id).remove();	
 	}
 
 	function fetchDetail(d) {
@@ -659,9 +808,11 @@
 					bodyDetail += '<td>'+(value.sub_group || "")+'</td>';
 					bodyDetail += '<td>'+value.due_date+'</td>';
 					bodyDetail += '<td>'+value.menu_name+'</td>';
+					var type = 'editForm';
 					if ($('#role').val() == 'GA' || $('#role').val() == 'MIS') {
+						bodyDetail += '<td>'+(value.additional || "")+'</td>';
 						if (value.due_date >= value.date_now) {
-							bodyDetail += '<td><button class="btn btn-warning" onclick="openModalEdit(\''+value.id_live+'\',\''+value.employee_id+'\',\''+value.due_date+'\')"><i class="fa fa-edit"></i> Edit</button></td>';
+							bodyDetail += '<td><button class="btn btn-warning" onclick="openModalEdit(\''+value.id_live+'\',\''+value.employee_id+'\',\''+value.due_date+'\',\''+type+'\')"><i class="fa fa-edit"></i> Edit</button></td>';
 						}else{
 							bodyDetail += '<td></td>';
 						}
@@ -767,6 +918,54 @@
 		}
 	}
 
+	function confirmOrderGa(){
+		$('#loading').show();
+		var order_by = $('#addUserGa').val();
+		var order_list = employees;
+
+		if(order_list.length <= 0){
+			$('#loading').hide();
+			audio_error.play();
+			openErrorGritter('Masukkan Nama Karyawan');
+			return false;
+		}
+
+		if(confirm("Apakah Anda yakin?")){
+
+			var data = {
+				due_date:$('#addDateGa').val(),
+				order_by:order_by,
+				order_list:order_list,
+			}
+
+			$.post('{{ url("input/ga_control/live_cooking_order/extra") }}', data, function(result, status, xhr){
+				if(result.status){
+					audio_ok.play();
+					openSuccessGritter(result.message);
+					$('#modalCreateGa').modal('hide');
+					$('#addDateGa').val("");
+					$("#addEmployeeGa").prop('selectedIndex', 0).change();
+					count = 0;
+					$('#countTotalGa').text(count);
+					$('#tableOrderGaBody').html("");
+					employees = [];
+					fetchOrderList();
+					$('#loading').hide();
+				}
+				else{
+					$('#loading').hide();
+					audio_error.play();
+					openErrorGritter(result.message);
+					return false;
+				}
+			});
+		}
+		else{
+			$('#loading').hide();
+			return false;
+		}
+	}
+
 	function uploadMenu(){
 		$('#loading').show();
 		if($('#menuDate').val() == ""){
@@ -829,171 +1028,6 @@
 					percentage.push((value.serving_ordered/value.serving_quota)*100);
 				});
 
-
-				// Highcharts.chart('container', {
-				// 	chart: {
-				// 		type: 'column',
-				// 		backgroundColor	: null
-				// 	},
-				// 	title: {
-				// 		text: null
-				// 	},
-				// 	credits: {
-				// 		enabled: false
-				// 	},
-				// 	xAxis: {
-				// 		tickInterval: 1,
-				// 		gridLineWidth: 1,
-				// 		categories: cat,
-				// 		crosshair: true
-				// 	},
-				// 	yAxis: [{
-				// 		min: 0,
-				// 		title: {
-				// 			text: null
-				// 		}
-				// 	}, { 
-				// 		min: 0,
-				// 		max:100,
-				// 		title: {
-				// 			text: null
-				// 		},
-				// 		labels: {
-				// 			enabled: false,
-				// 			format: '{value}%'
-				// 		},
-				// 		opposite: true
-				// 	}],
-				// 	legend: {
-				// 		enabled:false
-				// 	},
-				// 	tooltip: {
-				// 		headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-				// 		pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-				// 		'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
-				// 		footerFormat: '</table>',
-				// 		shared: true,
-				// 		useHTML: true
-				// 	},
-				// 	plotOptions: {
-				// 		column: {
-				// 			pointPadding: 0.05,
-				// 			groupPadding: 0.1,
-				// 			borderWidth: 1,
-				// 			borderColor: 'black',
-				// 			cursor: 'pointer',
-				// 			point: {
-				// 				events: {
-				// 					click: function () {
-				// 						fetchDetail(this.category);
-				// 					}
-				// 				}
-				// 			}
-				// 		}
-				// 	},
-				// 	series: [{
-				// 		name: 'Quota',
-				// 		data: quota,
-				// 		color: '#7cb342'
-
-				// 	}, {
-				// 		name: 'Order',
-				// 		data: ordered,
-				// 		color: '#d81b60'
-				// 	},{
-				// 		name: 'Order %',
-				// 		type: 'spline',
-				// 		yAxis: 1,
-				// 		color: 'red',
-				// 		dataLabels: {
-				// 			enabled: true,
-				// 			formatter: function () {
-				// 				return Highcharts.numberFormat(this.y,1)+'%';
-				// 			}
-				// 		},
-				// 		data: percentage
-
-				// 	}]
-				// });
-
-				// $('#tableOrderList').DataTable().clear();
-				// $('#tableOrderList').DataTable().destroy();
-				// $('#tableOrderListBody').html("");
-				// var tableOrderList = "";
-				// var tableHistory = "";
-
-				// $.each(result.resumes, function(key, value){
-				// 	if (value.due_date == result.now) {
-				// 		var color = "style='background-color:#a8c2ff'";
-				// 	}else{
-				// 		var color = "";
-				// 	}
-				// 	tableOrderList += '<tr '+color+'>';
-				// 	tableOrderList += '<td>'+value.order_by+'</td>';
-				// 	tableOrderList += '<td>'+value.name_by+'</td>';
-				// 	tableOrderList += '<td>'+value.due_date+'</td>';
-				// 	tableOrderList += '<td>'+value.order_for+'</td>';
-				// 	tableOrderList += '<td>'+value.name_for+'</td>';
-				// 	tableOrderList += '<td>'+value.department+'</td>';
-				// 	tableOrderList += '<td>'+value.section+'</td>';
-				// 	tableOrderList += '<td>';
-				// 	tableOrderList += '<button class="btn btn-warning" onclick="openModalEdit(\''+value.id_live+'\''+','+'\''+value.order_by+'\''+','+'\''+value.name_by+'\''+','+'\''+value.order_for+'\''+','+'\''+value.name_for+'\''+','+'\''+value.due_date+'\''+','+'\''+value.order_for+'\')" id="'+value.id_live+'"><i class="fa fa-pencil"></i></button>';
-				// 	tableOrderList += '</td>';
-				// 	tableOrderList += '</tr>';
-				// });
-
-				// $('#tableOrderListBody').append(tableOrderList);
-				// $('#tableOrderList').DataTable({
-				// 	'dom': 'Bfrtip',
-				// 	'responsive':true,
-				// 	'lengthMenu': [
-				// 	[ 10, 25, 50, -1 ],
-				// 	[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-				// 	],
-				// 	'buttons': {
-				// 		buttons:[
-				// 		{
-				// 			extend: 'pageLength',
-				// 			className: 'btn btn-default',
-				// 		},
-				// 		{
-				// 			extend: 'copy',
-				// 			className: 'btn btn-success',
-				// 			text: '<i class="fa fa-copy"></i> Copy',
-				// 			exportOptions: {
-				// 				columns: ':not(.notexport)'
-				// 			}
-				// 		},
-				// 		{
-				// 			extend: 'excel',
-				// 			className: 'btn btn-info',
-				// 			text: '<i class="fa fa-file-excel-o"></i> Excel',
-				// 			exportOptions: {
-				// 				columns: ':not(.notexport)'
-				// 			}
-				// 		},
-				// 		{
-				// 			extend: 'print',
-				// 			className: 'btn btn-warning',
-				// 			text: '<i class="fa fa-print"></i> Print',
-				// 			exportOptions: {
-				// 				columns: ':not(.notexport)'
-				// 			}
-				// 		},
-				// 		]
-				// 	},
-				// 	'paging': true,
-				// 	'lengthChange': true,
-				// 	'searching': true,
-				// 	'ordering': true,
-				// 	'order': [],
-				// 	'info': true,
-				// 	'autoWidth': true,
-				// 	"sPaginationType": "full_numbers",
-				// 	"bJQueryUI": true,
-				// 	"bAutoWidth": false,
-				// 	"processing": true
-				// });
 				var cal = {};
 				var cals = [];
 				var bg = "";
@@ -1016,6 +1050,7 @@
 							if (value.serving_ordered == value.serving_quota) {
 								cal = {
 									title: value.menu_name+" ("+value.serving_ordered+"/"+value.serving_quota+")",
+									id_live: "",
 									start: Date.parse(value.week_date),
 									allDay: true,
 									backgroundColor:  '#427bff',
@@ -1026,6 +1061,7 @@
 							}else{
 								cal = {
 									title: value.menu_name+" ("+value.serving_ordered+"/"+value.serving_quota+")",
+									id_live: "",
 									start: Date.parse(value.week_date),
 									allDay: true,
 									backgroundColor:  'rgb(126,86,134)',
@@ -1039,8 +1075,10 @@
 				});
 
 				$.each(result.resumes, function(key, value){
+					console.log(value.id_live);
 					cal = {
-						title: value.name_for,
+						title: value.order_for+' - '+value.name_for,
+						id_live: value.id_live,
 						start: Date.parse(value.due_date),
 						allDay: true,
 						backgroundColor: '#d2ff8a',
@@ -1065,12 +1103,21 @@
 							day  : 'day'
 						},
 						eventOrder: 'color,start',
-						// dayClick: function(date, jsEvent, view) { 
-						// 	var d = addZero(formatDate(date));
-						// 	openModalCreate('new', d, '','');
-						// },
+						dayClick: function(date, allDay, jsEvent, view) { 
+							var d = addZero(formatDate(date));
+							var event_id = "";
+							var event_color = "";
+							var id_live = "";
+							$('#calendar').fullCalendar('clientEvents', function(event) {
+				                if (d == addZero(formatDate(event.start))) {
+				                	event_id = event.title;
+				                	event_color = event.backgroundColor;
+				                }
+				            });
+							openModalCreate('new', d, event_id,event_color,"");
+						},
 						eventClick: function(info) {
-							openModalCreate('detail', formatDate(info.start), info.title,info.backgroundColor);
+							openModalCreate('detail', formatDate(info.start), info.title,info.backgroundColor,info.id_live);
 						},
 						events    : cals,
 						editable  : false
@@ -1136,7 +1183,7 @@
 		return [year, month, day].join('-');
 	}
 
-	function openModalEdit(id,employee_id,due_date) {
+	function openModalEdit(id,employee_id,due_date,type) {
 		$('#editEmployee').val(employee_id).trigger('change.select2');
 		$('#editDate').val(due_date).datepicker("setDate", new Date(due_date) );
 		$('#editID').val(id);
@@ -1144,6 +1191,7 @@
 		$('#tableDetail').hide();
 		$('#tableDetail').DataTable().clear();
 		$('#tableDetail').DataTable().destroy();
+		$('#editType').val(type);
 	}
 
 	function updateOrder() {
@@ -1212,17 +1260,24 @@
 	}
 
 	function cancelEdit() {
-		$('#editEmployee').val("").trigger('change.select2');
-		$('#editDate').val("");
-		$('#editID').val("");
-		$('#divEdit').hide();
-		$('#tableDetail').show();
-		fetchDetail($('#due_date').val());
+		if ($("#editType").val() == 'editForm') {
+			$('#editEmployee').val("").trigger('change.select2');
+			$('#editDate').val("");
+			$('#editID').val("");
+			$('#divEdit').hide();
+			$('#tableDetail').show();
+			fetchDetail($('#due_date').val());
+		}else{
+			$('#modalDetail').modal('hide');
+		}
 	}
 
 	$(function () {
 		$('.select2').select2({
 			dropdownParent: $('#modalCreate')
+		});
+		$('.select2').select2({
+			dropdownParent: $('#modalCreateGa')
 		});
 	});
 
@@ -1278,6 +1333,7 @@
 					bodyDetail += '<td>'+(value.group || "")+'</td>';
 					bodyDetail += '<td>'+value.due_date+'</td>';
 					bodyDetail += '<td>'+value.menu_name+'</td>';
+					bodyDetail += '<td>'+(value.additional || "")+'</td>'
 					bodyDetail += '<td>'+hadir+'</td>';
 					bodyDetail += '<td>'+(value.attend_date || "")+'</td>';
 					bodyDetail += '</tr>';
