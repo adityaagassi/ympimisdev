@@ -3112,6 +3112,22 @@ public function postOxymeterCheck(Request $request)
 
 		$att_log->save();
 
+		if ($request->get('ctg') != 'oxygen' && $att_log->remark < 95 && $att_log->remark2) {
+			$data = GeneralAttendanceLog::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_attendance_logs.employee_id')
+			->where('general_attendance_logs.employee_id', '=', $request->get('employee_id'))
+			->where('general_attendance_logs.due_date', '=', date('Y-m-d'))
+			->where('general_attendance_logs.purpose_code', '=', 'Oxymeter')
+			->select('general_attendance_logs.employee_id', 'employee_syncs.name', 'employee_syncs.section', 'general_attendance_logs.remark', 'general_attendance_logs.remark2')
+			->first();
+
+
+			$section = EmployeeSync::where('employee_id', '=', $request->get('employee_id'))->first();
+
+			$mail_to = db::select("select email from send_emails where remark = '".$section->section."'");
+
+			Mail::to($mail_to)->bcc(['nasiqul.ibat@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])->send(new SendEmail($data, 'notification_oxymeter'));
+		}
+
 		$response = array(
 			'status' => true,
 			'message' => 'Success',
