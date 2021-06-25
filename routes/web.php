@@ -669,6 +669,7 @@ Route::get('fetch/overtime_report', 'OvertimeController@overtimeReport');
 Route::get('fetch/overtime_report_detail', 'OvertimeController@overtimeReportDetail');
 Route::get('index/report/total_meeting', 'EmployeeController@indexTotalMeeting');
 Route::get('fetch/report/total_meeting', 'EmployeeController@fetchTotalMeeting');
+Route::get('fetch/report/attendance_rate/detail', 'EmployeeController@detailAttendanceRate');
 Route::get('fetch/report/att_rate', 'EmployeeController@fetchAttendanceRate');
 Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
 Route::get('fetch/report/status1', 'EmployeeController@fetchReportStatus');
