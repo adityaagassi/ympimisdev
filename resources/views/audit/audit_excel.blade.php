@@ -29,7 +29,7 @@
             <tr style="vertical-align: middle; ">
                 <th colspan="6" style="text-align: center;">
                     @if($detail[0]->kategori == "Patrol Daily")
-                        Patrol Daily Shift 1 & Shift
+                        Patrol Daily Shift 1 & Shift 2
                         <br>
                         デイリーパトロール　1直・2直
                     @elseif($detail[0]->kategori == "Patrol Covid")
@@ -43,12 +43,11 @@
             </tr>
 
             <tr></tr>
-            
+<!--             
             <tr style="vertical-align: middle;">
                 <th colspan="2" style="text-align:left">Nama Petugas<br>パトロール担当者</th> 
-                <th>: {{ $detail[0]->auditor_name }}</th>
             </tr>
-
+ -->
             <tr style="vertical-align: middle;">
                 <th colspan="2">Tanggal<br>日付</th> 
                 <th>: <?php echo date('d-m-Y', strtotime($detail[0]->tanggal)) ?></th>
@@ -60,6 +59,7 @@
 
             <tr>
                 <th style="border: 1px solid black;">No</th>
+                <th style="border: 1px solid black;">Petugas<br>パトロール担当者</th>
                 <th style="border: 1px solid black;">Lokasi<br>場所</th>
                 <th style="border: 1px solid black;">PIC<br>場所</th>
                 <th style="border: 1px solid black;">Poin Kategori<br>指摘カテゴリー</th>
@@ -76,6 +76,7 @@
 
             <tr>
                 <td style="vertical-align: middle;text-align: left;width: 10">{{ $num++ }}</td>
+                <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->auditor_name }}</td>
                 <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->lokasi }}</td>
                 <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->auditee_name }}</td>
                 <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->point_judul }}</td>
