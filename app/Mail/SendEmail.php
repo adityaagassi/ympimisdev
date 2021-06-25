@@ -576,15 +576,27 @@ class SendEmail extends Mailable
         }
 
         if($this->remark == 'fixed_asset_invoice'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            $email = $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
             ->subject('Fixed Asset Invoice')
             ->view('mails.fixed_asset_invoice');
+
+            for ($i=0; $i < count($this->data); $i++) { 
+                $email->attach(public_path('files/fixed_asset/'.$this->data[$i]['att']));
+            }
+
+            return $email;
         }
 
         if($this->remark == 'audit_kanban'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
             ->subject('Audit Kanban (かんばん監査)')
             ->view('mails.audit_kanban');
+        }
+
+        if($this->remark == 'notification_oxymeter'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->subject('Notification Oxygen Rate Below 95')
+            ->view('mails.oxygen');
         }
 
     }
