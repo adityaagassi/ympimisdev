@@ -924,12 +924,62 @@ else if(frequency == 'Daily'){
             body += '<td style="background-color: #f7ff59"></td>';
           }
         }
+        if (act_type[0] == 'Audit Kanban Harian') {
+          if(parseInt(result.detail[i].jumlah_audit_kanban) != 0){
+            body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_audit_kanban+'</td>';
+          }else{
+            body += '<td style="background-color: #f7ff59"></td>';
+          }
+        }
+        // if (act_type[0] == 'Audit Kanban Harian Lacquering') {
+        //   if(parseInt(result.detail[i].jumlah_audit_kanban) != 0){
+        //     body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_audit_kanban+'</td>';
+        //   }else{
+        //     body += '<td style="background-color: #f7ff59"></td>';
+        //   }
+        // }
+        // if (act_type[1] == 'Audit Kanban Harian Buffing Sax Key') {
+        //   if(parseInt(result.detail[i].jumlah_audit_kanban) != 0){
+        //     body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_audit_kanban+'</td>';
+        //   }else{
+        //     body += '<td style="background-color: #f7ff59"></td>';
+        //   }
+        // }
+        // if (act_type[2] == 'Audit Kanban Harian Buffing FL & CL Key') {
+        //   if(parseInt(result.detail[i].jumlah_audit_kanban) != 0){
+        //     body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_audit_kanban+'</td>';
+        //   }else{
+        //     body += '<td style="background-color: #f7ff59"></td>';
+        //   }
+        // }
+        // if (act_type[3] == 'Audit Kanban Harian Buffing Body') {
+        //   if(parseInt(result.detail[i].jumlah_audit_kanban) != 0){
+        //     body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_audit_kanban+'</td>';
+        //   }else{
+        //     body += '<td style="background-color: #f7ff59"></td>';
+        //   }
+        // }
+        // if (act_type[4] == 'Audit Kanban Harian Tumbling') {
+        //   if(parseInt(result.detail[i].jumlah_audit_kanban) != 0){
+        //     body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_audit_kanban+'</td>';
+        //   }else{
+        //     body += '<td style="background-color: #f7ff59"></td>';
+        //   }
+        // }
+        // if (act_type[5] == 'Audit Kanban Harian Plating') {
+        //   if(parseInt(result.detail[i].jumlah_audit_kanban) != 0){
+        //     body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_audit_kanban+'</td>';
+        //   }else{
+        //     body += '<td style="background-color: #f7ff59"></td>';
+        //   }
+        // }
         body += '</tr>';
         total_plan += parseInt(result.detail[i].plan) * bb;
-        total_aktual += (parseInt(result.detail[i].jumlah_daily_check) + parseInt(result.detail[i].jumlah_area_check) + parseInt(result.detail[i].jumlah_apd_check) + parseInt(result.detail[i].jumlah_apd_check_cuci_asam));
+        total_aktual += (parseInt(result.detail[i].jumlah_daily_check) + parseInt(result.detail[i].jumlah_area_check) + parseInt(result.detail[i].jumlah_apd_check) + parseInt(result.detail[i].jumlah_apd_check_cuci_asam)+ parseInt(result.detail[i].jumlah_audit_kanban));
         plan = result.detail[i].plan * bb;
         no++;
       }
+      console.log(plan);
       presentase = (total_aktual / plan)*100;
       body += '<tr>';
       body += '<td colspan="2"><b>Total Aktual</b></td>';

@@ -239,9 +239,9 @@ class ProductionReportController extends Controller
             WHERE
                 DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) = '".$bulan."' 
             AND week_date NOT IN ( SELECT tanggal FROM ftm.kalender ))* daily.jumlah_activity_daily AS jumlah_activity_daily,
-            daily.jumlah_daily_check + daily.jumlah_area_check + daily.jumlah_apd_check + daily.jumlah_apd_check_cuci_asam AS jumlah_daily,
+            daily.jumlah_daily_check + daily.jumlah_area_check + daily.jumlah_apd_check + daily.jumlah_apd_check_cuci_asam+daily.jumlah_audit_kanban AS jumlah_daily,
             COALESCE (((
-                        daily.jumlah_daily_check + daily.jumlah_area_check + daily.jumlah_apd_check + daily.jumlah_apd_check_cuci_asam 
+                        daily.jumlah_daily_check + daily.jumlah_area_check + daily.jumlah_apd_check + daily.jumlah_apd_check_cuci_asam+daily.jumlah_audit_kanban 
                         )/((
                         SELECT
                             count( week_date ) 
@@ -526,7 +526,7 @@ class ProductionReportController extends Controller
             ) weekly,
             (
             SELECT COALESCE
-                ( count( activity_type ), 0 ) AS jumlah_activity_daily,
+                ( count( DISTINCT(activity_name) ), 0 ) AS jumlah_activity_daily,
                 COALESCE ((
                     SELECT
                         count(
@@ -593,6 +593,22 @@ class ProductionReportController extends Controller
                         ),
                     0 
                 ) AS jumlah_apd_check_cuci_asam,
+                        COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( check_date )) AS jumlah_audit_kanban
+                    FROM
+                        audit_kanbans
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( audit_kanbans.check_date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Daily' 
+                        AND audit_kanbans.leader = '".$dataleader."' 
+                        AND audit_kanbans.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                        ),
+                    0 
+                ) AS jumlah_audit_kanban,
                 (
                 SELECT
                     count( week_date ) AS jumlah_day 
@@ -643,6 +659,7 @@ class ProductionReportController extends Controller
                 AND department_id = '".$id."' 
                 AND leader_dept = '".$dataleader."' 
                 AND activity_lists.frequency = 'Daily' 
+                                AND activity_lists.activity_name is not null
             GROUP BY
             leader_dept 
             ) daily");
@@ -931,7 +948,7 @@ class ProductionReportController extends Controller
 
         $date = db::select("select week_date from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."' and week_date not in (select tanggal from ftm.kalender)");
 
-        $act_name = DB::select("select activity_name,frequency,activity_type from activity_lists where 
+        $act_name = DB::select("select DISTINCT(activity_name),frequency,activity_type from activity_lists where 
              leader_dept = '".$leader_name."'
             and activity_lists.department_id = '".$id."'
             and activity_lists.frequency = '".$frequency."'");
@@ -1003,7 +1020,21 @@ class ProductionReportController extends Controller
                 AND actlist.department_id = '".$id."' 
                 AND actlist.frequency = '".$frequency."' 
                 AND actlist.activity_name = 'Cek Alat Pelindung Diri (APD)'
-            ) AS jumlah_apd_check
+            ) AS jumlah_apd_check,
+            (
+            SELECT
+                count(
+                DISTINCT ( check_date )) 
+            FROM
+                audit_kanbans
+                JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+            WHERE
+                DATE_FORMAT( check_date, '%Y-%m' ) = '".$week_date."' 
+                AND leader = '".$leader_name."' 
+                AND check_date = weekly_calendars.week_date 
+                AND actlist.department_id = '".$id."' 
+                AND actlist.frequency = '".$frequency."' 
+            ) AS jumlah_audit_kanban
         FROM
             weekly_calendars 
         WHERE
