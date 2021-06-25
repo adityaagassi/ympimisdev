@@ -1787,24 +1787,13 @@ $att_rate = db::select("SELECT *, 100 - ((tidak_hadir_permanen/hadir_permanen) *
      ORDER BY sunfish_shift_syncs.shift_date asc
 ) as mstr");
 
-$att_detail = db::select("SELECT sunfish_shift_syncs.employee_id, name, section, employment_status, attend_code, absence_name, count(attend_code) as jml_hari from sunfish_shift_syncs
-     left join employee_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
-     left join absence_categories on sunfish_shift_syncs.attend_code = absence_categories.absence_code
-     where DATE_FORMAT(sunfish_shift_syncs.shift_date, '%Y-%m') = '".$period."' 
-     AND sunfish_shift_syncs.attend_code not like '%PRS%'
-     AND sunfish_shift_syncs.attend_code <> ' OFF'
-     group by employee_id, name, section, attend_code, absence_name, employment_status
-           HAVING jml_hari >= 5
-     ORDER BY count(attend_code) desc");
-
 $response = array(
      'status' => true,
      'employees' => $employees,
      'att_rate' => $att_rate,
      'overtimes1' => $overtimes1,
      'overtimes2' => $overtimes2,
-     'period' => $period,
-     'att_detail' => $att_detail
+     'period' => $period
 );
 return Response::json($response);
 }
@@ -4664,6 +4653,26 @@ public function fetchAttendanceRate(Request $request)
      $response = array(
           'status' => false,
           'datas' => $base
+     );
+     return Response::json($response);
+}
+
+public function detailAttendanceRate(Request $request)
+{
+     $att_detail = db::select("SELECT sunfish_shift_syncs.employee_id, name, section, employment_status, attend_code, absence_name, count(attend_code) as jml_hari from sunfish_shift_syncs
+          left join employee_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
+          left join absence_categories on sunfish_shift_syncs.attend_code = absence_categories.absence_code
+          where DATE_FORMAT(sunfish_shift_syncs.shift_date, '%M %Y') = '".$request->get('period')."'
+          AND sunfish_shift_syncs.attend_code not like '%PRS%'
+          AND sunfish_shift_syncs.attend_code <> ' OFF'
+          group by employee_id, name, section, attend_code, absence_name, employment_status
+          HAVING jml_hari >= 5
+          ORDER BY count(attend_code) desc");
+
+
+     $response = array(
+          'status' => true,
+          'att_detail' => $att_detail
      );
      return Response::json($response);
 }

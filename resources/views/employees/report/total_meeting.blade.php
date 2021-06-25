@@ -151,7 +151,7 @@
 
 @endsection
 @section('scripts')
-<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
@@ -762,7 +762,8 @@ Highcharts.chart('chartOvertimeViolation', {
      yAxis:{
           title:{
                text: null
-          }
+          },
+          tickInterval: 20
      },
      xAxis: {
           categories: xCat
@@ -917,7 +918,7 @@ Highcharts.chart('chart_att_rate', {
 series: [{
      name: 'YMPI Permanent',
      data: perm_att,
-     color: '#7da6ff'
+     color: '#1e7cf7'
 }, {
   name: 'YMPI Contract',
   data: contract_att,
@@ -1000,30 +1001,32 @@ function detail_att_rate(mon, ctg) {
      }
 
      var tableData = "";
-     
-     console.log(category);
 
      $('#body_att_rate').empty();
      var no = 1;
 
-     $.each(detail_att, function(key, value){
-          if (~value.employment_status.indexOf(category)) {
-               tableData += '<tr>';
-               tableData += '<td>'+no+'</td>';
-               tableData += '<td>'+value.employee_id+'</td>';
-               tableData += '<td>'+value.name+'</td>';
-               tableData += '<td>'+value.section+'</td>';
-               tableData += '<td>'+value.employment_status+'</td>';
-               tableData += '<td>'+(value.absence_name || value.attend_code)+'</td>';
-               tableData += '<td>'+value.jml_hari+'</td>';
-               tableData += '</tr>';
+     var data = {
+          period : mon
+     }
 
-               no++;
-          }
-     });
-     $('#body_att_rate').append(tableData);
+     $.get('{{ url("fetch/report/attendance_rate/detail") }}', data, function(result){
+          $.each(result.att_detail, function(key, value){
+               if (~value.employment_status.indexOf(category)) {
+                    tableData += '<tr>';
+                    tableData += '<td>'+no+'</td>';
+                    tableData += '<td>'+value.employee_id+'</td>';
+                    tableData += '<td>'+value.name+'</td>';
+                    tableData += '<td>'+value.section+'</td>';
+                    tableData += '<td>'+value.employment_status+'</td>';
+                    tableData += '<td>'+(value.absence_name || value.attend_code)+'</td>';
+                    tableData += '<td>'+value.jml_hari+'</td>';
+                    tableData += '</tr>';
 
-     // table_att_rate
+                    no++;
+               }
+          });
+          $('#body_att_rate').append(tableData);
+     })
      
 }
 </script>
