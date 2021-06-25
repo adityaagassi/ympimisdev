@@ -180,7 +180,7 @@ class AuditKanbanController extends Controller{
   public function emailAuditKanban(Request $request)
   {
      try {
-      $audit_kanban = AuditKanban::select('audit_kanbans.*','audit_kanban_point_checks.*','audit_kanbans.id as id_audit_kanban')
+      $audit_kanban = AuditKanban::select('audit_kanbans.*','audit_kanban_point_checks.*','audit_kanbans.id as id_audit_kanban','activity_lists.remark as area')
       ->leftjoin('audit_kanban_point_checks','audit_kanban_point_checks.id','audit_kanbans.point_check_id')
       ->leftjoin('activity_lists','activity_lists.id','audit_kanbans.activity_list_id')
       ->where('check_date',$request->get('check_date'))

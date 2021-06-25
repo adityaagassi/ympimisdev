@@ -20,7 +20,7 @@
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 25px;"><b>Audit Kanban (かんばん監査)</b></p>
-			<p style="font-size: 22px;">Leader {{$data[0]->leader}}<br>Tanggal {{date('d F Y',strtotime($data[0]->check_date))}}</p>
+			<p style="font-size: 20px;">Leader {{$data[0]->leader}}<br>{{$data[0]->area}}<br>Tanggal {{date('d F Y',strtotime($data[0]->check_date))}}</p>
 			<?php $activity_list_id = $data[0]->activity_list_id; ?>
 			<?php $month = date('Y-m',strtotime($data[0]->check_date)); ?>
 			This is an automatic notification. Please do not reply to this address.<br>
