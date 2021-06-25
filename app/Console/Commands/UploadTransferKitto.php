@@ -50,7 +50,6 @@ class UploadTransferKitto extends Command
         $title = "";
         $body = "";
         $mail_to = [
-            'yusli.erwandi@music.yamaha.com',
             'silvy.firliani@music.yamaha.com',
             'istiqomah@music.yamaha.com',
             'fathor.rahman@music.yamaha.com',
