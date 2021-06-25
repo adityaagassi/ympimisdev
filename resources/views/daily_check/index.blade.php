@@ -270,7 +270,8 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Check Date</label>
-				  <input type="text" name="check_date" id="inputCheckDate" class="form-control" value="{{ date('Y-m-d') }}" readonly required="required" title="">
+				  <!-- <input type="text" name="check_date" id="inputCheckDate" class="form-control" value="{{ date('Y-m-d') }}" readonly required="required" title=""> -->
+				  <input type="text" name="check_date" id="inputCheckDate" class="form-control" value="" placeholder="Select Date" required="required" title="">
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -413,6 +414,12 @@
 	});
 
 	$('#inputProductionDate').datepicker({
+      autoclose: true,
+      format: 'yyyy-mm-dd',
+      todayHighlight: true
+    });
+
+    $('#inputCheckDate').datepicker({
       autoclose: true,
       format: 'yyyy-mm-dd',
       todayHighlight: true
