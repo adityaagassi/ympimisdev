@@ -57,26 +57,46 @@
 <section class="content">
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
 		<p style="position: absolute; color: White; top: 45%; left: 35%;">
-			<span style="font-size: 40px">Uploading, Please Wait . . . <i class="fa fa-spin fa-refresh"></i></span>
+			<span style="font-size: 40px">Please Wait . . . <i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-solid">
 				<div class="box-body">
-					<div class="col-xs-12">
-						<span style="font-weight: bold;">Month From</span>
-					</div>
-					<div class="col-xs-3">
-						<div class="input-group date">
-							<div class="input-group-addon">
-								<i class="fa fa-calendar"></i>
+					<div class="col-xs-4">
+						<div class="col-xs-12">
+							<span style="font-weight: bold;">Month From</span>
+						</div>
+						<div class="col-xs-12">
+							<div class="input-group date">
+								<div class="input-group-addon">
+									<i class="fa fa-calendar"></i>
+								</div>
+								<input type="text" class="form-control pull-right" id="month_from" placeholder="Pilih Bulan Awal">
 							</div>
-							<input type="text" class="form-control pull-right" id="month" placeholder="Pilih Bulan">
 						</div>
 					</div>
 					<div class="col-xs-4">
-						<button id="search" onClick="getData()" class="btn btn-primary">Search</button>
+						<div class="col-xs-12">
+							<span style="font-weight: bold;">Month To</span>
+						</div>
+						<div class="col-xs-12">
+							<div class="input-group date">
+								<div class="input-group-addon">
+									<i class="fa fa-calendar"></i>
+								</div>
+								<input type="text" class="form-control pull-right" id="month_to" placeholder="Pilih Bulan Akhir">
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="col-xs-12">
+							<span style="font-weight: bold;">Search</span>
+						</div>
+						<div class="col-xs-12">
+							<button id="search" onClick="getData()" class="btn btn-primary">Search</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -91,10 +111,16 @@
 								<th style="width: 1%">#</th>
 								<th style="width: 1%">Jig ID</th>
 								<th style="width: 2%">Jig Name</th>
+								<th style="width: 1%">Jig Part</th>
+								<th style="width: 1%">Check</th>
+								<th style="width: 1%">Lower</th>
+								<th style="width: 1%">Upper</th>
+								<th style="width: 1%">Value</th>
+								<th style="width: 1%">Result</th>
+								<th style="width: 1%">Status</th>
 								<th style="width: 2%">Start</th>
 								<th style="width: 2%">Finish</th>
 								<th style="width: 1%">Operator</th>
-								<th style="width: 1%">Result</th>
 								<th style="width: 1%">Action</th>
 							</tr>
 						</thead>
@@ -171,8 +197,18 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 		getData();
-		$('#month').val("");
-		$('#month').datepicker({
+		$('#month_from').val("");
+		$('#month_to').val("");
+		
+		$('#month_from').datepicker({
+			format: "yyyy-mm",
+			startView: "months", 
+			minViewMode: "months",
+			autoclose: true
+
+		});
+
+		$('#month_to').datepicker({
 			format: "yyyy-mm",
 			startView: "months", 
 			minViewMode: "months",
@@ -183,7 +219,8 @@
 
 	function getData() {
 		var data = {
-			month:$('#month').val()
+			month_from:$('#month_from').val(),
+			month_to:$('#month_to').val()
 		}
 		$.get('{{ url("fetch/welding/repair_jig_report") }}',data, function(result, status, xhr){
 			if(result.status){
@@ -200,10 +237,16 @@
 					jigtable += '<td>'+index+'</td>';
 					jigtable += '<td>'+value.jig_id+'</td>';
 					jigtable += '<td>'+value.jig_name+'</td>';
+					jigtable += '<td>'+value.jig_child+'</td>';
+					jigtable += '<td>'+value.check_name+'</td>';
+					jigtable += '<td style="background-color:#ffdbdb">'+value.lower_limit+'</td>';
+					jigtable += '<td style="background-color:#ffdbdb">'+value.upper_limit+'</td>';
+					jigtable += '<td style="background-color:#ffdbdb">'+value.value+'</td>';
+					jigtable += '<td style="background-color:#ffdbdb">'+value.result+'</td>';
+					jigtable += '<td>'+value.status+'</td>';
 					jigtable += '<td>'+value.started_at+'</td>';
 					jigtable += '<td>'+value.finished_at+'</td>';
-					jigtable += '<td>'+value.operator+'</td>';
-					jigtable += '<td>'+value.status+'</td>';
+					jigtable += '<td>'+value.employee_id+'<br>'+value.name+'</td>';
 					jigtable += '<td><button onclick="showModal(\''+stts+'\',\''+value.jig_id+'\',\''+value.started_at+'\',\''+value.finished_at+'\')" class="btn btn-primary btn-sm">Detail</button></td>';
 					index++;
 				});

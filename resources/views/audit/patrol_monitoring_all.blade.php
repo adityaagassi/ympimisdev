@@ -131,28 +131,24 @@
     <div class="row">
       <input type="hidden" value="{{csrf_token()}}" name="_token" />
       <input type="hidden" value="{{ $category }}" id="category" name="category">
-          <?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "GA" || Auth::user()->role_code == "GA-SPL") { ?>
 
-          <form method="GET" action="{{ url("export/patrol_all/list") }}">
+        <form method="GET" action="{{ url("export/patrol_all/list") }}">
           <div class="col-md-12" style="padding: 1px !important">
             <div class="col-xs-2">
               <div class="input-group date">
                 <div class="input-group-addon bg-green" style="border: none;">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input type="text" class="form-control datepicker" id="date" name="date" placeholder="Select Date">
+                <input type="text" class="form-control datepicker" id="date" name="date" placeholder="Select Date" required="">
                 <input type="hidden" value="{{ $category }}" id="category_export" name="category_export">
               </div>
             </div>
-            <div class="col-xs-2">
-              <button type="submit" class="btn btn-success form-control" style="width: 100%"><i class="fa fa-file-excel-o"></i> &nbsp;&nbsp;Download Data</button>
+            <div class="col-xs-3">
+              <button type="submit" class="btn btn-success form-control" style="width: 100%"><i class="fa fa-file-excel-o"></i> &nbsp;&nbsp;Download Resume Hasil Patrol</button>
             </div>
-
           </div>
-          </form>
+        </form>
 
-        <?php } ?>
-      
       <div class="col-md-12" style="padding-top: 10px;">
         <div id="chart_bulan" style="width: 99%; height: 300px;"></div>
       </div>

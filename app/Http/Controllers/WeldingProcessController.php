@@ -5121,12 +5121,25 @@ class WeldingProcessController extends Controller
 	public function fetchRepairJigReport(Request $request)
 	{
 		try {
-			if ($request->get('month') == "") {
-				$now = 'DATE(
-				DATE_ADD( NOW(), INTERVAL - 6 MONTH ))';
-			}else{
-				$now = $request->get('month').'-01';
-			}
+			$month_from = $request->get('month_from');
+	        $month_to = $request->get('month_to');
+	        if ($month_from == "") {
+	             if ($month_to == "") {
+	                  $first = "DATE_FORMAT(NOW(), '%Y-%m' )";
+	                  $last = "DATE_FORMAT(NOW(), '%Y-%m' )";
+	             }else{
+	                  $first = "DATE_FORMAT(NOW(), '%Y-%m' )";
+	                  $last = "'".$month_to."'";
+	             }
+	        }else{
+	             if ($month_to == "") {
+	                  $first = "'".$month_from."'";
+	                  $last = "DATE_FORMAT(NOW(), '%Y-%m' )";
+	             }else{
+	                  $first = "'".$month_from."'";
+	                  $last = "'".$month_to."'";
+	             }
+	        }
 
 			$jig_no_repair = DB::SELECT("	
 				SELECT DISTINCT
@@ -5170,40 +5183,30 @@ class WeldingProcessController extends Controller
 				JOIN employee_syncs ON operator_id = employee_id
 				JOIN jigs ON jigs.jig_id = a.jig_id
 				WHERE
-				DATE(finished_at) BETWEEN '".$now."'
-				AND DATE(
-				DATE_ADD( NOW(), INTERVAL + 1 MONTH ))");
+				DATE_FORMAT( finished_at, '%Y-%m' ) BETWEEN ".$first." AND ".$last."");
 
-			$jig_repaired = DB::SELECT("SELECT DISTINCT
-				( a.jig_id ) AS jig_id,
+			$jig_repaired = DB::SELECT("SELECT
+				jig_repair_logs.jig_id,
 				jigs.jig_name,
-				started_at,
-				finished_at,
-				NAME AS operator,
-				IF
-				((
-				SELECT
-				count(
-				DISTINCT ( result )) 
-				FROM
-				jig_repair_logs 
-				WHERE
-				jig_repair_logs.jig_id = a.jig_id 
-				AND jig_repair_logs.finished_at = a.finished_at 
-				) > 1,
-				'NG',
-				'OK' 
-				) AS result,
-				COALESCE (( SELECT DISTINCT ( STATUS ) FROM jig_repair_logs WHERE jig_repair_logs.jig_id = a.jig_id AND jig_repair_logs.finished_at = a.finished_at ), 'No Repair' ) AS status,
-				COALESCE (( SELECT DISTINCT ( action) FROM jig_repair_logs WHERE jig_repair_logs.jig_id = a.jig_id AND jig_repair_logs.finished_at = a.finished_at ),'OK') AS action 
-				FROM
-				`jig_repair_logs` a
+				jig_repair_logs.started_at,
+				jig_repair_logs.finished_at,
+				employee_syncs.employee_id,
+				employee_syncs.`name`,
+				jig_repair_logs.jig_child,
+				jig_repair_logs.check_name,
+				jig_repair_logs.lower_limit,
+				jig_repair_logs.upper_limit,
+				jig_repair_logs.`value`,
+				jig_repair_logs.`result`,
+				jig_repair_logs.`status` 
+			FROM
+				`jig_repair_logs`
 				JOIN employee_syncs ON operator_id = employee_id
-				JOIN jigs ON jigs.jig_id = a.jig_id
-				WHERE
-				DATE(finished_at) BETWEEN '".$now."'
-				AND DATE(
-				DATE_ADD( NOW(), INTERVAL + 1 MONTH ))");
+				JOIN jigs ON jigs.jig_id = jig_repair_logs.jig_id 
+			WHERE
+				result = 'NG' 
+				AND DATE_FORMAT( finished_at, '%Y-%m' ) BETWEEN ".$first."
+				AND ".$last."");
 
 			$response = array(
 				'status' => true,
