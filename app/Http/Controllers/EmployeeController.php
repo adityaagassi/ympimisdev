@@ -1219,7 +1219,7 @@ public function indexKaizenApprovalResume()
      left join
      (select count(kaizen_forms.id) as count, area from kaizen_forms 
      left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
-      where `status` = -1 and kaizen_forms.deleted_at is null and employee_syncs.end_date is null group by area) as kz
+     where `status` = -1 and kaizen_forms.deleted_at is null and employee_syncs.end_date is null group by area) as kz
      on bagian.section = kz.area
      ".$d."
      order by `name` desc";
@@ -1762,13 +1762,49 @@ else{
      ) lima_nam on lima_nam.department = kd.department");
 }
 
+$att_rate = db::select("SELECT *, 100 - ((tidak_hadir_permanen/hadir_permanen) * 100) as rate_permanen, 100 - ((tidak_hadir_kontrak/hadir_kontrak) * 100) as rate_kontrak, 100 - ((tidak_hadir_os/hadir_os) * 100) as rate_os FROM
+     (SELECT DATE_FORMAT(sunfish_shift_syncs.shift_date, '%M %Y') as mon,
+     SUM(IF(employment_status = 'PERMANENT', IF(attend_code LIKE '%SAKIT%' OR attend_code LIKE '%Izin%' OR attend_code LIKE '%ABS%' OR attend_code LIKE '%CUTI%' OR attend_code LIKE '%CK%' OR attend_code is null,1,0), 0)) as tidak_hadir_permanen,
+
+     SUM(IF(employment_status LIKE 'CONTRACT%',IF(attend_code LIKE '%SAKIT%' OR attend_code LIKE '%Izin%' OR attend_code LIKE '%ABS%' OR attend_code LIKE '%CUTI%' OR attend_code LIKE '%CK%' OR attend_code is null,1,0),0)) as tidak_hadir_kontrak,
+
+     SUM(IF(employment_status = 'OUTSOURCING',IF(attend_code LIKE '%SAKIT%' OR attend_code LIKE '%Izin%' OR attend_code LIKE '%ABS%' OR attend_code LIKE '%CUTI%' OR attend_code LIKE '%CK%' OR attend_code is null,1,0),0)) as tidak_hadir_os,
+
+     SUM(IF(employment_status = 'PERMANENT', IF(attend_code LIKE '%SAKIT%' OR attend_code LIKE '%Izin%' OR attend_code LIKE '%ABS%' OR attend_code LIKE '%CUTI%' OR attend_code LIKE '%CK%' OR attend_code is null,0,1), 0)) as hadir_permanen,
+
+     SUM(IF(employment_status LIKE 'CONTRACT%',IF(attend_code LIKE '%SAKIT%' OR attend_code LIKE '%Izin%' OR attend_code LIKE '%ABS%' OR attend_code LIKE '%CUTI%' OR attend_code LIKE '%CK%' OR attend_code is null,0,1),0)) as hadir_kontrak,
+
+     SUM(IF(employment_status = 'OUTSOURCING',IF(attend_code LIKE '%SAKIT%' OR attend_code LIKE '%Izin%' OR attend_code LIKE '%ABS%' OR attend_code LIKE '%CUTI%' OR attend_code LIKE '%CK%' OR attend_code is null,0,1),0)) as hadir_os
+
+     FROM
+     sunfish_shift_syncs
+     LEFT JOIN employee_syncs ON employee_syncs.employee_id = sunfish_shift_syncs.employee_id 
+     WHERE DATE_FORMAT(sunfish_shift_syncs.shift_date, '%Y-%m') >= '2021-04'
+     AND DATE_FORMAT(sunfish_shift_syncs.shift_date, '%Y-%m') <= '".$period."'
+     AND sunfish_shift_syncs.shiftdaily_code not like '%OFF%'
+     AND sunfish_shift_syncs.attend_code not like '%OFF%'
+     GROUP BY DATE_FORMAT(sunfish_shift_syncs.shift_date, '%M %Y')
+     ORDER BY sunfish_shift_syncs.shift_date asc
+) as mstr");
+
+$att_detail = db::select("SELECT sunfish_shift_syncs.employee_id, name, section, employment_status, attend_code, absence_name, count(attend_code) as jml_hari from sunfish_shift_syncs
+     left join employee_syncs on sunfish_shift_syncs.employee_id = employee_syncs.employee_id
+     left join absence_categories on sunfish_shift_syncs.attend_code = absence_categories.absence_code
+     where DATE_FORMAT(sunfish_shift_syncs.shift_date, '%Y-%m') = '".$period."' 
+     AND sunfish_shift_syncs.attend_code not like '%PRS%'
+     AND sunfish_shift_syncs.attend_code <> ' OFF'
+     group by employee_id, name, section, attend_code, absence_name, employment_status
+           HAVING jml_hari >= 5
+     ORDER BY count(attend_code) desc");
 
 $response = array(
      'status' => true,
      'employees' => $employees,
+     'att_rate' => $att_rate,
      'overtimes1' => $overtimes1,
      'overtimes2' => $overtimes2,
      'period' => $period,
+     'att_detail' => $att_detail
 );
 return Response::json($response);
 }

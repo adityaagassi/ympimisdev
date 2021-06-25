@@ -56,6 +56,9 @@
                <div id="chartTotalManpowerByUnion" style="width: 100%; height: 500px;"></div>
           </div>
           <div class="col-xs-12" style="padding-top: 10px;">
+               <div id="chart_att_rate" style="width: 100%; height: 500px;"></div>
+          </div>
+          <div class="col-xs-12" style="padding-top: 10px;">
                <div id="chartTotalOvertime" style="width: 100%; height: 500px;"></div>
           </div>
           <div class="col-xs-12" style="padding-top: 10px;">
@@ -117,6 +120,35 @@
      </div>
 </div>
 
+<div class="modal fade" id="modalAttRate">
+     <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+               <div class="modal-header">
+                    <h3 style="margin-top: 0;" id="titleAttRate"></h3>
+                    <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="table_att_rate">
+                         <thead style="background-color: rgba(126,86,134,.7);">
+                              <tr>
+                                   <th>No</th>
+                                   <th>Employee ID</th>
+                                   <th>Employee Name</th>
+                                   <th>Section</th>
+                                   <th>Employement Status</th>
+                                   <th>Absence</th>
+                                   <th>Days</th>
+                              </tr>
+                         </thead>
+                         <tbody id="body_att_rate"></tbody>
+                         <tfoot>
+                         </tfoot>
+                    </table>
+               </div>
+               <div class="modal-footer">
+                    <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+               </div>
+          </div>
+     </div>
+</div>
+
 @endsection
 @section('scripts')
 <script src="{{ url("js/highstock.js")}}"></script>
@@ -129,6 +161,8 @@
                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
      });
+
+     var detail_att = [];
 
      jQuery(document).ready(function(){
           $('#modalPeriod').modal({
@@ -812,6 +846,104 @@ Highcharts.chart('chartOvertimeViolation', {
           }
      }]
 });
+
+var series_att = [];
+
+var perm_att = [];
+var contract_att = [];
+var os_att = [];
+
+$.each(result.att_rate, function(key, value){
+     series_att.push(value.mon);
+     perm_att.push(parseFloat(parseFloat(value.rate_permanen).toFixed(1)));
+     contract_att.push(parseFloat(parseFloat(value.rate_kontrak).toFixed(1)));
+     os_att.push(parseFloat(parseFloat(value.rate_os).toFixed(1)));
+});
+
+detail_att = result.att_detail;
+
+Highcharts.chart('chart_att_rate', {
+     title: {
+          text: 'Attendance Rate',
+          style: {
+               fontSize: '30px',
+               fontWeight: 'bold'
+          }
+     },
+
+     yAxis: {
+          title: {
+               text: '% Attendance Rate'
+          }
+     },
+
+     xAxis: {
+          categories : series_att
+     },
+
+     legend: {
+
+     },
+
+     credits:{
+          enabled:false
+     },
+
+     plotOptions: {
+          series: {
+               cursor: 'pointer',
+               label: {
+                   connectorAllowed: false
+              },
+              dataLabels: {
+                   enabled: true,
+                   style: {
+                    fontSize: '15px',
+               },
+               formatter: function () {
+                    return this.point.y + ' %';
+               }
+          },
+          point: {
+               events: {
+                    click: function(e) {
+                         detail_att_rate(this.category, this.series.name);
+                    }
+               }
+          }
+     }
+},
+
+series: [{
+     name: 'YMPI Permanent',
+     data: perm_att,
+     color: '#7da6ff'
+}, {
+  name: 'YMPI Contract',
+  data: contract_att,
+  color: '#d1d0cb'
+}, {
+  name: 'Outsourcing',
+  data: os_att,
+  color: '#ffba7d'
+}],
+
+responsive: {
+  rules: [{
+   condition: {
+    maxWidth: 500
+},
+chartOptions: {
+    legend: {
+     layout: 'horizontal',
+     align: 'center',
+     verticalAlign: 'bottom'
+}
+}
+}]
+}
+
+});
 }
 else{
      alert(result.message);
@@ -851,6 +983,48 @@ function details(date, cat, name){
           }
           $('#progressbar2').hide();
      });
+}
+
+function detail_att_rate(mon, ctg) {
+     $("#titleAttRate").text("Absence Detail "+ctg+" on "+mon);
+     $("#modalAttRate").modal('show');
+
+     var category = "";
+
+     if (ctg == 'YMPI Permanent') {
+          category = 'PERMANENT';
+     } else if(ctg == 'YMPI Contract') {
+          category = 'CONTRACT';
+     } else if(ctg == 'Outsourcing') {
+          category = 'OUTSOURCING';
+     }
+
+     var tableData = "";
+     
+     console.log(category);
+
+     $('#body_att_rate').empty();
+     var no = 1;
+
+     $.each(detail_att, function(key, value){
+          if (~value.employment_status.indexOf(category)) {
+               tableData += '<tr>';
+               tableData += '<td>'+no+'</td>';
+               tableData += '<td>'+value.employee_id+'</td>';
+               tableData += '<td>'+value.name+'</td>';
+               tableData += '<td>'+value.section+'</td>';
+               tableData += '<td>'+value.employment_status+'</td>';
+               tableData += '<td>'+(value.absence_name || value.attend_code)+'</td>';
+               tableData += '<td>'+value.jml_hari+'</td>';
+               tableData += '</tr>';
+
+               no++;
+          }
+     });
+     $('#body_att_rate').append(tableData);
+
+     // table_att_rate
+     
 }
 </script>
 @endsection
