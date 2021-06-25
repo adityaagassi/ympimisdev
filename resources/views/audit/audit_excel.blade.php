@@ -16,6 +16,16 @@
         table > tfoot > tr > th{
             border: 1px solid rgb(211,211,211);
         }
+
+        .nethink {
+            background-color: #FFCCFF;
+        }
+        .posthink {
+            background-color: #CCFFFF;
+        }
+        .putih{
+            background-color: #FFF;
+        }
     </style>
 </head>
 <body>
@@ -74,14 +84,22 @@
 
             @foreach($detail as $audit)
 
+            <?php if($audit->point_judul == "Positive Finding") {
+                $cls = 'posthink';  
+            } else if($audit->point_judul == "Negative Finding"){
+                $cls = 'nethink';
+            } else{
+                $cls = 'putih';
+            } ?>
+
             <tr>
-                <td style="vertical-align: middle;text-align: left;width: 10">{{ $num++ }}</td>
-                <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->auditor_name }}</td>
-                <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->lokasi }}</td>
-                <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->auditee_name }}</td>
-                <td style="vertical-align: middle;text-align: left;width: 20">{{ $audit->point_judul }}</td>
-                <td style="vertical-align: middle;text-align: left;width: 20"><b>{{ $audit->note }}</b></td>
-                <td style="vertical-align: middle;text-align: right;align-items: right;align-content: right">&nbsp;&nbsp;<img src="files/patrol/{{ $audit->foto }}" width="190"></td>
+                <td style="vertical-align: middle;text-align: left;width: 10" class="{{ $cls }}">{{ $num++ }}</td>
+                <td style="vertical-align: middle;text-align: left;width: 20" class="{{ $cls }}">{{ $audit->auditor_name }}</td>
+                <td style="vertical-align: middle;text-align: left;width: 20" class="{{ $cls }}">{{ $audit->lokasi }}</td>
+                <td style="vertical-align: middle;text-align: left;width: 20" class="{{ $cls }}">{{ $audit->auditee_name }}</td>
+                <td style="vertical-align: middle;text-align: left;width: 20" class="{{ $cls }}">{{ $audit->point_judul }}</td>
+                <td style="vertical-align: middle;text-align: left;width: 40" class="{{ $cls }}"><b>{{ $audit->note }}</b></td>
+                <td style="vertical-align: middle;text-align: right;align-items: right;align-content: right" class="{{ $cls }}">&nbsp;&nbsp;<img src="files/patrol/{{ $audit->foto }}" width="190"></td>
             </tr>
 
             @endforeach

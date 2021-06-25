@@ -435,7 +435,7 @@ class AuditController extends Controller
 
         $auditdata = db::select($isimail);
 
-        if ($request->input('category') == "Patrol Daily") {
+        if ($request->input('category') == "Patrol Daily" || $request->input('category') == "Patrol Covid") {
           $mailscc = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where section = 'Secretary Admin Section' and employee_id != 'PI9704001'";  
           $mailtoocc = DB::select($mailscc);
 
