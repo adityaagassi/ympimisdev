@@ -15,7 +15,7 @@
 			padding-right: 3px;
 		}
 		.button {
-			background-color: #4CAF50;
+			background-color: #347bed;
 			border: none;
 			color: white;
 			padding: 5px 15px;
