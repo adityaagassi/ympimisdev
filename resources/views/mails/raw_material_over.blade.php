@@ -14,13 +14,25 @@
 			padding-left: 3px;
 			padding-right: 3px;
 		}
+		.button {
+			background-color: #4CAF50;
+			border: none;
+			color: white;
+			padding: 5px 15px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			margin: 4px 2px;
+			cursor: pointer;
+		}
 	</style>
 </head>
 <body>
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 20px;">Raw Material Over Plan Usage On {{ $data['month_text'] }}<br>{{ $data['start_date'] }} - {{ $data['end_date'] }}</p>
+			<p style="font-size: 20px;">{{ $data['material_group'] }} Material Over Plan Usage On {{ $data['month_text'] }}<br>{{ $data['start_date'] }} - {{ $data['end_date'] }}</p>
 			
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="90%">
@@ -32,7 +44,6 @@
 						<th rowspan="2" style="width: 5%; border:1px solid black;">Plan Usage</th>
 						<th colspan="6" style="width: 30%; border:1px solid black;">Actual Usage Cummulative by Departement</th>
 						<th rowspan="2" style="width: 5%; border:1px solid black;">Total</th>
-						<th rowspan="2" style="width: 15%; border:1px solid black;">Status</th>
 						<th rowspan="2" style="width: 15%; border:1px solid black;">Reason</th>
 					</tr>
 					<tr>
@@ -118,19 +129,14 @@
 						<td style="border:1px solid black; text-align: right;">0</td>
 						@endif
 
-
 						<td style="border:1px solid black; text-align: right;">{{ $over->quantity }}</td>
-						<td style="border:1px solid black; text-align: center;">Over Usage</td>
-					</tr>
-					@endforeach
-				</tbody>
-			</table>
-			<br>
-
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="{{ url("index/material/material_monitoring/direct") }}">Raw Material Monitoring (素材監視)</a><br>
-
-		</center>
-	</div>
-</body>
-</html>
+						<td style="border:1px solid black; text-align: center;"><a href="{{ url("index/material/material_monitoring/direct") }}" class="button">Reason</a></td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
+				<br>
+			</center>
+		</div>
+	</body>
+	</html>
