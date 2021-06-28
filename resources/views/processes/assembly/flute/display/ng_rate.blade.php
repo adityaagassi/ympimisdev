@@ -1,5 +1,6 @@
 @extends('layouts.display')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 	input {
 		line-height: 22px;
@@ -29,16 +30,21 @@
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
 	}
+	#loading, #error { display: none; }
 </style>
 @endsection
 @section('header')
 @endsection
 @section('content')
 <section class="content" style="padding-top: 0;">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+		<p style="position: absolute; color: white; top: 45%; left: 50%;">
+			<span style="font-size: 60px"><i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<div class="row">
 		<div class="col-xs-12" style="padding-bottom: 5px;">
 			<div class="row">
-				<form method="GET" action="{{ action('AssemblyProcessController@indexNgRate') }}">
 					<div class="col-xs-2" style="padding-right: 0;">
 						<div class="input-group date">
 							<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
@@ -56,11 +62,18 @@
 						<input type="text" name="location" id="location" hidden>	
 					</div>
 
+					<div class="col-xs-2" style="padding-right: 0;">
+						<select class="form-control select2" id="origin" data-placeholder="Select Origin" style="width: 100%;">
+							<option value=""></option>
+							<option value="Production">Production</option>
+							<option value="QA">QA</option>
+						</select>
+					</div>
+
 					<div class="col-xs-2">
-						<button class="btn btn-success" type="submit"><i class="fa fa-search"></i> Search</button>
+						<button class="btn btn-success" onclick="fetchChart()"><i class="fa fa-search"></i> Search</button>
 					</div>
 					<div class="pull-right" id="loc" style="margin: 0px;padding-top: 0px;padding-right: 20px;font-size: 2vw;"></div>
-				</form>
 			</div>
 		</div>
 		<div class="col-xs-12">
@@ -116,24 +129,38 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="modalDetailTitle"></h4>
+				<div style="background-color: #fcba03;text-align: center;">
+					<h4 class="modal-title" style="font-weight: bold;padding: 10px;font-size: 20px" id="modalDetailTitle"></h4>
+				</div>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
-					<center>
+					<!-- <center>
 						<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
-					</center>
+					</center> -->
 					<table class="table table-hover table-bordered table-striped" id="tableDetail">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
 								<th style="width: 1%;">#</th>
-								<th style="width: 3%;">Material</th>
-								<th style="width: 9%;">Description</th>
-								<th style="width: 3%;">Stock/Day</th>
-								<th style="width: 3%;">Act. Stock</th>
-								<th style="width: 3%;">Stock</th>
+								<th style="width: 2%;">Serial Number</th>
+								<th style="width: 2%;">Model</th>
+								<th style="width: 3%;">Loc</th>
+								<th style="width: 3%;">NG Name</th>
+								<th style="width: 3%;">Onko</th>
+								<th style="width: 3%;">Qty</th>
+								<th style="width: 3%;">Value Atas</th>
+								<th style="width: 3%;">Value Bawan</th>
+								<th style="width: 3%;">NG Loc</th>
+								<th style="width: 3%;">Emp Kensa</th>
+								<th style="width: 3%;">At</th>
 							</tr>
 						</thead>
 						<tbody id="tableDetailBody">
 						</tbody>
+						<tfoot style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th colspan="6">TOTAL</th>
+								<th colspan="6" style="text-align: left;" id="total_all"></th>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -143,10 +170,11 @@
 
 @endsection
 @section('scripts')
-<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -159,9 +187,11 @@
 			autoclose: true,
 			todayHighlight: true
 		});
-		$('.select2').select2();
+		$('.select2').select2({
+			allowClear:true
+		});
 		fetchChart();
-		setInterval(fetchChart, 20000);
+		// setInterval(fetchChart, 20000);
 	});
 
 	Highcharts.createElement('link', {
@@ -366,12 +396,14 @@
 
 	function fetchChart(){
 
-		var location = "{{$_GET['location']}}";
-		var tanggal = "{{$_GET['tanggal']}}";
+		var location = $('#location').val();
+		var tanggal = $('#tanggal').val();
+		var origin = $('#origin').val();
 
 		var data = {
 			tanggal:tanggal,
-			location:location
+			location:location,
+			origin:origin
 		}
 
 		$.get('{{ url("fetch/assembly/ng_rate") }}', data, function(result, status, xhr) {
@@ -424,12 +456,8 @@
 					ng_rate.push(parseFloat(value.rate));
 					series2.push([ng2[key], ng_rate[key]]);
 
-					console.log(parseFloat(value.rate));
 
 				});
-				// console.log(series2);
-				// console.log(categories1);
-				// console.log(newArr);
 
 				Highcharts.chart('container1', {
 					chart: {
@@ -440,7 +468,7 @@
 					title: {
 						text: 'Total NG',
 						style: {
-							fontSize: '30px',
+							fontSize: '25px',
 							fontWeight: 'bold'
 						}
 					},
@@ -460,7 +488,7 @@
 						lineColor:'#9e9e9e',
 						labels: {
 							style: {
-								fontSize: '20px',
+								fontSize: '14px',
 								fontWeight: 'bold'
 							}
 						},
@@ -531,7 +559,7 @@
 							point: {
 								events: {
 									click: function () {
-										ShowModal(this.category,result.date);
+										ShowModal(this.category,result.date,'ng_name');
 									}
 								}
 							},
@@ -617,7 +645,7 @@
 					title: {
 						text: 'Total NG By Model',
 						style: {
-							fontSize: '30px',
+							fontSize: '25px',
 							fontWeight: 'bold'
 						}
 					},
@@ -637,7 +665,7 @@
 						lineColor:'#9e9e9e',
 						labels: {
 							style: {
-								fontSize: '22px',
+								fontSize: '14px',
 								fontWeight: 'bold'
 							}
 						},
@@ -706,7 +734,7 @@
 							point: {
 								events: {
 									click: function () {
-										ShowModal(this.category,result.date);
+										ShowModal(this.category,result.date,'model');
 									}
 								}
 							},
@@ -765,6 +793,115 @@
 		});
 }
 
+function ShowModal(cat,date,type) {
+	$("#loading").show();
+	var location = $('#location').val();
+	var origin = $('#origin').val();
+	var data = {
+		cat:cat,
+		date:date,
+		type:type,
+		location:location,
+		origin:origin,
+	}
+
+	$.get('{{ url("fetch/assembly/ng_rate_detail") }}', data, function(result, status, xhr) {
+		if(result.status){
+			$('#tableDetail').DataTable().clear();
+			$('#tableDetail').DataTable().destroy();
+			$('#tableDetailBody').html('');
+			var tableBody = '';
+			var index = 1;
+			var total_qty = 0;
+			$.each(result.detail, function(key, value) {
+				tableBody += '<tr>';
+				tableBody += '<td>'+index+'</td>';
+				tableBody += '<td>'+value.serial_number+'</td>';
+				tableBody += '<td>'+value.model+'</td>';
+				tableBody += '<td>'+value.location+'</td>';
+				tableBody += '<td>'+value.ng_name+'</td>';
+				tableBody += '<td>'+value.ongko+'</td>';
+				var qty = 1;
+				if (value.value_bawah == null) {
+					tableBody += '<td>'+qty+'</td>';
+					tableBody += '<td></td>';
+					tableBody += '<td></td>';
+				}else{
+					tableBody += '<td>'+qty+'</td>';
+					tableBody += '<td>'+value.value_bawah+'</td>';
+					tableBody += '<td>'+value.value_atas+'</td>';
+				}
+				tableBody += '<td>'+(value.value_lokasi || "")+'</td>';
+				tableBody += '<td>'+value.employee_id+'<br>'+value.name+'</td>';
+				tableBody += '<td>'+value.created+'</td>';
+				tableBody += '</tr>';
+				total_qty++;
+				index++;
+			});
+			$('#tableDetailBody').append(tableBody);
+			$('#total_all').html(total_qty);
+
+			var table = $('#tableDetail').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ 10, 25, 50, -1 ],
+				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					]
+				},
+				'paging': true,
+				'lengthChange': true,
+				'searching': true,
+				'ordering': true,
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true,
+				// "footerCallback": function ( row, data, start, end, display ) {
+		  //           var api = this.api(), data;
+		 
+		  //           var intVal = function ( i ) {
+		  //               return typeof i === 'string' ?
+		  //                   i.replace(/[\$,]/g, '')*1 :
+		  //                   typeof i === 'number' ?
+		  //                       i : 0;
+		  //           };
+
+		  //           pageTotal = api
+		  //               .column( 7, { page: 'current'} )
+		  //               .data()
+		  //               .reduce( function (a, b) {
+		  //                   return intVal(a) + intVal(b);
+		  //               }, 0 );
+		 
+		  //           $( api.column( 7 ).footer() ).html(
+		  //               pageTotal
+		  //           );
+		  //       }
+			});
+			if (type === 'ng_name') {
+				$('#modalDetailTitle').html('Detail NG '+cat+'<br>Tanggal '+date);
+			}else{
+				$('#modalDetailTitle').html('Detail NG Pada Model '+cat+'<br>Tanggal '+date);
+			}
+			$("#loading").hide();
+			$('#modalDetail').modal('show');
+		}else{
+			$("#loading").hide();
+			openErrorGritter('Error!',result.message);
+		}
+	});
+}
+
 $.date = function(dateObject) {
 	var d = new Date(dateObject);
 	var day = d.getDate();
@@ -785,6 +922,30 @@ function changeLocation(){
 	$("#location").val($("#locationSelect").val());
 }
 
+
+var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
 
 </script>
 @endsection

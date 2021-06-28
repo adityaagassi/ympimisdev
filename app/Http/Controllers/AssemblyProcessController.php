@@ -151,31 +151,31 @@ class AssemblyProcessController extends Controller
 			return Response::json($response);
 		}
 
-		try{
+		// try{
 			$cek_serial = new AssemblySerial([
 				'serial_number' => $request->get('serial'),
 				'origin_group_code' => $request->get('origin_group_code'),
 				'created_by' => $auth_id
 			]);
 			$cek_serial->save();
-		}
-		catch(QueryException $e){
-			$error_code = $e->errorInfo[1];
-			if($error_code == 1062){
-				$response = array(
-					'status' => false,
-					'message' => "Serial number sudah pernah discan.",
-				);
-				return Response::json($response);
-			}
-			else{
-				$response = array(
-					'status' => false,
-					'message' => $e->getMessage(),
-				);
-				return Response::json($response);
-			}
-		}
+		// }
+		// catch(QueryException $e){
+		// 	$error_code = $e->errorInfo[1];
+		// 	if($error_code == 1062){
+		// 		$response = array(
+		// 			'status' => false,
+		// 			'message' => "Serial number sudah pernah discan.",
+		// 		);
+		// 		return Response::json($response);
+		// 	}
+		// 	else{
+		// 		$response = array(
+		// 			'status' => false,
+		// 			'message' => $e->getMessage(),
+		// 		);
+		// 		return Response::json($response);
+		// 	}
+		// }
 
 		$taghex = $this->dec2hex($request->get('tagBody'));
 
@@ -2427,7 +2427,7 @@ class AssemblyProcessController extends Controller
 	}
 
 	public function indexNgRate(){
-		$locations = $this->location_fl_display;
+		$locations = $this->location_fl;
 
 		return view('processes.assembly.flute.display.ng_rate', array(
 			'title' => 'NG Rate',
@@ -2437,164 +2437,243 @@ class AssemblyProcessController extends Controller
 	}
 
 	public function fetchNgRate(Request $request){
-		$now = date('Y-m-d');
-		$addlocation = "";
-		if($request->get('location') != null) {
-			$locations = explode(",", $request->get('location'));
-			$location = "";
+		try {
+			$now = date('Y-m-d');
+			$addlocation = "";
+			$origin = "";
+			if($request->get('location') != null) {
+				$locations = explode(",", $request->get('location'));
+				$location = "";
 
-			for($x = 0; $x < count($locations); $x++) {
-				$location = $location."'".$locations[$x]."'";
-				if($x != count($locations)-1){
-					$location = $location.",";
+				for($x = 0; $x < count($locations); $x++) {
+					$location = $location."'".$locations[$x]."'";
+					if($x != count($locations)-1){
+						$location = $location.",";
+					}
 				}
+				$addlocation = "and location in (".$location.") ";
 			}
-			$addlocation = "and location in (".$location.") ";
-		}
 
-		if(strlen($request->get('tanggal'))>0){
-			$now = date('Y-m-d', strtotime($request->get('tanggal')));
-		}
-
-		$ng = db::select("SELECT DISTINCT
-			(
-			SUBSTRING_INDEX( a.ng_name, '-', 1 )) AS ng_name,(
-			SELECT
-			COUNT( ng_name ) 
-			FROM
-			assembly_ng_logs 
-			WHERE
-			DATE(created_at) = '".$now."' ".$addlocation."
-			AND
-			SUBSTRING_INDEX( ng_name, '-', 1 ) = SUBSTRING_INDEX( a.ng_name, '-', 1 )) AS jumlah,(
-			SELECT
-			COUNT( ng_name ) 
-			FROM
-			assembly_ng_logs 
-			WHERE
-			DATE(created_at) = '".$now."' ".$addlocation."
-			AND
-			SUBSTRING_INDEX( ng_name, '-', 1 ) = SUBSTRING_INDEX( a.ng_name, '-', 1 )) / ( SELECT count( DISTINCT ( model )) AS model FROM `assembly_details` WHERE DATE( created_at ) = '".$now."' ".$addlocation." ) * 100 AS rate 
-			FROM
-			assembly_ng_logs AS a 
-			WHERE
-			DATE( a.created_at ) = '".$now."' ".$addlocation." ORDER BY jumlah DESC");
-
-		$ngkey = db::select("
-			SELECT DISTINCT
-			( model ),
-			count( ng_name ) AS ng,
-			0 AS rate 
-			FROM
-			assembly_ng_logs 
-			WHERE
-			DATE( created_at ) = '".$now."' ".$addlocation."
-			GROUP BY
-			model 
-			ORDER BY
-			ng DESC"
-		);
-
-
-		$dateTitle = date("d M Y", strtotime($now));
-
-
-		$datastat = db::select("SELECT
-			(
-			SELECT
-			SUM( check_total.total_check ) AS total_check 
-			FROM
-			((
-			SELECT
-			COUNT(
-			DISTINCT ( serial_number )) AS total_check 
-			FROM
-			assembly_logs 
-			WHERE
-			DATE( assembly_logs.sedang_start_date )= '".$now."' ".$addlocation." UNION ALL
-			SELECT
-			COUNT(
-			DISTINCT ( serial_number )) AS total_check 
-			FROM
-			assembly_details 
-			WHERE
-			DATE( assembly_details.created_at )= '".$now."' ".$addlocation." 
-			)) check_total 
-			) AS total_check,
-			(
-			SELECT
-			SUM( check_total.total_check ) AS total_check 
-			FROM
-			((
-			SELECT
-			COUNT(
-			DISTINCT ( serial_number )) AS total_check 
-			FROM
-			assembly_logs 
-			WHERE
-			DATE( assembly_logs.sedang_start_date )= '".$now."' ".$addlocation." UNION ALL
-			SELECT
-			COUNT(
-			DISTINCT ( serial_number )) AS total_check 
-			FROM
-			assembly_details 
-			WHERE
-			DATE( assembly_details.created_at )= '".$now."' ".$addlocation." 
-			)) check_total 
-			) - count( DISTINCT ( serial_number ) ) AS total_ok,
-			(count( DISTINCT ( serial_number ) ) / (
-			SELECT
-			SUM( check_total.total_check ) AS total_check 
-			FROM
-			((
-			SELECT
-			COUNT(
-			DISTINCT ( serial_number )) AS total_check 
-			FROM
-			assembly_logs 
-			WHERE
-			DATE( assembly_logs.sedang_start_date )= '".$now."' ".$addlocation." UNION ALL
-			SELECT
-			COUNT(
-			DISTINCT ( serial_number )) AS total_check 
-			FROM
-			assembly_details 
-			WHERE
-			DATE( assembly_details.created_at )= '".$now."' ".$addlocation." 
-			)) check_total 
-			)) * 100 AS ng_rate,
-			count( DISTINCT ( serial_number ) ) AS total_ng 
-			FROM
-			assembly_ng_logs 
-			WHERE
-			DATE( assembly_ng_logs.created_at )= '".$now."' ".$addlocation." 
-			AND deleted_at IS NULL");
-
-		$location = "";
-		if($request->get('location') != null) {
-			$locations = explode(",", $request->get('location'));
-			for($x = 0; $x < count($locations); $x++) {
-				$location = $location." ".$locations[$x]." ";
-				if($x != count($locations)-1){
-					$location = $location."&";
-				}
+			if(strlen($request->get('tanggal'))>0){
+				$now = date('Y-m-d', strtotime($request->get('tanggal')));
 			}
-		}else{
+
+			if($request->get('origin') == "Production"){
+				$origin = "and location not like '%qa%'";
+			}else if($request->get('origin') == "QA"){
+				$origin = "and location like '%qa%'";
+			}else{
+				$origin = "";
+			}
+
+			$ng = db::select("SELECT DISTINCT
+				(
+				SUBSTRING_INDEX( a.ng_name, '-', 1 )) AS ng_name,(
+				SELECT
+				COUNT( ng_name ) 
+				FROM
+				assembly_ng_logs 
+				WHERE
+				DATE(created_at) = '".$now."' ".$addlocation." ".$origin."
+				AND
+				SUBSTRING_INDEX( ng_name, '-', 1 ) = SUBSTRING_INDEX( a.ng_name, '-', 1 )) AS jumlah,(
+				SELECT
+				COUNT( ng_name ) 
+				FROM
+				assembly_ng_logs 
+				WHERE
+				DATE(created_at) = '".$now."' ".$addlocation." ".$origin."
+				AND
+				SUBSTRING_INDEX( ng_name, '-', 1 ) = SUBSTRING_INDEX( a.ng_name, '-', 1 )) / ( SELECT count( DISTINCT ( model )) AS model FROM `assembly_details` WHERE DATE( created_at ) = '".$now."' ".$addlocation." ".$origin." ) * 100 AS rate 
+				FROM
+				assembly_ng_logs AS a 
+				WHERE
+				DATE( a.created_at ) = '".$now."' ".$addlocation." ".$origin." ORDER BY jumlah DESC");
+
+			$ngkey = db::select("
+				SELECT DISTINCT
+				( model ),
+				count( ng_name ) AS ng,
+				0 AS rate 
+				FROM
+				assembly_ng_logs 
+				WHERE
+				DATE( created_at ) = '".$now."' ".$addlocation." ".$origin."
+				GROUP BY
+				model 
+				ORDER BY
+				ng DESC"
+			);
+
+
+			$dateTitle = date("d M Y", strtotime($now));
+
+
+			$datastat = db::select("SELECT
+				(
+				SELECT
+				SUM( check_total.total_check ) AS total_check 
+				FROM
+				((
+				SELECT
+				COUNT(
+				DISTINCT ( serial_number )) AS total_check 
+				FROM
+				assembly_logs 
+				WHERE
+				DATE( assembly_logs.sedang_start_date )= '".$now."' ".$addlocation." ".$origin." UNION ALL
+				SELECT
+				COUNT(
+				DISTINCT ( serial_number )) AS total_check 
+				FROM
+				assembly_details 
+				WHERE
+				DATE( assembly_details.created_at )= '".$now."' ".$addlocation." ".$origin." 
+				)) check_total 
+				) AS total_check,
+				(
+				SELECT
+				SUM( check_total.total_check ) AS total_check 
+				FROM
+				((
+				SELECT
+				COUNT(
+				DISTINCT ( serial_number )) AS total_check 
+				FROM
+				assembly_logs 
+				WHERE
+				DATE( assembly_logs.sedang_start_date )= '".$now."' ".$addlocation." ".$origin." UNION ALL
+				SELECT
+				COUNT(
+				DISTINCT ( serial_number )) AS total_check 
+				FROM
+				assembly_details 
+				WHERE
+				DATE( assembly_details.created_at )= '".$now."' ".$addlocation." ".$origin." 
+				)) check_total 
+				) - count( DISTINCT ( serial_number ) ) AS total_ok,
+				(count( DISTINCT ( serial_number ) ) / (
+				SELECT
+				SUM( check_total.total_check ) AS total_check 
+				FROM
+				((
+				SELECT
+				COUNT(
+				DISTINCT ( serial_number )) AS total_check 
+				FROM
+				assembly_logs 
+				WHERE
+				DATE( assembly_logs.sedang_start_date )= '".$now."' ".$addlocation." ".$origin." UNION ALL
+				SELECT
+				COUNT(
+				DISTINCT ( serial_number )) AS total_check 
+				FROM
+				assembly_details 
+				WHERE
+				DATE( assembly_details.created_at )= '".$now."' ".$addlocation." ".$origin." 
+				)) check_total 
+				)) * 100 AS ng_rate,
+				count( DISTINCT ( serial_number ) ) AS total_ng 
+				FROM
+				assembly_ng_logs 
+				WHERE
+				DATE( assembly_ng_logs.created_at )= '".$now."' ".$addlocation." ".$origin." 
+				AND deleted_at IS NULL");
+
 			$location = "";
-		}
-		$location = strtoupper($location);
+			if($request->get('location') != null) {
+				$locations = explode(",", $request->get('location'));
+				for($x = 0; $x < count($locations); $x++) {
+					$location = $location." ".$locations[$x]." ";
+					if($x != count($locations)-1){
+						$location = $location."&";
+					}
+				}
+			}else{
+				$location = "";
+			}
+			$location = strtoupper($location);
 
-		$response = array(
-			'status' => true,
-			// 'checks' => $checks,
-			// 'ngs' => $ngs,
-			'ng' => $ng,
-			'ngkey' => $ngkey,
-			'dateTitle' => $dateTitle,
-			'data' => $datastat,
-			'title' => $location
-		);
-		return Response::json($response);
+			$response = array(
+				'status' => true,
+				// 'checks' => $checks,
+				// 'ngs' => $ngs,
+				'ng' => $ng,
+				'ngkey' => $ngkey,
+				'dateTitle' => $dateTitle,
+				'date' => $now,
+				'data' => $datastat,
+				'title' => $location
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchNgRateDetail(Request $request)
+	{
+		try {
+			$model = "";
+			$ng_name = "";
+			if ($request->get('type') == 'ng_name') {
+				$ng_name = "AND SUBSTRING_INDEX( ng_name, '-', 1 ) = '".$request->get('cat')."'";
+			}else{
+				$model = "AND model = '".$request->get('cat')."'";
+			}
+			$date = $request->get('date');
+
+			$addlocation = "";
+			$origin = "";
+			if($request->get('location') != null) {
+				$locations = explode(",", $request->get('location'));
+				$location = "";
+
+				for($x = 0; $x < count($locations); $x++) {
+					$location = $location."'".$locations[$x]."'";
+					if($x != count($locations)-1){
+						$location = $location.",";
+					}
+				}
+				$addlocation = "and location in (".$location.") ";
+			}
+
+			if($request->get('origin') == "Production"){
+				$origin = "and location not like '%qa%'";
+			}else if($request->get('origin') == "QA"){
+				$origin = "and location like '%qa%'";
+			}else{
+				$origin = "";
+			}
+
+			$detail = DB::SELECT("SELECT
+				*,assembly_ng_logs.created_at as created
+			FROM
+				assembly_ng_logs
+				LEFT JOIN employee_syncs ON employee_syncs.employee_id = assembly_ng_logs.employee_id 
+			WHERE
+				DATE( assembly_ng_logs.created_at ) = '".$date."' 
+				".$ng_name."
+				".$model."
+				".$addlocation."
+				".$origin."");
+
+			$response = array(
+				'status' => true,
+				'detail' => $detail,
+			);
+			return Response::json($response);
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function indexOpRate(){
