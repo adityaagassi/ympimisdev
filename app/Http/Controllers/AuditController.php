@@ -428,21 +428,26 @@ class AuditController extends Controller
 
         $id = $audit_all->id;
 
-        $mails = "select distinct email from users where name = '".$request->input('patrol_pic_'.$i)."'";
-        $mailtoo = DB::select($mails);
+        if ($request->input('patrol_detail_'.$i) != "Positive Finding") {
+          $mails = "select distinct email from users where name = '".$request->input('patrol_pic_'.$i)."'";
+          $mailtoo = DB::select($mails);
 
-        $isimail = "select * from audit_all_results where id = ".$id;
+          $isimail = "select * from audit_all_results where id = ".$id;
 
-        $auditdata = db::select($isimail);
+          $auditdata = db::select($isimail);
 
-        if ($request->input('category') == "Patrol Daily" || $request->input('category') == "Patrol Covid") {
-          $mailscc = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where section = 'Secretary Admin Section' and employee_id != 'PI9704001'";  
-          $mailtoocc = DB::select($mailscc);
+          if ($request->input('category') == "Patrol Daily" || $request->input('category') == "Patrol Covid") {
+            $mailscc = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where section = 'Secretary Admin Section' and employee_id != 'PI9704001'";  
+            $mailtoocc = DB::select($mailscc);
 
-          Mail::to($mailtoo)->cc($mailtoocc)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
-        }else{
-          Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
+            Mail::to($mailtoo)->cc($mailtoocc)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
+          } 
+          else{
+            Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com'])->send(new SendEmail($auditdata, 'patrol'));
+          }
         }
+
+        
 
 			}
 
