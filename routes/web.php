@@ -1175,6 +1175,7 @@ Route::post('upload/ga_control/live_cooking_menu', 'GeneralAffairController@uplo
 Route::get('fetch/ga_control/live_cooking_order_list', 'GeneralAffairController@fetchLiveCookingOrderList');
 Route::get('live_cooking/menu/{periode}', 'GeneralAffairController@fetchLiveCookingMenu');
 Route::post('input/ga_control/live_cooking_order', 'GeneralAffairController@inputLiveCookingOrder');
+Route::post('input/ga_control/live_cooking_order/extra', 'GeneralAffairController@inputLiveCookingOrderExtra');
 Route::get('fetch/ga_control/live_cooking_employees', 'GeneralAffairController@fetchLiveCookingEmployees');
 Route::get('detail/ga_control/live_cooking', 'GeneralAffairController@detailLiveCooking');
 Route::post('edit/ga_control/live_cooking_order', 'GeneralAffairController@editLiveCookingOrder');
@@ -4501,6 +4502,7 @@ Route::get('fetch/assembly/request', 'AssemblyProcessController@fetchRequest');
 
 Route::get('index/assembly/ng_rate', 'AssemblyProcessController@indexNgRate');
 Route::get('fetch/assembly/ng_rate', 'AssemblyProcessController@fetchNgRate');
+Route::get('fetch/assembly/ng_rate_detail', 'AssemblyProcessController@fetchNgRateDetail');
 
 Route::get('index/assembly/op_ng', 'AssemblyProcessController@indexOpRate');
 Route::get('fetch/assembly/op_ng', 'AssemblyProcessController@fetchOpRate');

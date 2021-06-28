@@ -84,7 +84,7 @@
 			
 			<a href="{{ url('/index/assembly/request/display','041') }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: red;">Assembly WIP</a>
 			
-			<a href="{{ url("index/assembly/ng_rate?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: red;">NG Rate</a>
+			<a href="{{ url("index/assembly/ng_rate") }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: red;">NG Rate</a>
 			
 			<a href="{{ url("index/assembly/op_ng?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 17px; border-color: red;">Operator NG Rate</a>
 			
