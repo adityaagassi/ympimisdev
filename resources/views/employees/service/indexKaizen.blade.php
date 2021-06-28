@@ -343,7 +343,7 @@
 			var body = "";
 
 			$.each(result.kaizen, function(key, value) {
-				if(jQuery.inArray(value.employee_id, result.employee) !== -1) {
+				if(jQuery.inArray(value.employee_id.toUpperCase(), result.employee) !== -1) {
 					body += "<tr>";
 					body += "<td>"+value.id+"</td>";
 					body += "<td>"+value.propose_date+"</td>";
