@@ -165,6 +165,9 @@
                 <label><input type="radio" name="handling" value="Revisi IK" @if($audit_report_activity->handling == "Revisi IK") checked @endif>Revisi IK</label>
               </div>
               <div class="radio">
+                <label><input type="radio" name="handling" value="Revisi QC Kouteihyo" @if($audit_report_activity->handling == "Revisi QC Kouteihyo") checked @endif>Revisi QC Kouteihyo</label>
+              </div>
+              <div class="radio">
                 <label><input type="radio" name="handling" value="Pembuatan Jig / Repair Jig" @if($audit_report_activity->handling == "Pembuatan Jig / Repair Jig") checked @endif>Pembuatan Jig / Repair Jig</label>
               </div>
               <div class="radio">

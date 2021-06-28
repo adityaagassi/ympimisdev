@@ -155,6 +155,9 @@
                 <label><input type="radio" name="handling" value="Revisi IK">Revisi IK</label>
               </div>
               <div class="radio">
+                <label><input type="radio" name="handling" value="Revisi QC Kouteihyo">Revisi QC Kouteihyo</label>
+              </div>
+              <div class="radio">
                 <label><input type="radio" name="handling" value="Pembuatan Jig / Repair Jig">Pembuatan Jig / Repair Jig</label>
               </div>
               <div class="radio">
