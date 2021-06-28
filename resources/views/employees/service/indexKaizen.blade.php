@@ -343,15 +343,18 @@
 			var body = "";
 
 			$.each(result.kaizen, function(key, value) {
-				if(jQuery.inArray(value.employee_id.toUpperCase(), result.employee) !== -1) {
-					body += "<tr>";
-					body += "<td>"+value.id+"</td>";
-					body += "<td>"+value.propose_date+"</td>";
-					body += "<td>"+value.employee_id+"</td>";
-					body += "<td>"+value.employee_name+"</td>";
-					body += "<td>"+value.section+"</td>";
-					body += "<td>"+value.title+"</td>";
-					body += "<td>"+value.area+"</td>";
+				// if(jQuery.inArray(value.employee_id.toUpperCase(), result.employee) !== -1) {
+					var emp = value.employee_id;
+					if ($.inArray(emp.toUpperCase(), result.employee) >= 0) {
+						console.log('ada');
+						body += "<tr>";
+						body += "<td>"+value.id+"</td>";
+						body += "<td>"+value.propose_date+"</td>";
+						body += "<td>"+value.employee_id+"</td>";
+						body += "<td>"+value.employee_name+"</td>";
+						body += "<td>"+value.section+"</td>";
+						body += "<td>"+value.title+"</td>";
+						body += "<td>"+value.area+"</td>";
 
 					//Foreman Status
 					if (value.status == '-1') {
