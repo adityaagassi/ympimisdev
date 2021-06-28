@@ -561,9 +561,17 @@
 			{ "data": "qty_receive"},
 			{ "data": "date_receive"},
 			{ "data": "surat_jalan"}
-			]
+			],
+			"createdRow":  function( row, data, dataIndex ) {
+   				if (data['qty_receive'] == "-") {
+      				$(row.children).addClass('bg-red');
+	    		}else if(data['qty'] != data['qty_receive']){
+      				$(row.children).addClass('bg-yellow');
+	    		} else{
+      				$(row.children).addClass('bg-green');
+	    		} 		
+			}
 		});
-
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

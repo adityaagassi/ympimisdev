@@ -90,14 +90,42 @@
 				</div>
 				<div class="row">
 					<div class="col-xs-12">
-						<div class="col-md-3">
+						<div class="col-md-2">
 							<div class="form-group">
 								<label>Tanggal Terima</label>
 								<div class="input-group date">
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="tanggal" name="tanggal" onchange="fetchTable()">
+									<input type="text" class="form-control pull-right" id="tanggal" name="tanggal" placeholder="Tanggal Kedatangan">
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Keyword</label>
+								<input type="text" class="form-control pull-right" id="keyword2" name="keyword2" placeholder="Masukkan Kata Kunci">
+							</div>
+						</div>
+
+						<div class="col-md-2">
+							<div class="form-group">
+								<label>Nomor PO</label>
+								<select class="form-control select2" id="no_po" name="no_po" data-placeholder='Nomor PO' style="width: 100%">
+					              <option value="">&nbsp;</option>
+					              @foreach($po_detail as $po)
+					              <option value="{{$po->no_po}}">{{$po->no_po}}</option>
+					              @endforeach
+					            </select>
+							</div>
+						</div>
+
+						<div class="col-md-3">
+							<div class="form-group">
+								<div class="col-md-" style="padding-right: 0;">
+									<label style="color: white;"> x</label>
+									<button class="btn btn-primary form-control" onclick="fetchTable()"><i class="fa fa-search"></i> Cari</button>
 								</div>
 							</div>
 						</div>
@@ -169,7 +197,7 @@
 
 	jQuery(document).ready(function() {
 		$('.select2').select2();
-		fetchTable();
+		// fetchTable();
 		$('body').toggleClass("sidebar-collapse");
 
 		$('#tanggal').datepicker({
@@ -187,13 +215,23 @@
 		$("#loading").show();
 	}
 
+	$('#keyword2').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			fetchTable();
+		}
+	});
+
 	function fetchTable(){
 		$('#itemtable').DataTable().destroy();
 
 		var tanggal = $('#tanggal').val();
+		var keyword = $('#keyword2').val();
+		var no_po = $('#no_po').val();
 
 		var data = {
-			tanggal:tanggal
+			tanggal:tanggal,
+			keyword:keyword,
+			no_po:no_po
 		}
 		
 		$('#itemtable tfoot th').each( function () {

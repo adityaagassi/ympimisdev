@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AccInvestmentBudget extends Model
 {
     protected $fillable = [
-		'reff_number','category_budget','budget_no','sisa','total','created_by'
+		'reff_number','category_budget','budget_no','sisa','total', 'total_ori','created_by'
 	];
 
 	public function user()

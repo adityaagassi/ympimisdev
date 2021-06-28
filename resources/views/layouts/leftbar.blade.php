@@ -406,7 +406,6 @@
   </li>
   @endif
 
-
   @if(in_array('S46', $navs))
   @if(isset($head) && $head == "Accounting")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
@@ -665,7 +664,7 @@
         <a href="{{ url("ga/receive_kantin") }}"><i class="fa fa-share-square-o"></i>Terima Barang Kantin</a>
       </li>
       @if(isset($page) && $page == "Cek Kedatangan Kantin")<li class="active">@else<li>@endif
-        <a href="{{ url("ga/cek_kedatangan/kantin") }}"><i class="fa fa-truck"></i>Cek Kedatangan Kantin</a>
+        <a href="{{ url("ga/cek_kedatangan/kantin") }}"><i class="fa fa-truck"></i>Report Kedatangan Kantin</a>
       </li>
     </ul>
   </li>
@@ -706,16 +705,16 @@
     </a>
     <ul class="treeview-menu">
       @if(isset($page) && $page == "Receive GA")<li class="active">@else<li>@endif
-        <a href="{{ url("warehouse/receive_ga") }}"><i class="fa fa-share-square-o"></i>Terima Barang</a>
+        <a href="{{ url("warehouse/receive_ga") }}"><i class="fa fa-share-square-o"></i>Terima Barang Non Kantin</a>
       </li>
       @if(isset($page) && $page == "Cek Kedatangan GA")<li class="active">@else<li>@endif
-        <a href="{{ url("ga/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Report Kedatangan Barang</a>
+        <a href="{{ url("ga/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Report Kedatangan Non Kantin</a>
       </li>
       @if(isset($page) && $page == "Receive GA Kantin")<li class="active">@else<li>@endif
         <a href="{{ url("ga/receive_kantin") }}"><i class="fa fa-share-square-o"></i>Terima Barang Kantin</a>
       </li>
       @if(isset($page) && $page == "Cek Kedatangan Kantin")<li class="active">@else<li>@endif
-        <a href="{{ url("ga/cek_kedatangan/kantin") }}"><i class="fa fa-truck"></i>Cek Kedatangan Kantin</a>
+        <a href="{{ url("ga/cek_kedatangan/kantin") }}"><i class="fa fa-truck"></i>Report Kedatangan Kantin</a>
       </li>
     </ul>
   </li>

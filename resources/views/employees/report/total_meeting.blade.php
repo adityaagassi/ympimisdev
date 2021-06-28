@@ -415,6 +415,7 @@
                     sOutsource = [];
                     sContract1 = [];
                     sContract2 = [];
+                    sContract = [];
                     sPermanent = [];
                     sProbation = [];
                     sMale = [];
@@ -434,6 +435,7 @@
                          sOutsource.push(parseInt(value.outsource));
                          sContract1.push(parseInt(value.contract1));
                          sContract2.push(parseInt(value.contract2));
+                         sContract.push(parseInt(value.contract1) + parseInt(value.contract2));
                          sPermanent.push(parseInt(value.permanent));
                          sProbation.push(parseInt(value.probation));
                          sMale.push(parseInt(value.male));
@@ -477,20 +479,8 @@
                               }
                          }, {
                               type: 'column',
-                              name: 'Contract 1',
-                              data: sContract1,
-                              dataLabels: {
-                                   enabled: true,
-                                   style: {
-                                        textOutline: false,
-                                        fontWeight: 'bold',
-                                        fontSize: '20px'
-                                   }
-                              }
-                         }, {
-                              type: 'column',
-                              name: 'Contract 2',
-                              data: sContract2,
+                              name: 'Contract',
+                              data: sContract,
                               dataLabels: {
                                    enabled: true,
                                    style: {
@@ -875,7 +865,8 @@ Highcharts.chart('chart_att_rate', {
      yAxis: {
           title: {
                text: '% Attendance Rate'
-          }
+          },
+          max: 100
      },
 
      xAxis: {

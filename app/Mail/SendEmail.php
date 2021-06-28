@@ -354,7 +354,7 @@ class SendEmail extends Mailable
 
         if($this->remark == 'payment_request'){
             if($this->data[0]->pdf != null && $this->data[0]->file != null){
-                
+
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
                 ->subject('Payment Request (支払リクエスト)')

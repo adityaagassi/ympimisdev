@@ -358,6 +358,7 @@
             <label for="form_budget">Amount</label>
             <div class="input-group"> 
               <span class="input-group-addon" id="ket_harga1" style="padding:6px">$</span>
+              <input type="hidden" class="form-control" id="amount_ori1" name="amount_ori1">
               <input type="text" class="form-control" id="amount_budget1" name="amount_budget1" placeholder="End Balance" readonly="">
             </div>
           </div>
@@ -440,6 +441,8 @@
                 @endif
                 <div class="input-group"> 
                   <span class="input-group-addon" id="ket_harga<?= $nomor ?>" style="padding:6px">$</span>
+
+                  <input type="hidden" class="form-control" id="amount_ori<?= $nomor ?>" name="amount_ori<?= $nomor ?>" value="{{$inv_budget->total_ori}}">
                   <input type="text" class="form-control" id="amount_budget<?= $nomor ?>" name="amount_budget<?= $nomor ?>" placeholder="Amount" value="{{$inv_budget->total}}" readonly="">
                 </div>
               </div>
@@ -860,7 +863,7 @@
       "serverSide": true,
       "ajax": {
         "type" : "get",
-        "url" : "{{ url("investment/fetch_investment_item",$investment->id) }}"
+        "url" : "{{ url('investment/fetch_investment_item',$investment->id) }}"
       },
       "columns": [
       { "data": "no_item"},
@@ -987,6 +990,8 @@
             var currency = $('#currency').val();
             var total_amount_budget = parseFloat(konversi(currency,"USD",total_beli));
             $('#amount_budget1').val(total_amount_budget);
+            $('#amount_ori1').val(total_beli);
+
           }
       });
     }
@@ -1229,6 +1234,7 @@
       var budget_name = [];
       var sisa = [];
       var amount = [];
+      var amount_ori = [];
 
       for(var i = 1;i <= jml; i++){
 
@@ -1261,6 +1267,7 @@
         budget_name.push($("#budget_name"+i).val());
         sisa.push($("#sisa_budget"+i).val());
         amount.push($("#amount_budget"+i).val());
+        amount_ori.push($("#amount_ori"+i).val());
       }
 
       var data = {
@@ -1291,6 +1298,7 @@
         budget_name: budget_name,
         sisa: sisa,
         amount: amount,
+        amount_ori: amount_ori,
         // budget_category: $("#budget_category").val(),
         // budget_no: $("#budget_no").val(),
       };
@@ -1588,7 +1596,7 @@
         lop = "lop2";
       }
 
-      var divdata = $("<div id='"+no+"' class='row'><div class='col-xs-2 col-sm-2 col-md-2 col-xs-offset-1'><select class='form-control select3' data-placeholder='Pilih Category Budget' name='budget_category"+no+"' id='budget_category"+no+"' onchange='selectbudget(this)' style='width: 100% height: 35px;' required> <option value=''>&nbsp;</option><option value='Shifting'>Shifting</option><option value='Out Of Budget'>Out of Budget </option></select></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_dana"+no+"'><select class='form-control select3' data-placeholder='Pilih Nomor Budget' name='budget_no"+no+"' id='budget_no"+no+"' onchange='getBudgetName(this)' style='width: 100% height: 35px;' onchange='' required> <option value='{{$investment->budget_no}}'>{{$investment->budget_no}}</option></select><input type='hidden' name='budget_name"+no+"' id='budget_name"+no+"'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_sisa"+no+"'><div class='input-group'><span class='input-group-addon' id='ket_sisa"+no+"' style='padding:6px'>$</span> <input type='text' class='form-control currency' id='sisa_budget"+no+"' name='sisa_budget"+no+"' placeholder='Beginning Balance' style='padding: 6px 6px' readonly=''></div></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_total"+no+"'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' style='padding:6px'>?</span><input type='text' class='form-control' id='amount_budget"+no+"' name='amount_budget"+no+"' placeholder='Total Pembelian'></div></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_konversi"+no+"'><div class='input-group'><span class='input-group-addon' id='dollar"+no+"' style='padding:6px'>$</span><input type='text' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Konversi Dollar' readonly=''></div></div><div class='col-xs-1 col-sm-1 col-md-1'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger' style='padding:6px 8px'><i class='fa fa-close'></i> </button> <button type='button' class='btn btn-success' style='padding:6px 8px' onclick='tambah(\""+id+"\",\""+lop+"\"); '><i class='fa fa-plus' ></i></button></div> </div>")
+      var divdata = $("<div id='"+no+"' class='row'><div class='col-xs-2 col-sm-2 col-md-2 col-xs-offset-1'><select class='form-control select3' data-placeholder='Pilih Category Budget' name='budget_category"+no+"' id='budget_category"+no+"' onchange='selectbudget(this)' style='width: 100% height: 35px;' required> <option value=''>&nbsp;</option><option value='Shifting'>Shifting</option><option value='Out Of Budget'>Out of Budget </option></select></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_dana"+no+"'><select class='form-control select3' data-placeholder='Pilih Nomor Budget' name='budget_no"+no+"' id='budget_no"+no+"' onchange='getBudgetName(this)' style='width: 100% height: 35px;' onchange='' required> <option value='{{$investment->budget_no}}'>{{$investment->budget_no}}</option></select><input type='hidden' name='budget_name"+no+"' id='budget_name"+no+"'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_sisa"+no+"'><div class='input-group'><span class='input-group-addon' id='ket_sisa"+no+"' style='padding:6px'>$</span> <input type='text' class='form-control currency' id='sisa_budget"+no+"' name='sisa_budget"+no+"' placeholder='Beginning Balance' style='padding: 6px 6px' readonly=''></div></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_total"+no+"'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' style='padding:6px'>?</span><input type='hidden' class='form-control' id='amount_ori"+no+"' name='amount_ori"+no+"'><input type='text' class='form-control' id='amount_budget"+no+"' name='amount_budget"+no+"' placeholder='Total Pembelian'></div></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_konversi"+no+"'><div class='input-group'><span class='input-group-addon' id='dollar"+no+"' style='padding:6px'>$</span><input type='text' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Konversi Dollar' readonly=''></div></div><div class='col-xs-1 col-sm-1 col-md-1'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger' style='padding:6px 8px'><i class='fa fa-close'></i> </button> <button type='button' class='btn btn-success' style='padding:6px 8px' onclick='tambah(\""+id+"\",\""+lop+"\"); '><i class='fa fa-plus' ></i></button></div> </div>")
 
       $("#"+id).append(divdata);
 
@@ -1616,7 +1624,7 @@
         lop = "lop2";
       }
 
-      var divdata = $("<div id='"+num+"' class='row'><div class='col-xs-2 col-sm-2 col-md-2 col-xs-offset-1'><select class='form-control select3' data-placeholder='Pilih Category Budget' name='budget_category"+num+"' id='budget_category"+num+"' onchange='selectbudget(this)' style='width: 100% height: 35px;' required> <option value=''>&nbsp;</option><option value='Shifting'>Shifting</option><option value='Out Of Budget'>Out of Budget </option></select></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_dana"+num+"'><select class='form-control select3' data-placeholder='Pilih nomor Budget' name='budget_no"+num+"' id='budget_no"+num+"' onchange='getBudgetName(this)' style='width: 100% height: 35px;' required> <option value='{{$investment->budget_no}}'>{{$investment->budget_no}}</option></select><input type='hidden' name='budget_name"+num+"' id='budget_name"+num+"'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_sisa"+num+"'><div class='input-group'><span class='input-group-addon' id='ket_sisa"+num+"' style='padding:6px'>$</span> <input type='text' class='form-control currency' id='sisa_budget"+num+"' name='sisa_budget"+num+"' placeholder='Beginning Balance' style='padding: 6px 6px' readonly=''></div></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_total"+num+"'><div class='input-group'><span class='input-group-addon' id='ket_harga"+num+"' style='padding:6px'>?</span><input type='text' class='form-control' id='amount_budget"+num+"' name='amount_budget"+num+"' placeholder='Total Pembelian'></div></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_konversi"+no+"'><div class='input-group'><span class='input-group-addon' id='dollar"+num+"' style='padding:6px'>$</span><input type='text' class='form-control' id='konversi_dollar"+num+"' name='konversi_dollar"+num+"' placeholder='Konversi Dollar' readonly=''></div></div><div class='col-xs-1 col-sm-1 col-md-1'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger' style='padding:6px 8px'><i class='fa fa-close'></i> </button> <button type='button' class='btn btn-success' style='padding:6px 8px' onclick='tambahDetail(\""+id+"\",\""+lop+"\", "+num+"); '><i class='fa fa-plus'></i></button></div> </div>")
+      var divdata = $("<div id='"+num+"' class='row'><div class='col-xs-2 col-sm-2 col-md-2 col-xs-offset-1'><select class='form-control select3' data-placeholder='Pilih Category Budget' name='budget_category"+num+"' id='budget_category"+num+"' onchange='selectbudget(this)' style='width: 100% height: 35px;' required> <option value=''>&nbsp;</option><option value='Shifting'>Shifting</option><option value='Out Of Budget'>Out of Budget </option></select></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_dana"+num+"'><select class='form-control select3' data-placeholder='Pilih nomor Budget' name='budget_no"+num+"' id='budget_no"+num+"' onchange='getBudgetName(this)' style='width: 100% height: 35px;' required> <option value='{{$investment->budget_no}}'>{{$investment->budget_no}}</option></select><input type='hidden' name='budget_name"+num+"' id='budget_name"+num+"'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_sisa"+num+"'><div class='input-group'><span class='input-group-addon' id='ket_sisa"+num+"' style='padding:6px'>$</span> <input type='text' class='form-control currency' id='sisa_budget"+num+"' name='sisa_budget"+num+"' placeholder='Beginning Balance' style='padding: 6px 6px' readonly=''></div></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_total"+num+"'><div class='input-group'><span class='input-group-addon' id='ket_harga"+num+"' style='padding:6px'>?</span><input type='hidden' class='form-control' id='amount_ori"+num+"' name='amount_ori"+num+"'><input type='text' class='form-control' id='amount_budget"+num+"' name='amount_budget"+num+"' placeholder='Total Pembelian'></div></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_konversi"+no+"'><div class='input-group'><span class='input-group-addon' id='dollar"+num+"' style='padding:6px'>$</span><input type='text' class='form-control' id='konversi_dollar"+num+"' name='konversi_dollar"+num+"' placeholder='Konversi Dollar' readonly=''></div></div><div class='col-xs-1 col-sm-1 col-md-1'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger' style='padding:6px 8px'><i class='fa fa-close'></i> </button> <button type='button' class='btn btn-success' style='padding:6px 8px' onclick='tambahDetail(\""+id+"\",\""+lop+"\", "+num+"); '><i class='fa fa-plus'></i></button></div> </div>")
 
       $("#"+id).append(divdata);
 
