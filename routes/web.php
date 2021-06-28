@@ -25,7 +25,7 @@ Route::get('minkd', 'TrialController@minkd');
 Route::get('force_print', 'TrialController@testPrint');
 
 Route::get('testmail', 'TrialController@testmail');
-Route::get('testmail2', 'AccountingController@coba');
+Route::get('testmail2', 'WindsController@coba');
 Route::get('testprint', 'TrialController@testPrint');
 Route::get('tesurgent', 'MaintenanceController@indexSPKUrgent');
 Route::get('testram', 'TrialController@testRam');
@@ -1967,8 +1967,8 @@ Route::get('export/invoice/tanda_terima', 'AccountingController@export_tanda_ter
 //Payment Request
 Route::get('payment_request', 'AccountingController@IndexPaymentRequest');
 Route::get('fetch/payment_request', 'AccountingController@fetchPaymentRequest');
-Route::get('detail/payment_request', 'AccountingController@fetchPaymentRequestDetail');
 Route::post('create/payment_request', 'AccountingController@createPaymentRequest');
+Route::get('detail/payment_request', 'AccountingController@fetchPaymentRequestDetail');
 Route::post('edit/payment_request', 'AccountingController@editPaymentRequest');
 Route::get('report/payment_request/{id}', 'AccountingController@reportPaymentRequest');
 Route::get('email/payment_request', 'AccountingController@emailPaymentRequest');
@@ -1981,6 +1981,11 @@ Route::get('payment_request/reject/{id}', 'AccountingController@paymentreject');
 
 //Cash Payment
 Route::get('index/cash_payment', 'AccountingController@IndexCashPayment');
+Route::get('fetch/cash_payment', 'AccountingController@fetchCashPayment');
+Route::post('create/cash_payment', 'AccountingController@createCashPayment');
+Route::get('detail/cash_payment', 'AccountingController@fetchCashPaymentDetail');
+Route::post('edit/cash_payment', 'AccountingController@editCashPayment');
+Route::get('report/cash_payment/{id}', 'AccountingController@reportCashPayment');
 
 
 Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
@@ -2028,7 +2033,9 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 
 
 	Route::get('index/kd_mouthpiece/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print_mp', 'KnockDownController@printLabelNew');
+	// Route::post('fetch/kd_print_mp', 'KnockDownController@printLabelNew');
+	Route::post('fetch/kd_print_mp', 'KnockDownController@printLabelNewSingle');
+
 	Route::get('index/print_label_mouthpiece/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
 
@@ -4969,6 +4976,13 @@ Route::get('fetch/detail/gmc', 'WarehouseNewController@fetchDetaiGmc');
 Route::get('fetch/detail/gmc/pel', 'WarehouseNewController@fetchDetaiGmcPel');
 Route::post('update/status/operator', 'WarehouseNewController@StatusOperatorWarehouse');
 
+Route::post('fetch/scan', 'WarehouseNewController@ScanPortable');
+
+Route::get('index/request/produksi', 'WarehouseNewController@requestProd');
+Route::get('fetch/scan/Qrcode', 'WarehouseNewController@ScanQrMaterial');
+Route::post('confirm/request/produksi', 'WarehouseNewController@ConfirmRequestPrd');
+Route::get('fetch/history/request/prod', 'WarehouseNewController@fetchRequestProduksi');
+Route::get('fetch/detail/request/prd', 'WarehouseNewController@fetchDetailRequest');
 
 
 //Sanding
@@ -5068,17 +5082,24 @@ Route::get('scan/reed/operator', 'ReedSyntheticController@scanReedOperator');
 //Molding
 Route::get('index/reed/molding_verification', 'ReedSyntheticController@indexMoldingVerification');
 Route::post('fetch/reed/finish_setup_molding', 'ReedSyntheticController@fetchFinishMolding');
-Route::get('index/reed/molding_approval/{kanban}/{employee_id}', 'ReedSyntheticController@indexMoldingApproval');
-
-Route::post('fetch/reed/submit_approval', 'ReedSyntheticController@fetchSubmitApproval');
+Route::post('fetch/reed/submit_pre_approval', 'ReedSyntheticController@fetchSubmitApproval');
 
 
 //Injeksi
+Route::get('index/reed/injection_order', 'ReedSyntheticController@indexInjectionOrder');
+Route::get('fetch/reed/injection_material', 'ReedSyntheticController@fetchInjectionMaterial');
+Route::get('fetch/reed/injection_order', 'ReedSyntheticController@fetchInjectionOrder');
+Route::post('create/reed/injection_order', 'ReedSyntheticController@createInjectionOrder');
 Route::get('index/reed/injection_verification', 'ReedSyntheticController@indexInjectionVerification');
 Route::get('fetch/reed/injection_picking_list', 'ReedSyntheticController@fetchInjectionPickingList');
 Route::post('fetch/reed/start_injection', 'ReedSyntheticController@fetchStartInjection');
 Route::post('fetch/reed/finish_injection', 'ReedSyntheticController@fetchFinishInjection');
 Route::post('scan/reed/injection_picking', 'ReedSyntheticController@scanInjectionPicking');
+Route::get('index/reed/approval/{location}/{order_id}/{employee_id}', 'ReedSyntheticController@indexApproval');
+Route::post('fetch/reed/submit_approval', 'ReedSyntheticController@fetchSubmitApproval');
+
+
+
 
 Route::get('index/reed/injection_resin_receive', 'ReedSyntheticController@indexInjectionResinReceive');
 Route::get('fetch/reed/injection_resin_receive', 'ReedSyntheticController@fetchInjectionResinReceive');
@@ -5210,3 +5231,17 @@ Route::group(['nav' => 'M33', 'middleware' => 'permission'], function(){
 
 	//End Server Room
 });
+
+
+// ----------------------------- WINDS -------------------------
+
+Route::get('winds', 'WindsController@index');
+Route::get('winds/fetch/process_list', 'WindsController@fetchProcess');
+Route::get('winds/index/description_item/{gmc}/{id_process}', 'WindsController@IndexItemDetails');
+Route::get('winds/master/fetch', 'WindsController@masterfetch');
+
+//-------------------------- HR ---------------------------
+Route::get('human_resource', 'HumanResourceController@IndexHr');
+Route::get('human_resource/get_employee', 'HumanResourceController@GetEmployee');
+Route::post('human_resource/add/uang_simpati', 'HumanResourceController@AddUangSimpati');
+Route::post('human_resource/add/uang_keluarga', 'HumanResourceController@AddUangKeluarga');

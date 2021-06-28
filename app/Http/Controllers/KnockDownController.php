@@ -233,7 +233,7 @@ class KnockDownController extends Controller{
 			$title = 'KD Mouthpiece';
 			$title_jp = '唄口KD';
 
-			return view('kd.index_kd', array(
+			return view('kd.index_kd_ending_stock', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'location' => $id,
@@ -2411,6 +2411,8 @@ class KnockDownController extends Controller{
 			$storage = "('WELDING') AND m.kd_name = 'BODY-BELL'";
 		}else if ($id == 'welding-keypost') {
 			$storage = "('WELDING') AND m.kd_name = 'KEY POST'";
+		}else if($id == 'mouthpiece-packed'){
+			$storage = "('MP') AND m.kd_name = 'MP'";
 		}
 
 		// $target = db::select("select target.material_number, target.material_description, sum(target.quantity ) as target from
@@ -4465,9 +4467,7 @@ class KnockDownController extends Controller{
 		}
 		return strtoupper($text);
 	}
-
-
-
-
+	
 }
+
 

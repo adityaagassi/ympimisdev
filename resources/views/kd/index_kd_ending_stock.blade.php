@@ -377,6 +377,8 @@
 			url = '{{ url("index/print_label_welding") }}'+'/'+kd_detail;
 		}else if(location == 'welding-keypost'){
 			url = '{{ url("index/print_label_welding") }}'+'/'+kd_detail;
+		}else if(location == 'mouthpiece-packed'){
+			url = '{{ url("index/print_label_mouthpiece") }}'+'/'+kd_detail;
 		}
 
 		newwindow = window.open(url, windowName, 'height=250,width=450');
@@ -405,6 +407,8 @@
 			url = '{{ url("fetch/kd_print_welding_body") }}';
 		}else if(location == 'welding-keypost'){
 			url = '{{ url("fetch/kd_print_welding_keypost") }}';
+		}else if(location == 'mouthpiece-packed'){
+			url = '{{ url("fetch/kd_print_mp") }}';
 		}
 
 		var data = {
