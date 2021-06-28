@@ -346,7 +346,7 @@
 				// if(jQuery.inArray(value.employee_id.toUpperCase(), result.employee) !== -1) {
 					var emp = value.employee_id;
 					if ($.inArray(emp.toUpperCase(), result.employee) >= 0) {
-						console.log('ada');
+						console.log('ada '+emp.toUpperCase());
 						body += "<tr>";
 						body += "<td>"+value.id+"</td>";
 						body += "<td>"+value.propose_date+"</td>";
@@ -406,6 +406,8 @@
 					body += "<td>"+((value.manager_point_1 * 40) + (value.manager_point_2 * 30) + (value.manager_point_3 * 30) )+"</td>";
 					body += '<td><button onClick="cekDetail(\''+value.id+'\')" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Details</button></td>';
 					body += "</tr>";
+				} else {
+					console.log('tidak ada '+emp.toUpperCase());
 				}
 			})
 
