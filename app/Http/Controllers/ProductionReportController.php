@@ -3436,7 +3436,21 @@ class ProductionReportController extends Controller
                         AND audit_guidances.deleted_at IS NULL 
                         AND audit_report_activities.`handling` = 'IK Tidak Digunakan' 
                         AND department_id = ".$key->id_department." 
-                    ) AS obsolete 
+                    ) AS obsolete,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`handling` = 'Revisi QC Kouteihyo' 
+                        AND department_id = ".$key->id_department." 
+                    ) AS revisi_qc
                 FROM
                     weekly_calendars 
                 WHERE
@@ -3556,7 +3570,21 @@ class ProductionReportController extends Controller
                         AND audit_guidances.deleted_at IS NULL 
                         AND audit_report_activities.`handling` = 'IK Tidak Digunakan' 
                         ".$department_id."
-                    ) AS obsolete 
+                    ) AS obsolete,
+                    (
+                    SELECT
+                        count( audit_guidances.id ) 
+                    FROM
+                        audit_guidances
+                        LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id
+                        LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    WHERE
+                        audit_guidances.`month` = DATE_FORMAT( week_date, '%Y-%m' ) 
+                        AND `status` = 'Sudah Dikerjakan' 
+                        AND audit_guidances.deleted_at IS NULL 
+                        AND audit_report_activities.`handling` = 'Revisi QC Kouteihyo' 
+                        ".$department_id."
+                    ) AS revisi_qc 
                 FROM
                     weekly_calendars 
                 WHERE
@@ -3772,6 +3800,46 @@ class ProductionReportController extends Controller
                     array_push($datass, $dd);
                 }
             }elseif ($kondisi == 'IK Tidak Digunakan') {
+                $datas = DB::SELECT("SELECT
+                    *,audit_guidances.id as id_guide
+                FROM
+                    audit_guidances
+                    LEFT JOIN activity_lists ON activity_lists.id = audit_guidances.activity_list_id 
+                    LEFT JOIN departments ON departments.id = activity_lists.department_id 
+                    LEFT JOIN audit_report_activities ON audit_report_activities.audit_guidance_id = audit_guidances.id 
+                WHERE 
+                    `month` = '".$month."' 
+                    AND `handling` = '".$kondisi."'
+                    and audit_guidances.deleted_at is null
+                    ".$department_id."");
+
+                foreach ($datas as $key) {
+                    $dd = DB::SELECT("SELECT
+                        department,
+                        section,
+                        subsection,
+                        audit_report_activities.date,
+                        audit_guidances.no_dokumen,
+                        audit_guidances.nama_dokumen,
+                        audit_guidances.month,
+                        audit_report_activities.kesesuaian_aktual_proses,
+                        audit_report_activities.kesesuaian_qc_kouteihyo,
+                        audit_report_activities.kelengkapan_point_safety,
+                        audit_report_activities.tindakan_perbaikan,
+                        audit_report_activities.target,
+                        audit_report_activities.operator,
+                        audit_report_activities.leader,
+                        audit_report_activities.handling,
+                        audit_report_activities.condition,
+                        audit_report_activities.activity_list_id
+                    FROM
+                        audit_report_activities
+                        JOIN audit_guidances ON audit_guidances.id = audit_report_activities.audit_guidance_id 
+                    WHERE
+                        audit_guidance_id = '".$key->id_guide."'");
+                    array_push($datass, $dd);
+                }
+            }elseif ($kondisi == 'Revisi QC Kouteihyo') {
                 $datas = DB::SELECT("SELECT
                     *,audit_guidances.id as id_guide
                 FROM

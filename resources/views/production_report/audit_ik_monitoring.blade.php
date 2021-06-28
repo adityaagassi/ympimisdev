@@ -372,6 +372,7 @@
           var categories = [];
           var training_ulang = [];
           var revisi_ik = [];
+          var revisi_qc = [];
           var jig = [];
           var obsolete = [];
 
@@ -379,6 +380,7 @@
             categories.push(result.resume_penanganan[i].months);
             training_ulang.push({y:parseInt(result.resume_penanganan[i].training_ulang),key:result.resume_penanganan[i].month});
             revisi_ik.push({y:parseInt(result.resume_penanganan[i].revisi_ik),key:result.resume_penanganan[i].month});
+            revisi_qc.push({y:parseInt(result.resume_penanganan[i].revisi_qc),key:result.resume_penanganan[i].month});
             jig.push({y:parseInt(result.resume_penanganan[i].jig),key:result.resume_penanganan[i].month});
             obsolete.push({y:parseInt(result.resume_penanganan[i].obsolete),key:result.resume_penanganan[i].month});
           }
@@ -492,6 +494,12 @@
               name: 'Revisi IK',
               data: revisi_ik,
               color:'#0061a6',
+              stacking:true
+            },
+            {
+              name: 'Revisi QC Kouteihyo',
+              data: revisi_qc,
+              color:'#a19d30',
               stacking:true
             },
             {
@@ -614,6 +622,20 @@
                     }
                   }
                 }
+
+              tableresume += '</tr>';
+              tableresume += '<tr>';
+                tableresume += '<td style="border: 1px solid white;color: #8abbff">QC工程表の改定</td>';
+                tableresume += '<td style="border: 1px solid white">Revisi QC Kouteihyo</td>';
+                for(var j = 0; j< result.resume_all.length;j++){
+                  if (result.resume_all[j][0].department_id == result.department[i].id_department) {
+                    for(var k = 0; k< result.resume_all[j].length;k++){
+                      tableresume += '<td style="border: 1px solid white;text-align:center">'+result.resume_all[j][k].revisi_qc+'</td>';
+                      total[k] = total[k] + parseInt(result.resume_all[j][k].revisi_qc);
+                    }
+                  }
+                }
+
               tableresume += '</tr>';
               tableresume += '<tr>';
                 tableresume += '<td style="border: 1px solid white;color: #8abbff">治具修正・作成等（治具摩耗、適切な治具を使用していなかった等の場合</td>';
