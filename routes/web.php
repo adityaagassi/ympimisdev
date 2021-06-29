@@ -5243,5 +5243,7 @@ Route::get('winds/master/fetch', 'WindsController@masterfetch');
 //-------------------------- HR ---------------------------
 Route::get('human_resource', 'HumanResourceController@IndexHr');
 Route::get('human_resource/get_employee', 'HumanResourceController@GetEmployee');
+Route::get('human_resource/get_section', 'HumanResourceController@GetSection');
+Route::post('human_resource/add/uang_pekerjaan', 'HumanResourceController@AddUangPekerjaan');
 Route::post('human_resource/add/uang_simpati', 'HumanResourceController@AddUangSimpati');
 Route::post('human_resource/add/uang_keluarga', 'HumanResourceController@AddUangKeluarga');
