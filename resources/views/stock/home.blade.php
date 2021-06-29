@@ -411,7 +411,7 @@
 		$('#description').val("");
 		$('#category').val("");
 		$('#quantity').val(0);
-	}
+	} 
 
 	function fetchResume(type){
 		$('#location').val($("#select_loc").val());
