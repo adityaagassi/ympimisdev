@@ -659,7 +659,6 @@ class ProductionReportController extends Controller
                 AND department_id = '".$id."' 
                 AND leader_dept = '".$dataleader."' 
                 AND activity_lists.frequency = 'Daily' 
-                                AND activity_lists.activity_name is not null
             GROUP BY
             leader_dept 
             ) daily");
