@@ -2158,6 +2158,15 @@ public function randomLiveCooking(Request $request)
 		$dateFrom = $request->get('dateFromRandom');
 		$dateTo = $request->get('dateToRandom');
 
+		if ($periode != date('Y-m')) {
+			$empys = Employee::get();
+			for ($i=0; $i < count($empys); $i++) { 
+				$empedit = Employee::where('id',$empys[$i]->id)->first();
+				$empedit->live_cooking = 0;
+				$empedit->save();
+			}
+		}
+
 		if ($dateFrom <= date('Y-m-d')) {
 			$response = array(
 				'status' => false,
