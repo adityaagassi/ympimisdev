@@ -28,6 +28,7 @@ use App\StocktakingDailyList;
 use App\StocktakingDailyLog;
 use App\StocktakingSilverList;
 use App\StocktakingSilverLog;
+use App\StocktakingReviseLog;
 use App\TransactionTransfer;
 use App\ErrorLog;
 use Carbon\Carbon;
@@ -5230,6 +5231,20 @@ s.id ASC");
 		}
 
 		try {
+
+			$log = new StocktakingReviseLog([
+				'st_id' => $material->id,
+				'location' => $material->location,
+				'store' => $material->store,
+				'sub_store' => $material->sub_store,
+				'material_number' => $material->material_number,
+				'category' => $material->category,
+				'before' => $material->final_count,
+				'final_count' => $final_count,
+				'revised_by' => Auth::user()->username,
+				'reason' => $reason
+			]);
+			$log->save();
 
 			$update = StocktakingNewList::where('id', $ids[1])
 			->update([
