@@ -71,16 +71,16 @@ class LiveCookingCommand extends Command
 
         $now = date('Y-m-d');
 
-        if ($now == date('Y-m-01')) {
-            $emp = Employee::where('end_date',null)->where('live_cooking',1)->get();
-            if (count($emp) > 0) {
-                foreach ($emp as $key) {
-                    $emp_edit = Employee::where('id',$key->id)->first();
-                    $emp_edit->live_cooking = 0;
-                    $emp_edit->save();
-                }
-            }
-        }
+        // if ($now == date('Y-m-01')) {
+        //     $emp = Employee::where('end_date',null)->where('live_cooking',1)->get();
+        //     if (count($emp) > 0) {
+        //         foreach ($emp as $key) {
+        //             $emp_edit = Employee::where('id',$key->id)->first();
+        //             $emp_edit->live_cooking = 0;
+        //             $emp_edit->save();
+        //         }
+        //     }
+        // }
 
         $live_cooking = DB::SELECT("SELECT
           *,

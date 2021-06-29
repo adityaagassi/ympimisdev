@@ -142,7 +142,7 @@
 						<a href="{{url('home')}}" class="btn btn-danger ">
 							<i class="fa fa-arrow-left"></i> Back
 						</a>
-						<?php if ($role == 'GA' || $role == 'MIS'): ?>
+						<?php if ($user == 'PI1201002' || $role == 'MIS'): ?>
 							<button class="btn btn-info pull-right" style="margin-left: 5px; width: 10%;" onclick="modalUploadMenu();"><i class="fa fa-upload"></i> Upload Menu</button>
 							<button class="btn btn-warning pull-right" style="margin-left: 5px; width: 10%;" onclick="modalRandomize();"><i class="fa fa-random"></i> Randomize</button>
 							<button class="btn btn-success pull-right" style="margin-left: 5px; width: 10%;" onclick="modalReport();"><i class="fa fa-file-text-o"></i> Report</button>
@@ -259,6 +259,7 @@
 						<input type="hidden" id="total_day" value="{{ $total_day }}">
 						<input type="hidden" id="month_now" value="{{ $month_now }}">
 						<input type="hidden" id="role" value="{{ $role }}">
+						<input type="hidden" id="user" value="{{ $user }}">
 						<div class="col-md-10 col-md-offset-1" style="padding-bottom: 5px;">
 							<div class="form-group">
 								<label for="" class="col-sm-3 control-label">Employee<span class="text-red"> :</span></label>
@@ -438,7 +439,7 @@
 								<th style="width: 5%;">Sub Group</th>
 								<th style="width: 1%;">Date</th>
 								<th style="width: 1%;">Menu</th>
-								<?php if ($role == 'GA' || $role == 'MIS'): ?>
+								<?php if ($user == 'PI1201002' || $role == 'MIS'): ?>
 									<th style="width: 1%;">Additional</th>
 									<th style="width: 1%;">Action</th>
 								<?php endif ?>
@@ -692,7 +693,7 @@
 		if(cat == 'new'){
 			// if ($('#total_day').val() <= 7 && $('#month_now').val() != d.split('-')[0]+'-'+d.split('-')[1] && d > $("#nowDate").val() && id != 'Libur 休日') {
 			if (id != 'Libur 休日') {
-				if ($('#role').val() == 'GA' || $('#role').val() == 'MIS') {
+				if ($('#user').val() == 'PI1201002' || $('#role').val() == 'MIS') {
 					$('#addDateGa').val(d);
 					$('#addDateGa').prop('disabled', true);
 
@@ -809,7 +810,7 @@
 					bodyDetail += '<td>'+value.due_date+'</td>';
 					bodyDetail += '<td>'+value.menu_name+'</td>';
 					var type = 'editForm';
-					if ($('#role').val() == 'GA' || $('#role').val() == 'MIS') {
+					if ($('#user').val() == 'PI1201002' || $('#role').val() == 'MIS') {
 						bodyDetail += '<td>'+(value.additional || "")+'</td>';
 						if (value.due_date >= value.date_now) {
 							bodyDetail += '<td><button class="btn btn-warning" onclick="openModalEdit(\''+value.id_live+'\',\''+value.employee_id+'\',\''+value.due_date+'\',\''+type+'\')"><i class="fa fa-edit"></i> Edit</button></td>';
