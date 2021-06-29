@@ -406,11 +406,20 @@
 			origin:origin
 		}
 
+		if ($('#origin').val() == 'QA') {
+			var colorsng = '#3f51b5';
+		}else if($('#origin').val() == 'Production'){
+			var colorsng = '#299123';
+		}else{
+			var colorsng = '#8a3fb5';
+		}
+
 		$.get('{{ url("fetch/assembly/ng_rate") }}', data, function(result, status, xhr) {
 			if(result.status){
 
 				var total = 0;
 				var title = result.title;
+				var title = $('#origin').val();
 				$('#loc').html('<b style="color:white">'+ title +'</b>');
 
 				for(var i = 0; i < result.data.length; i++){
@@ -604,7 +613,7 @@
 						data: series,
 						name: 'Total NG',
 						colorByPoint: false,
-						color: "#3f51b5",
+						color: colorsng,
 						animation: false,
 						dataLabels: {
 							enabled: true,
@@ -781,7 +790,7 @@
 						data: series,
 						name: 'Total NG',
 						colorByPoint: false,
-						color: "#3f51b5",
+						color: colorsng,
 						animation: false
 					},
 					]
