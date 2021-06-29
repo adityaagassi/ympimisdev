@@ -3732,6 +3732,7 @@ public function fetchSerialNumberReport($process,Request $request)
 				GROUP BY
 				a.serial_number,
 				a.model,
+				assembly_logs.model,
 				assembly_logs.created_at");
 
 			$report_visual1 = DB::SELECT("SELECT
@@ -3811,6 +3812,7 @@ public function fetchSerialNumberReport($process,Request $request)
 				GROUP BY
 				a.serial_number,
 				a.model,
+				assembly_logs.model,
 				assembly_logs.created_at");
 
 			$report_visual2 = DB::SELECT("SELECT
