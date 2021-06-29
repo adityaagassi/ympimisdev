@@ -664,6 +664,10 @@
                                 <i class="fa fa-caret-right"></i> Report Kaizen Reward (改善リポートのリワード)
                             </a>
                             <br>
+                            <a href="{{ url("human_resource") }}">
+                                <i class="fa fa-caret-right"></i> Allowance Application Form (手当申請書)
+                            </a>
+                            <br>
                         </td>
                     </tr>
                     {{--  <tr>
