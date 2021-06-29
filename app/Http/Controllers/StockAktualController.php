@@ -45,6 +45,8 @@ class StockAktualController extends Controller
     public function IndexMonitoring(){
         $reason = db::select('SELECT reason, reason_name FROM scrap_reasons ORDER BY reason ASC');
         $storage_location = db::select('SELECT storage_location FROM storage_locations');
+        $store = db::select("SELECT DISTINCT store from `data_materials` ORDER BY store ASC");
+
         // dd($storage_location);
 
 
@@ -53,6 +55,7 @@ class StockAktualController extends Controller
             'title' => 'Monitoring Stock',
             'title_jp' => 'スクラップ材料',
             'storage_locations' => $storage_location,
+            'stores' => $store,
             'category_reason' => $this->category_reason,
             'reicive' => $this->reicive,
             'category' => $this->category
@@ -62,8 +65,7 @@ class StockAktualController extends Controller
     public function ResumeStockAktual(Request $request){
         try {
             $loc = $request->get('loc');
-            // $date_from = $request->get('date_from');
-            // $date_to = $request->get('date_to');
+            $date_stock = $request->get('date_stock');
             $filter = $request->get('filter');
 
             if ($filter != null && $filter == 'lebih_besar') {
@@ -72,27 +74,20 @@ class StockAktualController extends Controller
             else if($filter != null && $filter == 'kurang_dari'){
                 $ftr = "ROUND((Actual/Ideal)*100,2) > 100";
             } 
-            // if ($date_from == "") {
-            //      if ($date_to == "") {
-            //           $first = "DATE_FORMAT( NOW(), '%Y-%m-01' ) ";
-            //           $last = "LAST_DAY(NOW())";
-            //      }else{
-            //           $first = "DATE_FORMAT( NOW(), '%Y-%m-01' ) ";
-            //           $last = "'".$date_to."'";
-            //      }
-            // }else{
-            //      if ($date_to == "") {
-            //           $first = "'".$date_from."'";
-            //           $last = "LAST_DAY(NOW())";
-            //      }else{
-            //           $first = "'".$date_from."'";
-            //           $last = "'".$date_to."'";
-            //      }
-            // }
 
-            if (($filter) == null) {
+            if (($filter) == null && ($date_stock) == null) {
             $resumes = DB::SELECT("select id, store, category, material_number, material_description, ideal, actual, location, ROUND((actual/ideal)*100,2) as bagi from data_materials WHERE location = '".$loc."' ORDER BY bagi DESC
                 ");
+            }
+            else if (($date_stock) != null) {
+                if (($filter) == null) {
+                $resumes = DB::SELECT("select id, store, category, material_number, material_description, ideal, actual, location, ROUND((actual/ideal)*100,2) as bagi from log_data_materials WHERE location = '".$loc."'
+                AND DATE_FORMAT( updated_at, '%Y-%m-%d' ) = '".$date_stock."'");
+                }else{
+                $resumes = DB::SELECT("select id, store, category, material_number, material_description, ideal, actual, location, ROUND((actual/ideal)*100,2) as bagi from log_data_materials WHERE location = '".$loc."'
+                AND DATE_FORMAT( updated_at, '%Y-%m-%d' ) = '".$date_stock."'
+                AND ".$ftr." order by bagi desc, material_number asc");
+                }
             }
             else{
             $resumes = DB::SELECT("select id, store, category, material_number, material_description, ideal, actual, location, ROUND((actual/ideal)*100,2) as bagi from data_materials WHERE location = '".$loc."'
@@ -119,48 +114,76 @@ class StockAktualController extends Controller
       {
           $today     = date("Y-m-d");
           $tahun = date('Y');
-          $dateto = $request->get('dateto');
+          $store = $request->get('store');
           $location = $request->get('loc');
-          if ($dateto != "") {
-            // $data = db::select("            
-            // SELECT
-            //     material_number,
-            //     location,
-            //     ideal as Ideal,
-            //     actual as Actual
-            // FROM
-            //     data_materials
-            // WHERE DATE_FORMAT(created_at, '%Y-%m-%d') = '".$dateto."'");
-
+          if ($store != "") {
             $data = db::select("
             SELECT
-            material_number,
-            location,
-            ideal as Ideal,
-            actual as Actual,
-            ROUND((Actual/Ideal)*100,2) as bagi 
+                material_number,
+                location,
+                ideal AS Ideal,
+                actual AS Actual,
+                ROUND(( Actual / Ideal )* 100, 2 ) AS bagi 
             FROM
-            data_materials 
-            WHERE location = '".$location."'
-            and DATE_FORMAT(created_at, '%Y-%m-%d') = '".$dateto."'
-            and ROUND((Actual/Ideal)*100,2) < 100
-            order by actual desc
-            limit 10
+                log_data_materials 
+            WHERE
+                location = '".$location."' 
+                AND store = '".$store."' 
+                AND ROUND(( Actual / Ideal )* 100, 2 ) < 100 
+            ORDER BY
+                actual DESC 
+                LIMIT 10
             ");
             $data1 = db::select("
             SELECT
-            material_number,
-            location,
-            ideal as Ideal,
-            actual as Actual,
-            ROUND((Actual/Ideal)*100,2) as bagi 
+                material_number,
+                location,
+                ideal AS Ideal,
+                actual AS Actual,
+                ROUND(( Actual / Ideal )* 100, 2 ) AS bagi 
             FROM
-            data_materials 
-            WHERE location = '".$location."'
-            and DATE_FORMAT(created_at, '%Y-%m-%d') = '".$dateto."'
-            and ROUND((Actual/Ideal)*100,2) > 100
-            order by actual desc
-            limit 10
+                data_materials 
+            WHERE
+                location = '".$location."' 
+                AND store = '".$store."' 
+                AND ROUND(( Actual / Ideal )* 100, 2 ) < 100 
+            ORDER BY
+                actual DESC 
+                LIMIT 10
+            ");
+            $data2 = db::select("
+            SELECT
+                material_number,
+                location,
+                ideal AS Ideal,
+                actual AS Actual,
+                ROUND(( Actual / Ideal )* 100, 2 ) AS bagi 
+            FROM
+                log_data_materials 
+            WHERE
+                location = '".$location."' 
+                AND store = '".$store."' 
+                AND ROUND(( Actual / Ideal )* 100, 2 ) > 100 
+            ORDER BY
+                actual DESC 
+                LIMIT 10
+            ");
+            $data3 = db::select("
+            SELECT
+                material_number,
+                location,
+                ideal AS Ideal,
+                actual AS Actual,
+                ROUND(( Actual / Ideal )* 100, 2 ) AS bagi 
+            FROM
+                data_materials 
+            WHERE
+                location = '".$location."' 
+                AND store = '".$store."' 
+                AND ROUND(( Actual / Ideal )* 100, 2 ) > 100 
+            ORDER BY
+                actual DESC 
+                LIMIT 10
             ");
           }else{
             $data = db::select("
@@ -171,7 +194,7 @@ class StockAktualController extends Controller
             actual as Actual,
             ROUND((Actual/Ideal)*100,2) as bagi 
             FROM
-            data_materials 
+            log_data_materials 
             WHERE
             location = '".$location."'
             and ROUND((Actual/Ideal)*100,2) < 100
@@ -189,11 +212,40 @@ class StockAktualController extends Controller
             data_materials 
             WHERE
             location = '".$location."'
+            and ROUND((Actual/Ideal)*100,2) < 100
+            order by bagi desc, material_number asc
+            limit 10
+            ");
+            $data2 = db::select("
+            SELECT
+            material_number,
+            location,
+            ideal as Ideal,
+            actual as Actual,
+            ROUND((Actual/Ideal)*100,2) as bagi 
+            FROM
+            log_data_materials 
+            WHERE
+            location = '".$location."'
             and ROUND((Actual/Ideal)*100,2) > 100
             order by bagi desc, material_number asc
             limit 10
             ");
-            // dd($data);
+            $data3 = db::select("
+            SELECT
+            material_number,
+            location,
+            ideal as Ideal,
+            actual as Actual,
+            ROUND((Actual/Ideal)*100,2) as bagi 
+            FROM
+            data_materials 
+            WHERE
+            location = '".$location."'
+            and ROUND((Actual/Ideal)*100,2) > 100
+            order by bagi desc, material_number asc
+            limit 10
+            ");
           }
 
           
@@ -201,8 +253,10 @@ class StockAktualController extends Controller
             'status' => true,
             'datas' => $data,
             'datas1' => $data1,
+            'datas2' => $data2,
+            'datas3' => $data3,
             'tahun' => $tahun,
-            'dateto' => $dateto,
+            'store' => $store,
             'location' => $location
         );
 
@@ -233,14 +287,50 @@ class StockAktualController extends Controller
         }else{
             $lists = db::select("SELECT id, store, category, material_number, material_description, ideal, actual, location from `data_materials` where location = '".$loc."' and store = '".$store."'");
         }
+
+        // $update = DataMaterials::find($id);
+        // var_dump($update);
         
 
         $response = array(
             'status' => true,
             'lists' => $lists,
             'location' => $loc
+            // 'updates' => $update
         );
         return Response::json($response);
+    }
+
+    public function EditListStock(Request $request){
+
+        $update = DataMaterials::find($request->get('id'));
+        // var_dump($update);
+        
+
+        $response = array(
+            'status' => true,
+            'updates' => $update
+        );
+        return Response::json($response);
+    }
+
+    public function UpdateStockIdeal(Request $request){
+            $id = $request->get('id');
+
+            $stock = DataMaterials::where('id',$id)->first();
+            $stock->ideal = $request->get('update_stock_ideal');
+
+            $stock->save();
+
+            $response = array(
+            'status' => true,
+            'stock' => $stock
+            // 'updates' => $update
+        );
+        return Response::json($response);
+
+
+        // return redirect('/stock/ideal/stock')->with('status', 'New Karyawan Mutasi has been created.')->with('page', 'Stock');
     }
 
     public function UpdateStock(Request $request){
