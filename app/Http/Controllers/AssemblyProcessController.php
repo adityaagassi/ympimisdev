@@ -3660,10 +3660,11 @@ public function fetchSerialNumberReport($process,Request $request)
 			$report_fungsi = DB::SELECT("SELECT
 				a.serial_number,
 				a.model,
+				assembly_logs.model AS model_packing,
 				GROUP_CONCAT( a.op_qa_fungsi SEPARATOR '' ) AS op_qa_fungsi,
 				(
 				SELECT
-				GROUP_CONCAT( ng_name, '=', ongko ) 
+				GROUP_CONCAT( ng_name, '=', ongko, '_', created_at ) 
 				FROM
 				assembly_ng_logs 
 				WHERE
@@ -3736,6 +3737,7 @@ public function fetchSerialNumberReport($process,Request $request)
 			$report_visual1 = DB::SELECT("SELECT
 				a.serial_number,
 				a.model,
+				assembly_logs.model AS model_packing,
 				GROUP_CONCAT( a.op_qa_visual_1 SEPARATOR '' ) AS op_qa_visual1,
 				(
 				SELECT
@@ -3749,7 +3751,7 @@ public function fetchSerialNumberReport($process,Request $request)
 				) AS ganti_kunci,
 				(
 				SELECT
-				GROUP_CONCAT( ng_name, '=', ongko ) 
+				GROUP_CONCAT( ng_name, '=', ongko, '_', created_at ) 
 				FROM
 				assembly_ng_logs 
 				WHERE
@@ -3814,6 +3816,7 @@ public function fetchSerialNumberReport($process,Request $request)
 			$report_visual2 = DB::SELECT("SELECT
 				a.serial_number,
 				a.model,
+				assembly_logs.model AS model_packing,
 				GROUP_CONCAT( a.op_qa_visual_2 SEPARATOR '' ) AS op_qa_visual2,
 				(
 				SELECT
@@ -3827,7 +3830,7 @@ public function fetchSerialNumberReport($process,Request $request)
 				) AS ganti_kunci,
 				(
 				SELECT
-				GROUP_CONCAT( ng_name, '=', ongko ) 
+				GROUP_CONCAT( ng_name, '=', ongko, '_', created_at ) 
 				FROM
 				assembly_ng_logs 
 				WHERE

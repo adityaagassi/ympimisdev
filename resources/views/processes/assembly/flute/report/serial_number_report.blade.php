@@ -112,10 +112,12 @@ thead input {
 									<tr>
 										<th>Serial Number</th>
 										<th>Model</th>
+										<th>Model Packing</th>
 										<th>Cek Fungsi Produksi</th>
 										<th>Operator QA Fungsi</th>
 										<th>Result QA Fungsi</th>
 										<th>NG QA Fungsi</th>
+										<th>Inputed At</th>
 										<th>Ganti Kunci</th>
 										<th>Packing Date</th>
 										<th>Packing Time</th>
@@ -133,10 +135,12 @@ thead input {
 									<tr>
 										<th>Serial Number</th>
 										<th>Model</th>
+										<th>Model Packing</th>
 										<th>Cek Visual Produksi</th>
 										<th>Operator QA Visual 1</th>
 										<th>Result QA Visual 1</th>
 										<th>NG QA Visual 1</th>
+										<th>Inputed At</th>
 										<th>Ganti Kunci</th>
 										<th>Packing Date</th>
 										<th>Packing Time</th>
@@ -154,10 +158,12 @@ thead input {
 									<tr>
 										<th>Serial Number</th>
 										<th>Model</th>
+										<th>Model Packing</th>
 										<th>Cek Visual Produksi</th>
 										<th>Operator QA Visual 2</th>
 										<th>Result QA Visual 2</th>
 										<th>NG QA Visual 2</th>
+										<th>Inputed At</th>
 										<th>Ganti Kunci</th>
 										<th>Packing Date</th>
 										<th>Packing Time</th>
@@ -248,9 +254,11 @@ thead input {
 						tableDataFungsi += '<tr>';
 						tableDataFungsi += '<td>'+ value.serial_number +'</td>';
 						tableDataFungsi += '<td>'+ value.model +'</td>';
+						tableDataFungsi += '<td>'+ value.model_packing +'</td>';
 						tableDataFungsi += '<td>'+ value.operator_fungsi.split(',').join('<br>') +'</td>';
 						tableDataFungsi += '<td>'+ value.op_qa_fungsi.split(',').join('<br>') +'</td>';
 						tableDataFungsi += '<td><span class="label label-success">OK</span></td>';
+						tableDataFungsi += '<td></td>';
 						tableDataFungsi += '<td></td>';
 						if (value.ganti_kunci == null) {
 							tableDataFungsi += '<td></td>';
@@ -265,10 +273,12 @@ thead input {
 							tableDataFungsi += '<tr>';
 							tableDataFungsi += '<td>'+ value.serial_number +'</td>';
 							tableDataFungsi += '<td>'+ value.model +'</td>';
+							tableDataFungsi += '<td>'+ value.model_packing +'</td>';
 							tableDataFungsi += '<td>'+ value.operator_fungsi.split(',').join('<br>') +'</td>';
 							tableDataFungsi += '<td>'+ value.op_qa_fungsi.split(',').join('<br>') +'</td>';
 							tableDataFungsi += '<td><span class="label label-danger">NG</span></td>';
-							tableDataFungsi += '<td>'+ng_fungsi[i]+'</td>';
+							tableDataFungsi += '<td>'+ng_fungsi[i].split('_')[0]+'</td>';
+							tableDataFungsi += '<td>'+ng_fungsi[i].split('_')[1]+'</td>';
 							if (value.ganti_kunci == null) {
 								tableDataFungsi += '<td></td>';
 							}else{
@@ -345,9 +355,11 @@ thead input {
 						tableDataVisual1 += '<tr>';
 						tableDataVisual1 += '<td>'+ value.serial_number +'</td>';
 						tableDataVisual1 += '<td>'+ value.model +'</td>';
+						tableDataVisual1 += '<td>'+ value.model_packing +'</td>';
 						tableDataVisual1 += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
 						tableDataVisual1 += '<td>'+ value.op_qa_visual1.split(',').join('<br>') +'</td>';
 						tableDataVisual1 += '<td><span class="label label-success">OK</span></td>';
+						tableDataVisual1 += '<td></td>';
 						tableDataVisual1 += '<td></td>';
 						if (value.ganti_kunci == null) {
 							tableDataVisual1 += '<td></td>';
@@ -362,10 +374,12 @@ thead input {
 							tableDataVisual1 += '<tr>';
 							tableDataVisual1 += '<td>'+ value.serial_number +'</td>';
 							tableDataVisual1 += '<td>'+ value.model +'</td>';
+							tableDataVisual1 += '<td>'+ value.model_packing +'</td>';
 							tableDataVisual1 += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
 							tableDataVisual1 += '<td>'+ value.op_qa_visual1.split(',').join('<br>') +'</td>';
 							tableDataVisual1 += '<td><span class="label label-danger">NG</span></td>';
-							tableDataVisual1 += '<td>'+ng_visual1[i]+'</td>';
+							tableDataVisual1 += '<td>'+ng_visual1[i].split('_')[0]+'</td>';
+							tableDataVisual1 += '<td>'+ng_visual1[i].split('_')[1]+'</td>';
 							if (value.ganti_kunci == null) {
 								tableDataVisual1 += '<td></td>';
 							}else{
@@ -442,9 +456,11 @@ thead input {
 						tableDataVisual2 += '<tr>';
 						tableDataVisual2 += '<td>'+ value.serial_number +'</td>';
 						tableDataVisual2 += '<td>'+ value.model +'</td>';
+						tableDataVisual2 += '<td>'+ value.model_packing +'</td>';
 						tableDataVisual2 += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
 						tableDataVisual2 += '<td>'+ value.op_qa_visual2.split(',').join('<br>') +'</td>';
 						tableDataVisual2 += '<td><span class="label label-success">OK</span></td>';
+						tableDataVisual2 += '<td></td>';
 						tableDataVisual2 += '<td></td>';
 						if (value.ganti_kunci == null) {
 							tableDataVisual2 += '<td></td>';
@@ -459,10 +475,12 @@ thead input {
 							tableDataVisual2 += '<tr>';
 							tableDataVisual2 += '<td>'+ value.serial_number +'</td>';
 							tableDataVisual2 += '<td>'+ value.model +'</td>';
+							tableDataVisual2 += '<td>'+ value.model_packing +'</td>';
 							tableDataVisual2 += '<td>'+ value.operator_visual.split(',').join('<br>')+'</td>';
 							tableDataVisual2 += '<td>'+ value.op_qa_visual2.split(',').join('<br>') +'</td>';
 							tableDataVisual2 += '<td><span class="label label-danger">NG</span></td>';
-							tableDataVisual2 += '<td>'+ng_visual2[i]+'</td>';
+							tableDataVisual2 += '<td>'+ng_visual2[i].split('_')[0]+'</td>';
+							tableDataVisual2 += '<td>'+ng_visual2[i].split('_')[1]+'</td>';
 							if (value.ganti_kunci == null) {
 								tableDataVisual2 += '<td></td>';
 							}else{
