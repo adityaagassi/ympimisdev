@@ -35,7 +35,7 @@ class AuditController extends Controller
 		}      
 		$this->middleware('auth');
 
-		$this->location = ['Assembly','Accounting','Body Process','Exim','Material Process','Surface Treatment','Educational Instrument','Standardization','QA Process','Chemical Process Control','Human Resources','General Affairs','Workshop and Maintenance Molding','Production Engineering','Maintenance','Procurement','Production Control','Warehouse Material','Warehouse Finished Goods','Welding Process','Case Tanpo CL Body 3D Room'];
+		$this->location = ['Assembly','Accounting','Body Process','Exim','Material Process','Surface Treatment','Educational Instrument','Standardization','QA Process','Chemical Process Control','Human Resources','General Affairs','Workshop and Maintenance Molding','Production Engineering','Maintenance','Procurement','Production Control','Warehouse Material','Warehouse Finished Goods','Welding Process','Case Tanpo CL Body 3D Room', 'Halte dan Trotoar','Kantin dan OMI', 'Area Parkir Motor Area', 'Ceklog LCQ – Plating', 'Area Ceklog Buffing Area', 'Ceklog Assy – Soldering', 'Area Ceklog Bpro – Pianica', 'Area Lobby dan Office', 'Area Ceklog Recorder', 'Area Ceklog Key Part Process'];
 
     $this->point_sup = [
       'Jalan - Lantai - Tempat Kerja - Tembok - Atap', 
