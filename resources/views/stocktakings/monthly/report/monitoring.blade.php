@@ -311,7 +311,7 @@
 
 				filledList();
 				auditedList();	
-				// variance();
+				variance();
 
 				$('#modalMonth').modal('hide');
 
