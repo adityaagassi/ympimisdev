@@ -147,7 +147,7 @@
 				<div class="col-xs-12">
 					<div class="col-md-3" style="padding:0">
 						<div class="form-group">
-							<label style="color:white">Pilih Tanggal Terima</label>
+							<label style="color:white">Date From</label>
 							<div class="input-group date">
 								<div class="input-group-addon">
 									<i class="fa fa-calendar"></i>
@@ -156,7 +156,17 @@
 							</div>
 						</div>
 					</div>
-					
+					<div class="col-md-3" >
+						<div class="form-group">
+							<label style="color:white">Date To</label>
+							<div class="input-group date">
+								<div class="input-group-addon">
+									<i class="fa fa-calendar"></i>
+								</div>
+								<input type="text" class="form-control pull-right" id="tanggal_ke" name="tanggal_ke" onchange="fetchTable()">
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -205,6 +215,12 @@
 		$('#confirm').hide();
 
 		$('#tanggal').datepicker({
+        	autoclose: true,
+        	todayHighlight: true,
+      		format: "yyyy-mm-dd"
+        });
+
+        $('#tanggal_ke').datepicker({
         	autoclose: true,
         	todayHighlight: true,
       		format: "yyyy-mm-dd"
@@ -483,9 +499,11 @@
 		$('#itemtable').DataTable().destroy();
 
 		var tanggal = $('#tanggal').val();
+		var tanggal_ke = $('#tanggal_ke').val();
 
 		var data = {
-			tanggal:tanggal
+			tanggal:tanggal,
+			tanggal_ke:tanggal_ke
 		}
 
 		var table = $('#itemtable').DataTable({
