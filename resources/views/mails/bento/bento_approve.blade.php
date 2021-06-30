@@ -106,7 +106,7 @@
 	</table>
 	<br>
 	<br>
-	Last order one day before. Last change on due date before 09:00.
+	Last order & last change one day before.
 	<br>
 	注文は遅くても前日となります。注文変更したい場合は遅くても当日の午前9時です。
 	<br>

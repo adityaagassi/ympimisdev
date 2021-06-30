@@ -3659,7 +3659,8 @@ public function fetchSerialNumberReport($process,Request $request)
 
 			$report_fungsi = DB::SELECT("SELECT
 				a.serial_number,
-				a.model,
+				a.model AS model_stamp,
+				stamp.model AS model,
 				assembly_logs.model AS model_packing,
 				GROUP_CONCAT( a.op_qa_fungsi SEPARATOR '' ) AS op_qa_fungsi,
 				(
@@ -3710,7 +3711,7 @@ public function fetchSerialNumberReport($process,Request $request)
 				CONCAT(
 				asl.operator_id,
 				'<br>',
-				SUBSTRING(employee_syncs.name,1,14),'...')) AS op_qa_fungsi,
+				SUBSTRING(employee_syncs.name,1,14),'...','_',asl.created_at)) AS op_qa_fungsi,
 				GROUP_CONCAT(
 				DISTINCT (
 				DATE( asl.created_at ))) AS created 
@@ -3725,6 +3726,8 @@ public function fetchSerialNumberReport($process,Request $request)
 				) a 
 				LEFT JOIN assembly_logs ON assembly_logs.serial_number = a.serial_number 
 				AND assembly_logs.location = 'packing' 
+				LEFT JOIN assembly_logs stamp ON stamp.serial_number = a.serial_number 
+				AND stamp.location = 'stamp-process' 
 				WHERE
 				DATE( assembly_logs.created_at ) BETWEEN '".$from."' 
 				AND '".$now."'
@@ -3737,7 +3740,8 @@ public function fetchSerialNumberReport($process,Request $request)
 
 			$report_visual1 = DB::SELECT("SELECT
 				a.serial_number,
-				a.model,
+				a.model AS model_stamp,
+				stamp.model AS model,
 				assembly_logs.model AS model_packing,
 				GROUP_CONCAT( a.op_qa_visual_1 SEPARATOR '' ) AS op_qa_visual1,
 				(
@@ -3789,7 +3793,7 @@ public function fetchSerialNumberReport($process,Request $request)
 				CONCAT(
 				asl.operator_id,
 				'<br>',
-				SUBSTRING(employee_syncs.name,1,14),'...')) AS op_qa_visual_1,
+				SUBSTRING(employee_syncs.name,1,14),'...','_',asl.created_at)) AS op_qa_visual_1,
 				'' AS op_qa_visual_2,
 				GROUP_CONCAT(
 				DISTINCT (
@@ -3805,6 +3809,8 @@ public function fetchSerialNumberReport($process,Request $request)
 				) a 
 				LEFT JOIN assembly_logs ON assembly_logs.serial_number = a.serial_number 
 				AND assembly_logs.location = 'packing' 
+				LEFT JOIN assembly_logs stamp ON stamp.serial_number = a.serial_number 
+				AND stamp.location = 'stamp-process' 
 				WHERE
 				DATE( assembly_logs.created_at ) BETWEEN '".$from."' 
 				AND '".$now."'
@@ -3817,7 +3823,8 @@ public function fetchSerialNumberReport($process,Request $request)
 
 			$report_visual2 = DB::SELECT("SELECT
 				a.serial_number,
-				a.model,
+				a.model AS model_stamp,
+				stamp.model AS model,
 				assembly_logs.model AS model_packing,
 				GROUP_CONCAT( a.op_qa_visual_2 SEPARATOR '' ) AS op_qa_visual2,
 				(
@@ -3870,7 +3877,7 @@ public function fetchSerialNumberReport($process,Request $request)
 				CONCAT(
 				asl.operator_id,
 				'<br>',
-				SUBSTRING(employee_syncs.name,1,14),'...')) AS op_qa_visual_2,
+				SUBSTRING(employee_syncs.name,1,14),'...','_',asl.created_at)) AS op_qa_visual_2,
 				GROUP_CONCAT(
 				DISTINCT (
 				DATE( asl.created_at ))) AS created 
@@ -3885,6 +3892,8 @@ public function fetchSerialNumberReport($process,Request $request)
 				) a 
 				LEFT JOIN assembly_logs ON assembly_logs.serial_number = a.serial_number 
 				AND assembly_logs.location = 'packing' 
+				LEFT JOIN assembly_logs stamp ON stamp.serial_number = a.serial_number 
+				AND stamp.location = 'stamp-process' 
 				WHERE
 				DATE( assembly_logs.created_at ) BETWEEN '".$from."' 
 				AND '".$now."'
