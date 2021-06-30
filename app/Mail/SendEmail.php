@@ -376,6 +376,30 @@ class SendEmail extends Mailable
             }
         }
 
+        if($this->remark == 'cash_payment'){
+            if($this->data[0]->pdf != null && $this->data[0]->file != null){
+
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Request Cash and Suspend ()')
+                ->view('mails.cash_payment')
+                ->attach(public_path('files/cash_payment/'.$this->data[0]->file))
+                ->attach(public_path('cash_list/'.$this->data[0]->pdf));
+            }
+            else if($this->data[0]->pdf != null){
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Request Cash and Suspend ()')
+                ->view('mails.cash_payment')
+                ->attach(public_path('cash_list/'.$this->data[0]->pdf));
+            }else{
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Request Cash and Suspend ()')
+                ->view('mails.cash_payment');
+            }
+        }
+
         if($this->remark == 'sakurentsu'){
             if ($this->data[0]->position == 'interpreter' || $this->data[0]->position == 'interpreter2') {
                 if($this->data[0]->file != null){
@@ -561,6 +585,13 @@ class SendEmail extends Mailable
             ->priority(1)
             ->subject('Penerimaan Barang MIS')
             ->view('mails.barang_mis');
+        }
+
+        if($this->remark == 'permohonan_uang_simpati'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('Permohonan Uang Simpati')
+            ->view('mails.hr_uang_simpati');
         }   
 
         if($this->remark == 'highest_covid'){
@@ -570,9 +601,19 @@ class SendEmail extends Mailable
         }
 
         if($this->remark == 'fixed_asset_registrations'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            $email = $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
             ->subject('Fixed Asset Registration')
             ->view('mails.fixed_asset');
+
+            for ($i=0; $i < count($this->data['att']); $i++) { 
+                $email->attach(public_path('files/fixed_asset/'.$this->data['att'][$i]['att']));
+            }
+
+            if ($this->data['assets']['sap_file'] && $this->data['status'] == 'APPROVAL MANAGER FA') {
+                $email->attach(public_path('files/fixed_asset/sap_file/'.$this->data['assets']['sap_file']));
+            }
+
+            return $email;
         }
 
         if($this->remark == 'fixed_asset_invoice'){
