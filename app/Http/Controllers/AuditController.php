@@ -1433,7 +1433,7 @@ public function detailPenanganan(Request $request){
     if ($status != null) {
 
       if ($status == "Temuan Open") {
-        $stat = 'and audit_all_results.status_ditangani is null and kategori = "'.$request->get('category').'"';
+        $stat = 'and audit_all_results.status_ditangani is null and kategori = "'.$request->get('category').'" and point_judul != "Positive Finding" ';
       }
       else if ($status == "Temuan Close") {
         $stat = 'and audit_all_results.status_ditangani = "close" and kategori = "'.$request->get('category').'"';
