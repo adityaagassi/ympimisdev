@@ -3252,7 +3252,8 @@ public function postAirVisual()
 		'https://www.airvisual.com/api/v2/node/60c71272d0ee39c0b5a7fb41',
 		'https://www.airvisual.com/api/v2/node/606bbb0c97b9294b00b2b297',
 		'https://www.airvisual.com/api/v2/node/606bbe7797b929136cb2b2a4',
-		'https://www.airvisual.com/api/v2/node/60c85f8ef7f824ae96f04a98'
+		'https://www.airvisual.com/api/v2/node/60c85f8ef7f824ae96f04a98',
+		'https://www.airvisual.com/api/v2/node/60dbedab1b6bb0409cab4f1c'
 	];
 
 	$true_date = "";

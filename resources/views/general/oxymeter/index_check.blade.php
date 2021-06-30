@@ -41,6 +41,10 @@
     padding-top: 0px !important;
   }
 
+  #loading {
+    display: none
+  }
+
 </style>
 @stop
 @section('header')
@@ -54,6 +58,11 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
+  <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+    <p style="position: absolute; color: white; top: 45%; left: 50%;">
+      <span style="font-size: 40px">Loading... <i class="fa fa-spinner fa-spin" style="font-size: 80px;"></i></span>
+    </p>
+  </div>
   <div class="row">
     <div class="col-xs-12">
       <div class="box box-solid">
@@ -65,7 +74,7 @@
               </div>
               <input type="text" class="form-control" placeholder="TAP ID CARD HERE" id="item_scan">
               <div class="input-group-addon" id="icon-serial" style="font-weight: bold;">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-user"></i>TAP
               </div>
             </div>
             <br>
@@ -263,6 +272,10 @@ function checkCode(param) {
 function save(val, ctg) {
   var emp = $("#op_id").val();
 
+  if (ctg == 'heart') {
+    $("#loading").show();
+  }
+
   data = {
     employee_id : $("#op_id").val(),
     name : $("#op_name").val(),
@@ -273,6 +286,7 @@ function save(val, ctg) {
   $.post('{{ url("post/general/oxymeter") }}', data, function(result, status, xhr){
     if (result.status) {
       audio_ok.play();
+      $("#loading").hide();
       openSuccessGritter('Success', 'Data has been Saved');
       $("#tombol2").empty();
       $("#tombol2").hide();

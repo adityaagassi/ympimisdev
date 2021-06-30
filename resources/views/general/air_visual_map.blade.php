@@ -222,25 +222,11 @@
 
 						table_content += '<tr>';
 						if (index == 0) {
-							table_content += '<td width="50%" rowspan="6" style="border-bottom: 0px; border-right: 1px solid white; color: #f3c612;">';
+							table_content += '<td width="50%" rowspan="7" style="border-bottom: 0px; border-right: 1px solid white; color: #f3c612;">';
 							table_content += '<div class="contain">';
 
 							table_content += '<div class="judul" style="margin-top: 0px; margin-left: 5px; width: 98%; height: 28px; background-color: #605ca8; color: white">';
 							table_content += '<b style="font-size: 20px">YMPI OFFICE</b><br>';
-							table_content += '</div>';
-
-							cls = "";
-							if (result.last_data[3].co >= 1000) {
-								cls = "alarm";
-								count_alarm++;
-							}
-
-							table_content += '<div class="judul '+cls+'" style="margin-top: 100px; margin-left: 35px; width: 240px; height: 130px">';
-
-							table_content += '<b style="font-size: 30px; color: #f3c612">'+result.last_data[3].location+'</b><br>';
-							table_content += '<b style="font-size: 20px">CO2 : '+result.last_data[3].co+' ppm</b><br>';
-							table_content += '<b style="font-size: 20px">Temp. : '+result.last_data[3].temperature+' &#8451;</b><br>';
-							table_content += '<b style="font-size: 20px">Humd. : '+result.last_data[3].humidity+' %</b>';
 							table_content += '</div>';
 
 							cls = "";
@@ -249,11 +235,12 @@
 								count_alarm++;
 							}
 
-							table_content += '<div class="judul '+cls+'" style="margin-top: 40px; margin-left: 280px; width: 120px; height: 130px">';
+							table_content += '<div class="judul '+cls+'" style="margin-top: 100px; margin-left: 35px; width: 240px; height: 130px">';
+
 							table_content += '<b style="font-size: 30px; color: #f3c612">'+result.last_data[4].location+'</b><br>';
-							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[4].co+' ppm</b><br>';
-							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[4].temperature+' &#8451;</b><br>';
-							table_content += '<b style="font-size: 18px">Humd. : '+result.last_data[4].humidity+' %</b>';
+							table_content += '<b style="font-size: 20px">CO2 : '+result.last_data[4].co+' ppm</b><br>';
+							table_content += '<b style="font-size: 20px">Temp. : '+result.last_data[4].temperature+' &#8451;</b><br>';
+							table_content += '<b style="font-size: 20px">Humd. : '+result.last_data[4].humidity+' %</b>';
 							table_content += '</div>';
 
 							cls = "";
@@ -262,11 +249,37 @@
 								count_alarm++;
 							}
 
-							table_content += '<div class="judul '+cls+'" style="margin-top: 40px; margin-left: 405px; width: 120px; height: 130px">';
+							table_content += '<div class="judul '+cls+'" style="margin-top: 40px; margin-left: 280px; width: 120px; height: 130px">';
 							table_content += '<b style="font-size: 30px; color: #f3c612">'+result.last_data[5].location+'</b><br>';
 							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[5].co+' ppm</b><br>';
 							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[5].temperature+' &#8451;</b><br>';
 							table_content += '<b style="font-size: 18px">Humd. : '+result.last_data[5].humidity+' %</b>';
+							table_content += '</div>';
+
+							cls = "";
+							if (result.last_data[6].co >= 1000) {
+								cls = "alarm";
+								count_alarm++;
+							}
+
+							table_content += '<div class="judul '+cls+'" style="margin-top: 40px; margin-left: 405px; width: 120px; height: 130px">';
+							table_content += '<b style="font-size: 30px; color: #f3c612">'+result.last_data[6].location+'</b><br>';
+							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[6].co+' ppm</b><br>';
+							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[6].temperature+' &#8451;</b><br>';
+							table_content += '<b style="font-size: 18px">Humd. : '+result.last_data[6].humidity+' %</b>';
+							table_content += '</div>';
+
+							cls = "";
+							if (result.last_data[3].co >= 1000) {
+								cls = "alarm";
+								count_alarm++;
+							}
+
+							table_content += '<div class="judul '+cls+'" style="margin-top: 290px; margin-left: 100px; width: 220px; height: 130px">';
+							table_content += '<b style="font-size: 30px; color: #f3c612">'+result.last_data[3].location+'</b><br>';
+							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[3].co+' ppm</b><br>';
+							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[3].temperature+' &#8451;</b><br>';
+							table_content += '<b style="font-size: 18px">Humd. : '+result.last_data[3].humidity+' %</b>';
 							table_content += '</div>';
 
 							cls = "";
@@ -275,7 +288,7 @@
 								count_alarm++;
 							}
 
-							table_content += '<div class="judul '+cls+'" style="margin-top: 290px; margin-left: 100px; width: 220px; height: 130px">';
+							table_content += '<div class="judul '+cls+'" style="margin-top: 490px; margin-left: 100px; width: 220px; height: 130px">';
 							table_content += '<b style="font-size: 30px; color: #f3c612">'+result.last_data[2].location+'</b><br>';
 							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[2].co+' ppm</b><br>';
 							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[2].temperature+' &#8451;</b><br>';
@@ -288,24 +301,11 @@
 								count_alarm++;
 							}
 
-							table_content += '<div class="judul '+cls+'" style="margin-top: 490px; margin-left: 100px; width: 220px; height: 130px">';
+							table_content += '<div class="judul '+cls+'" style="margin-top: 720px; margin-left: 100px; width: 220px; height: 130px">';
 							table_content += '<b style="font-size: 30px; color: #f3c612">'+result.last_data[1].location+'</b><br>';
 							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[1].co+' ppm</b><br>';
 							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[1].temperature+' &#8451;</b><br>';
 							table_content += '<b style="font-size: 18px">Humd. : '+result.last_data[1].humidity+' %</b>';
-							table_content += '</div>';
-
-							cls = "";
-							if (result.last_data[0].co >= 1000) {
-								cls = "alarm";
-								count_alarm++;
-							}
-
-							table_content += '<div class="judul '+cls+'" style="margin-top: 720px; margin-left: 100px; width: 220px; height: 130px">';
-							table_content += '<b style="font-size: 30px; color: #f3c612">'+result.last_data[0].location+'</b><br>';
-							table_content += '<b style="font-size: 18px">CO2 : '+result.last_data[0].co+' ppm</b><br>';
-							table_content += '<b style="font-size: 18px">Temp. : '+result.last_data[0].temperature+' &#8451;</b><br>';
-							table_content += '<b style="font-size: 18px">Humd. : '+result.last_data[0].humidity+' %</b>';
 							table_content += '</div>';
 							table_content += '<img src="{{ url("images/office_map.png") }}" >';
 							table_content += '</div>';
@@ -324,7 +324,7 @@
 						} else {
 							table_content += '<td width="50%">';
 							table_content += '<table width="100%"><tr><td colspan="2"><div style="background-color: #605ca8; font-size: 25px; font-weight: bold;">'+node_name+'</div></td></tr>';
-							table_content += '<tr><td width="80%"><div id="chart_co'+index+'" style="height: 180px; border: 1px solid #605ca8; width:100%"></div></td>';
+							table_content += '<tr><td width="80%"><div id="chart_co'+index+'" style="height: 140px; border: 1px solid #605ca8; width:100%"></div></td>';
 							table_content += '<td style="border: 1px solid #605ca8;" width="20%">';
 							table_content += '<b style="font-size: 25px">CO2 : '+result.last_data[index].co+' ppm</b><br>';
 							table_content += '<b style="font-size: 25px">Temp. : '+result.last_data[index].temperature+' &#8451;</b><br>';
@@ -352,6 +352,8 @@
 								},
 								gridLineWidth: 0,
 								minorGridLineWidth: 0,
+								max: 1200,
+								min: 300,
 								plotBands: [{
 									from: 0,
 									to: 799,
