@@ -550,8 +550,13 @@
 						if (result.resumes[j].ng_name_kensa != null) {
 							if (result.resumes[j].operator_injection == result.emp[i].employee_id) {
 								var countskensa = result.resumes[j].ng_count_kensa.split(',');
+								var nameskensa = result.resumes[j].ng_name_kensa.split(',');
 								for (var k = 0; k < countskensa.length; k++) {
-									countsngkensa = countsngkensa + parseInt(countskensa[k]);
+									if (nameskensa[k] == 'NG Gate Cut' || nameskensa[k] == 'NG Top Side' || nameskensa[k] == 'NG Hot Stamp') {
+
+									}else{
+										countsngkensa = countsngkensa + parseInt(countskensa[k]);
+									}
 								}
 							}
 						}
@@ -606,20 +611,24 @@
 								var namekensa = result.resumes[j].ng_name_kensa.split(',');
 								for (var k = 0; k < countskensa.length; k++) {
 									// countsng = countsng + parseInt(counts[k]);
-									countsngkensa = countsngkensa + parseInt(countskensa[k]);
-									detail_all_assy.push({
-										operator_kensa: result.resumes[j].emp_kensa,
-										name_kensa: result.resumes[j].name_kensa,
-										operator_injection: result.resumes[j].operator_injection,
-										name_injection: result.resumes[j].name,
-										product: result.resumes[j].product,
-										material_number: result.resumes[j].material_number,
-										part_code: result.resumes[j].part_code,
-										part_name: result.resumes[j].part_name,
-										cavity: result.resumes[j].cavity,
-										ng_name: namekensa[k],
-										ng_count: countskensa[k],
-									});
+									if (namekensa[k] == 'NG Gate Cut' || namekensa[k] == 'NG Top Side' || namekensa[k] == 'NG Hot Stamp') {
+
+									}else{
+										countsngkensa = countsngkensa + parseInt(countskensa[k]);
+										detail_all_assy.push({
+											operator_kensa: result.resumes[j].emp_kensa,
+											name_kensa: result.resumes[j].name_kensa,
+											operator_injection: result.resumes[j].operator_injection,
+											name_injection: result.resumes[j].name,
+											product: result.resumes[j].product,
+											material_number: result.resumes[j].material_number,
+											part_code: result.resumes[j].part_code,
+											part_name: result.resumes[j].part_name,
+											cavity: result.resumes[j].cavity,
+											ng_name: namekensa[k],
+											ng_count: countskensa[k],
+										});
+									}
 								}
 							}
 						}
