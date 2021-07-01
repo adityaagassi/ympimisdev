@@ -324,7 +324,7 @@
 						} else {
 							table_content += '<td width="50%">';
 							table_content += '<table width="100%"><tr><td colspan="2"><div style="background-color: #605ca8; font-size: 25px; font-weight: bold;">'+node_name+'</div></td></tr>';
-							table_content += '<tr><td width="80%"><div id="chart_co'+index+'" style="height: 140px; border: 1px solid #605ca8; width:100%"></div></td>';
+							table_content += '<tr><td width="80%"><div id="chart_co'+index+'" style="height: 180px; border: 1px solid #605ca8; width:100%"></div></td>';
 							table_content += '<td style="border: 1px solid #605ca8;" width="20%">';
 							table_content += '<b style="font-size: 25px">CO2 : '+result.last_data[index].co+' ppm</b><br>';
 							table_content += '<b style="font-size: 25px">Temp. : '+result.last_data[index].temperature+' &#8451;</b><br>';
