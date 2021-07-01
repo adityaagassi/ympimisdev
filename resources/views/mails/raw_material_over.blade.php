@@ -44,7 +44,7 @@
 						<th rowspan="2" style="width: 5%; border:1px solid black;">Plan Usage</th>
 						<th colspan="6" style="width: 30%; border:1px solid black;">Actual Usage Cummulative by Departement</th>
 						<th rowspan="2" style="width: 5%; border:1px solid black;">Total</th>
-						<th rowspan="2" style="width: 15%; border:1px solid black;">Reason</th>
+						{{-- <th rowspan="2" style="width: 15%; border:1px solid black;">Reason</th> --}}
 					</tr>
 					<tr>
 						<th style="width: 7.5%; border:1px solid black; background-color: rgb(126,86,134);">Part Process</th>
@@ -130,8 +130,9 @@
 						@endif
 
 						<td style="border:1px solid black; text-align: right;">{{ $over->quantity }}</td>
-						<td style="border:1px solid black; text-align: center;">
-							<a href="{{ url("index/material/material_monitoring/direct") }}" class="button">Reason</a></td>
+						{{-- <td style="border:1px solid black; text-align: center;">
+							<a href="{{ url("index/material/material_monitoring/direct") }}" class="button">Reason</a>
+						</td> --}}
 						</tr>
 						@endforeach
 					</tbody>

@@ -48,6 +48,9 @@ class RawMaterialOverUsage extends Command
         $start = date('Y-m-01');
         $end = date('Y-m-d');
 
+        $start = '2021-06-01';
+        $end = '2021-06-30';
+
         $now = WeeklyCalendar::where('week_date', $end)->first();
 
         if($now->remark != 'H'){
@@ -101,9 +104,9 @@ class RawMaterialOverUsage extends Command
                     'overs' => $over,
                     'details' => $detail,
                     'material_group' => 'Direct',
-                    'month_text' => date('F Y'),
+                    'month_text' => date('F Y', strtotime($start)),
                     'start_date' => date('d F Y', strtotime($start)),
-                    'end_date' => date('d F Y')
+                    'end_date' => date('d F Y', strtotime($end))
                 ];
 
                 Mail::to($to)
@@ -141,9 +144,9 @@ class RawMaterialOverUsage extends Command
                     'overs' => $over,
                     'details' => $detail,
                     'material_group' => 'Indirect',
-                    'month_text' => date('F Y'),
+                    'month_text' => date('F Y', strtotime($start)),
                     'start_date' => date('d F Y', strtotime($start)),
-                    'end_date' => date('d F Y')
+                    'end_date' => date('d F Y', strtotime($end))
                 ];
 
                 Mail::to($to)
