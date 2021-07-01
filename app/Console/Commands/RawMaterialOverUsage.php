@@ -170,7 +170,7 @@ class RawMaterialOverUsage extends Command
             AND mc.purchasing_group = '".$purchasing_group."'
             GROUP BY io.material_number) AS io
             LEFT JOIN
-            (SELECT material_number, SUM(`usage`) AS `usage` FROM material_requirement_plans
+            (SELECT material_number, CEIL(SUM(`usage`)) AS `usage` FROM material_requirement_plans
             WHERE due_date BETWEEN '".$start."' AND '".$end."'
             GROUP BY material_number) AS mrp
             ON mrp.material_number = io.material_number
