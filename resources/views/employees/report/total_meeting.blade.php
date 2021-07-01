@@ -887,6 +887,7 @@ Highcharts.chart('chart_att_rate', {
                label: {
                    connectorAllowed: false
               },
+              lineWidth: 3,
               dataLabels: {
                    enabled: true,
                    style: {
@@ -909,15 +910,15 @@ Highcharts.chart('chart_att_rate', {
 series: [{
      name: 'YMPI Permanent',
      data: perm_att,
-     color: '#1e7cf7'
+     color: '#e44bf2'
 }, {
   name: 'YMPI Contract',
   data: contract_att,
-  color: '#d1d0cb'
+  color: '#4ce4f5'
 }, {
   name: 'Outsourcing',
   data: os_att,
-  color: '#ffba7d'
+  color: '#ffde4d'
 }],
 
 responsive: {
