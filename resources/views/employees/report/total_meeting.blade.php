@@ -528,421 +528,507 @@
                          }]
                     });
 
-Highcharts.chart('chartTotalManpowerByGender', {
-     title: {
-          text: 'Total Manpower By Gender',
-          style: {
-               fontSize: '30px',
-               fontWeight: 'bold'
-          }
-     },
-     yAxis:{
-          title:{
-               text: null
-          }
-     },
-     xAxis: {
-          categories: xDate
-     },
-     credits:{
-          enabled:false
-     },
-     series: [{
-          type: 'column',
-          name: 'Male',
-          data: sMale,
-          dataLabels: {
-               enabled: true,
-               style: {
-                    textOutline: false,
-                    fontWeight: 'bold',
-                    fontSize: '20px'
-               }
-          }
-     }, {
-          type: 'column',
-          name: 'Female',
-          data: sFemale,
-          dataLabels: {
-               enabled: true,
-               style: {
-                    textOutline: false,
-                    fontWeight: 'bold',
-                    fontSize: '20px'
-               }
-          }
-     }]
-});
+                    Highcharts.chart('chartTotalManpowerByGender', {
+                         title: {
+                              text: 'Total Manpower By Gender',
+                              style: {
+                                   fontSize: '30px',
+                                   fontWeight: 'bold'
+                              }
+                         },
+                         yAxis:{
+                              title:{
+                                   text: null
+                              }
+                         },
+                         xAxis: {
+                              categories: xDate
+                         },
+                         credits:{
+                              enabled:false
+                         },
+                         series: [{
+                              type: 'column',
+                              name: 'Male',
+                              data: sMale,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }, {
+                              type: 'column',
+                              name: 'Female',
+                              data: sFemale,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }]
+                    });
 
-Highcharts.chart('chartTotalManpowerByUnion', {
-     title: {
-          text: 'Total Manpower By Union',
-          style: {
-               fontSize: '30px',
-               fontWeight: 'bold'
-          }
-     },
-     yAxis:{
-          title:{
-               text: null
-          }
-     },
-     xAxis: {
-          categories: xDate
-     },
-     credits:{
-          enabled:false
-     },
-     series: [{
-          type: 'column',
-          name: 'No Union',
-          data: sNon,
-          dataLabels: {
-               enabled: true,
-               style: {
-                    textOutline: false,
-                    fontWeight: 'bold',
-                    fontSize: '20px'
-               }
-          }
-     }, {
-          type: 'column',
-          name: 'SPSI',
-          data: sSPSI,
-          dataLabels: {
-               enabled: true,
-               style: {
-                    textOutline: false,
-                    fontWeight: 'bold',
-                    fontSize: '20px'
-               }
-          }
-     }, {
-          type: 'column',
-          name: 'SPMI',
-          data: sSPMI,
-          dataLabels: {
-               enabled: true,
-               style: {
-                    textOutline: false,
-                    fontWeight: 'bold',
-                    fontSize: '20px'
-               }
-          }
-     }, {
-          type: 'column',
-          name: 'SBM',
-          data: sSBM,
-          dataLabels: {
-               enabled: true,
-               style: {
-                    textOutline: false,
-                    fontWeight: 'bold',
-                    fontSize: '20px'
-               }
-          }
-     }]
-});
+                    Highcharts.chart('chartTotalManpowerByUnion', {
+                         title: {
+                              text: 'Total Manpower By Union',
+                              style: {
+                                   fontSize: '30px',
+                                   fontWeight: 'bold'
+                              }
+                         },
+                         yAxis:{
+                              title:{
+                                   text: null
+                              }
+                         },
+                         xAxis: {
+                              categories: xDate
+                         },
+                         credits:{
+                              enabled:false
+                         },
+                         series: [{
+                              type: 'column',
+                              name: 'No Union',
+                              data: sNon,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }, {
+                              type: 'column',
+                              name: 'SPSI',
+                              data: sSPSI,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }, {
+                              type: 'column',
+                              name: 'SPMI',
+                              data: sSPMI,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }, {
+                              type: 'column',
+                              name: 'SBM',
+                              data: sSBM,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }]
+                    });
 
-var data = result.overtimes1;
-var seriesData = [];
-var xCategories = [];
-var i, cat;
-var intVal = function ( i ) {
-     return typeof i === 'string' ?
-     i.replace(/[\$,]/g, '')*1 :
-     typeof i === 'number' ?
-     i : 0;
-};
+                    var data = result.overtimes1;
+                    var seriesData = [];
+                    var xCategories = [];
+                    var i, cat;
+                    var intVal = function ( i ) {
+                         return typeof i === 'string' ?
+                         i.replace(/[\$,]/g, '')*1 :
+                         typeof i === 'number' ?
+                         i : 0;
+                    };
 
-for(i = 0; i < data.length; i++){
-     cat = data[i].period;
-     if(xCategories.indexOf(cat) === -1){
-          xCategories[xCategories.length] = cat;
-     }
-}
-for(i = 0; i < data.length; i++){
-     var ot = parseFloat(data[i].ot_person);
-     if(seriesData){
-          var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == data[i].Department.toUpperCase();});
-          if(currSeries.length === 0){
-               seriesData[seriesData.length] = currSeries = {name: data[i].Department.toUpperCase(), data: []};
-          } else {
-               currSeries = currSeries[0];
-          }
-          var index = currSeries.data.length;
-          currSeries.data[index] = parseFloat(ot.toFixed(1));
-     } else {
-          seriesData[0] = {name: data[i].Department.toUpperCase(), data: [parseFloat(ot.toFixed(1))]}
-     }
-}
-
-Highcharts.chart('chartTotalOvertime', {
-     chart: {
-          type: 'column'
-     },
-     title: {
-          text: 'Overtime By Person',
-          style: {
-               fontSize: '30px',
-               fontWeight: 'bold'
-          }
-     },
-     xAxis: {
-          categories: xCategories
-     },
-     credits:{
-          enabled:false
-     },
-     yAxis: {
-          min: 0,
-          title: {
-               text: null
-          }
-     },
-     tooltip: {
-          headerFormat: '<b>{point.x}</b><br/>',
-          pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-     },
-     plotOptions: {
-          column: {
-               stacking: 'normal',
-               dataLabels: {
-                    enabled: true,
-                    style: {
-                         textOutline: 'black',
-                         fontWeight: 'bold',
-                         fontSize: '16px'
+                    for(i = 0; i < data.length; i++){
+                         cat = data[i].period;
+                         if(xCategories.indexOf(cat) === -1){
+                              xCategories[xCategories.length] = cat;
+                         }
                     }
-               }
-          }
-     },
-     series: seriesData
-});
-
-var xCat = [];
-var s3 = [];
-var s14 = [];
-var s3_14 = [];
-var s56 = [];
-
-var tgl = result.overtimes2[0].orderer;
-
-$.each(result.overtimes2, function(key, value) {
-     var cat = value.Department.toUpperCase();
-     if(xCat.indexOf(cat) === -1){
-          xCat[xCat.length] = cat;
-     }
-
-     s3.push(parseInt(value.ot_3));
-     s14.push(parseInt(value.ot_14));
-     s3_14.push(parseInt(value.ot_3_14));
-     s56.push(parseInt(value.ot_56));
-
-});
-
-Highcharts.chart('chartOvertimeViolation', {
-     title: {
-          text: 'Overtime Violation',
-          style: {
-               fontSize: '30px',
-               fontWeight: 'bold'
-          }
-     },
-     yAxis:{
-          title:{
-               text: null
-          },
-          tickInterval: 20
-     },
-     xAxis: {
-          categories: xCat
-     },
-     credits:{
-          enabled:false
-     },
-     plotOptions: {
-          column: {
-               dataLabels: {
-                    enabled: true,
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black',
-                    style: {
-                         fontSize: '12px',
-                         textOutline: 0
+                    for(i = 0; i < data.length; i++){
+                         var ot = parseFloat(data[i].ot_person);
+                         if(seriesData){
+                              var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == data[i].Department.toUpperCase();});
+                              if(currSeries.length === 0){
+                                   seriesData[seriesData.length] = currSeries = {name: data[i].Department.toUpperCase(), data: []};
+                              } else {
+                                   currSeries = currSeries[0];
+                              }
+                              var index = currSeries.data.length;
+                              currSeries.data[index] = parseFloat(ot.toFixed(1));
+                         } else {
+                              seriesData[0] = {name: data[i].Department.toUpperCase(), data: [parseFloat(ot.toFixed(1))]}
+                         }
                     }
-               },
-               borderWidth: 0
-          },
-          series: {
-               cursor: 'pointer',
-               minPointLength: 5,
-               point: {
-                    events: {
-                         click: function(e) {
-                              if(this.y > 0){
-                                   details(tgl, this.category, this.series.name);
+
+                    var tmp ={};
+
+                    data.forEach(function(item){
+                         var ot = parseFloat(item.ot_person);
+
+                         var obj =  tmp[item.period] = tmp[item.period] || {count:0, total: 0};
+
+                         obj.count ++;
+                         obj.total += ot;
+
+                    });
+
+                    var res = Object.entries(tmp).map(function(entry){
+                     return { name: entry[0], type: 'spline', data: entry[1].total/entry[1].count}
+                })
+
+                    console.log( res);
+
+                    Highcharts.chart('chartTotalOvertime', {
+                         chart: {
+                              type: 'column'
+                         },
+                         title: {
+                              text: 'Overtime By Person',
+                              style: {
+                                   fontSize: '30px',
+                                   fontWeight: 'bold'
+                              }
+                         },
+                         xAxis: {
+                              categories: xCategories
+                         },
+                         credits:{
+                              enabled:false
+                         },
+                         yAxis: {
+                              min: 0,
+                              title: {
+                                   text: null
+                              },
+                              stackLabels: {
+                                   style: {
+                                       color: 'white',
+                                       textOutline: false
+                                  },
+                                  enabled: true,
+                                  formatter: function() {
+
+                                       var sum = 0,
+                                       x = this.x;
+
+                                       $.each(this.axis.chart.series, function(i, serie){
+                                         sum += serie.options.data[x];
+                                    });
+
+                                       return 'Average: ' + Highcharts.numberFormat((sum / this.axis.chart.series.length),'1');
+                                  }
+                             }
+                        },
+                        tooltip: {
+                         headerFormat: '<b>{point.x}</b><br/>',
+                         pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                    },
+                    plotOptions: {
+                         column: {
+                              stacking: 'normal',
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: 'black',
+                                        fontWeight: 'bold',
+                                        fontSize: '16px'
+                                   }
+                              }
+                         }
+                    },
+                    series: seriesData
+
+               });
+
+                    // seriesDataAvg
+
+
+
+                  //   Highcharts.chart('chartTotalOvertimeAvg', {
+                  //        chart: {
+                  //             type: 'spline'
+                  //        },
+                  //        title: {
+                  //             text: 'Overtime Average',
+                  //             style: {
+                  //                  fontSize: '30px',
+                  //                  fontWeight: 'bold'
+                  //             }
+                  //        },
+                  //        xAxis: {
+                  //             categories: xCategories
+                  //        },
+                  //        credits:{
+                  //             enabled:false
+                  //        },
+                  //        yAxis: {
+                  //             min: 0,
+                  //             title: {
+                  //                  text: null
+                  //             }
+                  //        },
+                  //        tooltip: {
+                  //             headerFormat: '<b>{point.x}</b><br/>',
+                  //             pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                  //        },
+                  //        plotOptions: {
+                  //             spline: {
+                  //                  dataLabels: {
+                  //                       enabled: true,
+                  //                       style: {
+                  //                            textOutline: 'black',
+                  //                            fontWeight: 'bold',
+                  //                            fontSize: '16px'
+                  //                       }
+                  //                  }
+                  //             }
+                  //        },
+                  //        series: [{
+                  //           name: 'Installation',
+                  //           data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+                  //      }]
+                  // });
+
+                  var xCat = [];
+                  var s3 = [];
+                  var s14 = [];
+                  var s3_14 = [];
+                  var s56 = [];
+
+                  var tgl = result.overtimes2[0].orderer;
+
+                  $.each(result.overtimes2, function(key, value) {
+                    var cat = value.Department.toUpperCase();
+                    if(xCat.indexOf(cat) === -1){
+                         xCat[xCat.length] = cat;
+                    }
+
+                    s3.push(parseInt(value.ot_3));
+                    s14.push(parseInt(value.ot_14));
+                    s3_14.push(parseInt(value.ot_3_14));
+                    s56.push(parseInt(value.ot_56));
+
+               });
+
+                  Highcharts.chart('chartOvertimeViolation', {
+                    title: {
+                         text: 'Overtime Violation',
+                         style: {
+                              fontSize: '30px',
+                              fontWeight: 'bold'
+                         }
+                    },
+                    yAxis:{
+                         title:{
+                              text: null
+                         },
+                         tickInterval: 20
+                    },
+                    xAxis: {
+                         categories: xCat
+                    },
+                    credits:{
+                         enabled:false
+                    },
+                    plotOptions: {
+                         column: {
+                              dataLabels: {
+                                   enabled: true,
+                                   color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black',
+                                   style: {
+                                        fontSize: '12px',
+                                        textOutline: 0
+                                   }
+                              },
+                              borderWidth: 0
+                         },
+                         series: {
+                              cursor: 'pointer',
+                              minPointLength: 5,
+                              point: {
+                                   events: {
+                                        click: function(e) {
+                                             if(this.y > 0){
+                                                  details(tgl, this.category, this.series.name);
+                                             }
+                                        }
+                                   }
+                              }
+                         }
+                    },
+                    series: [{
+                         type: 'column',
+                         name: '4Hours/Day',
+                         data: s3,
+                         dataLabels: {
+                              enabled: true,
+                              style: {
+                                   textOutline: false,
+                                   fontWeight: 'bold',
+                                   fontSize: '20px'
+                              }
+                         }
+                    }, {
+                         type: 'column',
+                         name: '18Hours/Week',
+                         data: s14,
+                         dataLabels: {
+                              enabled: true,
+                              style: {
+                                   textOutline: false,
+                                   fontWeight: 'bold',
+                                   fontSize: '20px'
+                              }
+                         }
+                    }, {
+                         type: 'column',
+                         name: 'Both',
+                         data: s3_14,
+                         dataLabels: {
+                              enabled: true,
+                              style: {
+                                   textOutline: false,
+                                   fontWeight: 'bold',
+                                   fontSize: '20px'
+                              }
+                         }
+                    }, {
+                         type: 'column',
+                         name: '72Hours/Month',
+                         data: s56,
+                         dataLabels: {
+                              enabled: true,
+                              style: {
+                                   textOutline: false,
+                                   fontWeight: 'bold',
+                                   fontSize: '20px'
+                              }
+                         }
+                    }]
+               });
+
+                  var series_att = [];
+
+                  var perm_att = [];
+                  var contract_att = [];
+                  var os_att = [];
+
+                  $.each(result.att_rate, function(key, value){
+                    series_att.push(value.mon);
+                    perm_att.push(parseFloat(parseFloat(value.rate_permanen).toFixed(1)));
+                    contract_att.push(parseFloat(parseFloat(value.rate_kontrak).toFixed(1)));
+                    os_att.push(parseFloat(parseFloat(value.rate_os).toFixed(1)));
+               });
+
+                  detail_att = result.att_detail;
+
+                  Highcharts.chart('chart_att_rate', {
+                    title: {
+                         text: 'Attendance Rate',
+                         style: {
+                              fontSize: '30px',
+                              fontWeight: 'bold'
+                         }
+                    },
+
+                    yAxis: {
+                         title: {
+                              text: '% Attendance Rate'
+                         },
+                         max: 100
+                    },
+
+                    xAxis: {
+                         categories : series_att
+                    },
+
+                    legend: {
+
+                    },
+
+                    credits:{
+                         enabled:false
+                    },
+
+                    plotOptions: {
+                         series: {
+                              cursor: 'pointer',
+                              label: {
+                               connectorAllowed: false
+                          },
+                          lineWidth: 3,
+                          dataLabels: {
+                               enabled: true,
+                               style: {
+                                   fontSize: '15px',
+                              },
+                              formatter: function () {
+                                   return this.point.y + ' %';
+                              }
+                         },
+                         point: {
+                              events: {
+                                   click: function(e) {
+                                        detail_att_rate(this.category, this.series.name);
+                                   }
                               }
                          }
                     }
-               }
-          }
-     },
-     series: [{
-          type: 'column',
-          name: '4Hours/Day',
-          data: s3,
-          dataLabels: {
-               enabled: true,
-               style: {
-                    textOutline: false,
-                    fontWeight: 'bold',
-                    fontSize: '20px'
-               }
-          }
-     }, {
-          type: 'column',
-          name: '18Hours/Week',
-          data: s14,
-          dataLabels: {
-               enabled: true,
-               style: {
-                    textOutline: false,
-                    fontWeight: 'bold',
-                    fontSize: '20px'
-               }
-          }
-     }, {
-          type: 'column',
-          name: 'Both',
-          data: s3_14,
-          dataLabels: {
-               enabled: true,
-               style: {
-                    textOutline: false,
-                    fontWeight: 'bold',
-                    fontSize: '20px'
-               }
-          }
-     }, {
-          type: 'column',
-          name: '72Hours/Month',
-          data: s56,
-          dataLabels: {
-               enabled: true,
-               style: {
-                    textOutline: false,
-                    fontWeight: 'bold',
-                    fontSize: '20px'
-               }
-          }
-     }]
-});
-
-var series_att = [];
-
-var perm_att = [];
-var contract_att = [];
-var os_att = [];
-
-$.each(result.att_rate, function(key, value){
-     series_att.push(value.mon);
-     perm_att.push(parseFloat(parseFloat(value.rate_permanen).toFixed(1)));
-     contract_att.push(parseFloat(parseFloat(value.rate_kontrak).toFixed(1)));
-     os_att.push(parseFloat(parseFloat(value.rate_os).toFixed(1)));
-});
-
-detail_att = result.att_detail;
-
-Highcharts.chart('chart_att_rate', {
-     title: {
-          text: 'Attendance Rate',
-          style: {
-               fontSize: '30px',
-               fontWeight: 'bold'
-          }
-     },
-
-     yAxis: {
-          title: {
-               text: '% Attendance Rate'
-          },
-          max: 100
-     },
-
-     xAxis: {
-          categories : series_att
-     },
-
-     legend: {
-
-     },
-
-     credits:{
-          enabled:false
-     },
-
-     plotOptions: {
-          series: {
-               cursor: 'pointer',
-               label: {
-                   connectorAllowed: false
-              },
-              lineWidth: 3,
-              dataLabels: {
-                   enabled: true,
-                   style: {
-                    fontSize: '15px',
                },
-               formatter: function () {
-                    return this.point.y + ' %';
-               }
-          },
-          point: {
-               events: {
-                    click: function(e) {
-                         detail_att_rate(this.category, this.series.name);
+
+               series: [{
+                    name: 'YMPI Permanent',
+                    data: perm_att,
+                    color: '#e44bf2'
+               }, {
+                  name: 'YMPI Contract',
+                  data: contract_att,
+                  color: '#4ce4f5'
+             }, {
+                  name: 'Outsourcing',
+                  data: os_att,
+                  color: '#ffde4d'
+             }],
+
+             responsive: {
+                  rules: [{
+                      condition: {
+                          maxWidth: 500
+                     },
+                     chartOptions: {
+                          legend: {
+                              layout: 'horizontal',
+                              align: 'center',
+                              verticalAlign: 'bottom'
+                         }
                     }
-               }
+               }]
           }
-     }
-},
 
-series: [{
-     name: 'YMPI Permanent',
-     data: perm_att,
-     color: '#e44bf2'
-}, {
-  name: 'YMPI Contract',
-  data: contract_att,
-  color: '#4ce4f5'
-}, {
-  name: 'Outsourcing',
-  data: os_att,
-  color: '#ffde4d'
-}],
-
-responsive: {
-  rules: [{
-   condition: {
-    maxWidth: 500
-},
-chartOptions: {
-    legend: {
-     layout: 'horizontal',
-     align: 'center',
-     verticalAlign: 'bottom'
-}
-}
-}]
-}
-
-});
-}
-else{
-     alert(result.message);
-}
-$('#loading').hide();
-});
+     });
+             }
+             else{
+               alert(result.message);
+          }
+          $('#loading').hide();
+     });
 }
 
 function details(date, cat, name){
@@ -986,10 +1072,13 @@ function detail_att_rate(mon, ctg) {
 
      if (ctg == 'YMPI Permanent') {
           category = 'PERMANENT';
+          max = 5;
      } else if(ctg == 'YMPI Contract') {
           category = 'CONTRACT';
+          max = 5;
      } else if(ctg == 'Outsourcing') {
           category = 'OUTSOURCING';
+          max = 3;
      }
 
      var tableData = "";
@@ -1003,7 +1092,7 @@ function detail_att_rate(mon, ctg) {
 
      $.get('{{ url("fetch/report/attendance_rate/detail") }}', data, function(result){
           $.each(result.att_detail, function(key, value){
-               if (~value.employment_status.indexOf(category)) {
+               if (~value.employment_status.indexOf(category) && value.jml_hari >= max) {
                     tableData += '<tr>';
                     tableData += '<td>'+no+'</td>';
                     tableData += '<td>'+value.employee_id+'</td>';
