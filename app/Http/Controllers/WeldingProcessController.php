@@ -3781,7 +3781,7 @@ class WeldingProcessController extends Controller
 				jig_schedules 
 				WHERE
 				jig_schedules.schedule_date = week_date 
-				AND schedule_status = 'Open' 
+				-- AND schedule_status = 'Open' 
 				-- AND kensa_time IS NULL 
 				-- AND repair_time IS NULL 
 				) AS before_kensa,
@@ -4208,7 +4208,7 @@ class WeldingProcessController extends Controller
 			$detail = [];
 
 			if ($status == 'Schedule Kensa') {
-				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date = '".$date."' AND jig_schedules.schedule_status = 'Open'");
+				$schedule = DB::SELECT("select * from jig_schedules join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date = '".$date."' ");
 
 				foreach ($schedule as $key) {
 					$detail[$key->jig_id] = DB::SELECT("select * from jig_schedules join jig_kensa_logs on jig_kensa_logs.jig_id = jig_schedules.jig_id and DATE(finished_at) = schedule_date join jigs on jigs.jig_id = jig_schedules.jig_id where schedule_date = '".$date."' and jig_schedules.jig_id = '".$key->jig_id."'");
