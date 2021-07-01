@@ -51,27 +51,25 @@ class RawMaterialOverUsage extends Command
         $now = WeeklyCalendar::where('week_date', $end)->first();
 
         if($now->remark != 'H'){
-            $to = [
+           $to = [
+                'bagus.nur.hidayat@music.yamaha.com',
+                'maruli.sapta.adi@music.yamaha.com',
+                'bambang.wahyudi@music.yamaha.com',
+                'santo.siswa@music.yamaha.com',
+                'ipung.dwi.setiawan@music.yamaha.com',
+                'anang.zahroni@music.yamaha.com'
+            ];
+
+            $cc = [
+                // 'khoirul.umam@music.yamaha.com', 
+                // 'yudi.abtadipa@music.yamaha.com', 
+                // 'fatchur.rozi@music.yamaha.com', 
+                // 'fattatul.mufidah@music.yamaha.com',
                 'jihan.rusdi@music.yamaha.com',
                 'nunik.erwantiningsih@music.yamaha.com',
                 'hanin.hamidi@music.yamaha.com',
+                'noviera.prasetyarini@music.yamaha.com'
             ];
-
-            // $to = [
-            //     'bagus.nur.hidayat@music.yamaha.com',
-            //     'maruli.sapta.adi@music.yamaha.com',
-            //     'bambang.wahyudi@music.yamaha.com',
-            //     'santo.siswa@music.yamaha.com',
-            //     'ipung.dwi.setiawan@music.yamaha.com',
-            //     'anang.zahroni@music.yamaha.com'
-            // ];
-
-            // $cc = [
-            //     'khoirul.umam@music.yamaha.com', 
-            //     'yudi.abtadipa@music.yamaha.com', 
-            //     'fatchur.rozi@music.yamaha.com', 
-            //     'fattatul.mufidah@music.yamaha.com'
-            // ];
 
             $bcc = [
                 'aditya.agassi@music.yamaha.com', 
@@ -109,7 +107,7 @@ class RawMaterialOverUsage extends Command
                 ];
 
                 Mail::to($to)
-                // ->cc($cc)
+                ->cc($cc)
                 ->bcc($bcc)
                 ->send(new SendEmail($data, 'raw_material_over'));
             }
@@ -149,7 +147,7 @@ class RawMaterialOverUsage extends Command
                 ];
 
                 Mail::to($to)
-                // ->cc($cc)
+                ->cc($cc)
                 ->bcc($bcc)
                 ->send(new SendEmail($data, 'raw_material_over'));
             }

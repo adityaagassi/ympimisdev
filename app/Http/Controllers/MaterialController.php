@@ -1141,7 +1141,7 @@ class MaterialController extends Controller{
                AND mpd.material_number IN (".$where_materials.")");
 
           $material_ins = db::select("SELECT mio.posting_date, mio.material_number, sum(mio.quantity) AS quantity FROM material_in_outs AS mio 
-               WHERE mio.issue_location = 'MSTK' 
+               WHERE mio.issue_location IN ('MSTK', 'MS11')
                AND mio.movement_type IN ( '101', '102', '9T3', '9T4' )
                AND date( mio.posting_date) >= '".$first."' 
                AND date( mio.posting_date) < '".$due_date."'
@@ -1149,7 +1149,7 @@ class MaterialController extends Controller{
                GROUP BY mio.posting_date, mio.material_number");
 
           $material_outs = db::select("SELECT mio.posting_date, mio.material_number, sum(mio.quantity) AS quantity FROM material_in_outs AS mio 
-               WHERE mio.issue_location = 'MSTK' 
+               WHERE mio.issue_location IN ('MSTK', 'MS11')
                AND mio.movement_type IN ( '9I3', '9I4', '9OE', '9OF' ) 
                AND date( mio.posting_date) >= '".$first."' 
                AND date( mio.posting_date) < '".$due_date."'

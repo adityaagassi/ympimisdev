@@ -50,6 +50,10 @@
 		<input type="hidden" id="purchasing_group" value="{{ $purchasing_group }}">
 
 		<div class="col-xs-12" style="padding-bottom: 10px;">
+			<div class="col-xs-1" style="padding-left: 0px">
+				<a data-toggle="modal" data-target="#detailModelChart" id="btnModelChart" class="btn btn-info" style="width: 100%;"><i class="fa fa-gear" style="font-size: 2vw;"></i></a>
+			</div>
+
 			<div id="period_title" class="col-xs-7" style="background-color: #64b5f6;"><center><span style="color: black; font-size: 2vw; font-weight: bold;" id="title_text"></span></center>
 			</div>
 			<div class="col-xs-1" style="padding-right: 0px">
@@ -110,6 +114,27 @@
 					<button class="btn btn-info" style="width: 100%; margin-bottom: 5px; font-weight: bold; color: black;" onclick="modalOpen('usage')">PLAN USAGE</button>
 					<button class="btn btn-info" style="width: 100%; margin-bottom: 5px; font-weight: bold; color: black;" onclick="modalOpen('delivery')">DELIVERY PLAN</button>
 					<button class="btn btn-info" style="width: 100%; margin-bottom: 5px; font-weight: bold; color: black;" onclick="modalOpen('inout')">MATERIAL IN/OUT</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="detailModelChart">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header no-padding">
+				<h3 style="background-color: #00c0ef; text-align: center; font-weight: bold; padding-top: 3%; padding-bottom: 3%;" class="modal-title">
+					CHOOSE CHART TYPE
+				</h3>
+			</div>
+			<div class="modal-body table-responsive">
+
+				<div class="col-xs-6">
+					<button class="btn btn-default" id="line" style="width: 100%; font-weight: bold;" onclick="changeModelChart(id)"><i class="fa fa-line-chart" style="font-size: 5vw;"></i></button>
+				</div>
+				<div class="col-xs-6">
+					<button class="btn btn-default" id="bar" style="width: 100%; font-weight: bold;" onclick="changeModelChart(id)"><i class="fa fa-bar-chart" style="font-size: 5vw;" disabled></i></button>
 				</div>
 			</div>
 		</div>
@@ -283,6 +308,8 @@
 	jQuery(document).ready(function() {
 		clearData();
 		fetchChart();
+		$('.bar').hide();
+		$('.line').show();
 		// setInterval(fetchChart, 1000*60*60);
 		$('#period').datepicker({
 			autoclose: true,
@@ -330,6 +357,55 @@
 		});
 
 
+	});
+
+	var chart_type = 'line';
+
+	function changeModelChart(id) {
+		chart_type = id;
+		$('#detailModelChart').modal('hide');
+
+		if(chart_type == 'line'){
+			$('.bar').hide();
+			$('.line').show();
+
+			$('#bar').prop('disabled', false);
+			$('#line').prop('disabled', true);
+
+			$('#bar').css('color', 'black');
+			$('#line').css('color', 'grey');
+
+		}else if(chart_type == 'bar'){
+			$('.bar').show();
+			$('.line').hide();
+
+			$('#bar').prop('disabled', true);
+			$('#line').prop('disabled', false);
+
+			$('#bar').css('color', 'grey');
+			$('#line').css('color', 'black');
+
+		}
+	}
+
+	$('#detailModelChart').on('shown.bs.modal', function () {
+
+		if(chart_type == 'line'){
+			$('#bar').prop('disabled', false);
+			$('#line').prop('disabled', true);
+
+			$('#bar').css('color', 'black');
+			$('#line').css('color', 'grey');
+
+
+		}else if(chart_type == 'bar'){
+			$('#bar').prop('disabled', true);
+			$('#line').prop('disabled', false);
+
+			$('#bar').css('color', 'grey');
+			$('#line').css('color', 'black');
+
+		}
 	});
 
 	$(function () {
@@ -814,6 +890,7 @@ function fetchChart(id){
 			$('#period').css('height', h);
 			$('#btnUpload').css('height', h);
 			$('#btnDetail').css('height', h);
+			$('#btnModelChart').css('height', h);
 
 			var count_material = 0;
 			var div_chart = "";
@@ -831,7 +908,7 @@ function fetchChart(id){
 				count_material++;
 
 				//Bar Chart
-				div_chart += '<div class="col-xs-6" style="padding: 0 5px 0 5px;">';
+				div_chart += '<div class="col-xs-6 bar" style="padding: 0 5px 0 5px;">';
 				div_chart += '<div class="box box-solid" style="margin-bottom: 10px;">';
 				div_chart += '<div class="box-header">';
 				div_chart += '<span style="font-weight: bold; font-size: 1.2vw;">'+count_material+') '+value.material_number+' '+value.material_description+'</span>';
@@ -852,7 +929,7 @@ function fetchChart(id){
 
 
 				//Line Chart
-				div_chart += '<div class="col-xs-6" style="padding: 0 5px 0 5px;">';
+				div_chart += '<div class="col-xs-6 line" style="padding: 0 5px 0 5px;">';
 				div_chart += '<div class="box box-solid" style="margin-bottom: 10px;">';
 				div_chart += '<div class="box-header">';
 				div_chart += '<span style="font-weight: bold; font-size: 1.2vw;">'+count_material+') '+value.material_number+' '+value.material_description+'</span>';

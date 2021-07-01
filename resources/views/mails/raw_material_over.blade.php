@@ -61,7 +61,7 @@
 						<td style="border:1px solid black; text-align: center;">{{ $over->material_number }}</td>
 						<td style="border:1px solid black;">{{ $over->material_description }}</td>
 						<td style="border:1px solid black; text-align: center;">{{ $over->bun }}</td>
-						<td style="border:1px solid black; text-align: right;">{{ round($over->usage, 3) }}</td>
+						<td style="border:1px solid black; text-align: right;">{{ ceil($over->usage) }}</td>
 
 						@php $is_filled = false; @endphp
 						@foreach($data['details'] as $detail)
@@ -130,7 +130,8 @@
 						@endif
 
 						<td style="border:1px solid black; text-align: right;">{{ $over->quantity }}</td>
-						<td style="border:1px solid black; text-align: center;"><a href="{{ url("index/material/material_monitoring/direct") }}" class="button">Reason</a></td>
+						<td style="border:1px solid black; text-align: center;">
+							<a href="{{ url("index/material/material_monitoring/direct") }}" class="button">Reason</a></td>
 						</tr>
 						@endforeach
 					</tbody>
