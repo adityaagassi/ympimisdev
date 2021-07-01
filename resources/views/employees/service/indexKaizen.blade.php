@@ -389,7 +389,7 @@
 								body += '<td><span class="label bg-blue"><i class="fa fa-envelope-o"></i>&nbsp; Noted</span></td>';
 							} else {
 								if (pos == 'Manager' || pos == 'Deputy General Manager') {
-									body += '<td><a class="label bg-yellow btn" href="{{ url("index/kaizen/detail") }}/'+value.id+'manager">Unverified</a></td>';
+									body += '<td><a class="label bg-yellow btn" href="{{ url("index/kaizen/detail") }}/'+value.id+'/manager">Unverified</a></td>';
 								} else {
 									body += '<td><span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span></td>';
 								}
