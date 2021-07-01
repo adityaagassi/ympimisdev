@@ -717,24 +717,24 @@
                               title: {
                                    text: null
                               },
-                              stackLabels: {
-                                   style: {
-                                       color: 'white',
-                                       textOutline: false
-                                  },
-                                  enabled: true,
-                                  formatter: function() {
+                             //  stackLabels: {
+                             //       style: {
+                             //           color: 'white',
+                             //           textOutline: false
+                             //      },
+                             //      enabled: true,
+                             //      formatter: function() {
 
-                                       var sum = 0,
-                                       x = this.x;
+                             //           var sum = 0,
+                             //           x = this.x;
 
-                                       $.each(this.axis.chart.series, function(i, serie){
-                                         sum += serie.options.data[x];
-                                    });
+                             //           $.each(this.axis.chart.series, function(i, serie){
+                             //             sum += serie.options.data[x];
+                             //        });
 
-                                       return 'Average: ' + Highcharts.numberFormat((sum / this.axis.chart.series.length),'1');
-                                  }
-                             }
+                             //           return 'Average: ' + Highcharts.numberFormat((sum / this.axis.chart.series.length),'1');
+                             //      }
+                             // }
                         },
                         tooltip: {
                          headerFormat: '<b>{point.x}</b><br/>',
