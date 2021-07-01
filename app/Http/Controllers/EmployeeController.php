@@ -1780,7 +1780,7 @@ $att_rate = db::select("SELECT *, 100 - ((tidak_hadir_permanen/hadir_permanen) *
      sunfish_shift_syncs
      LEFT JOIN employee_syncs ON employee_syncs.employee_id = sunfish_shift_syncs.employee_id 
      WHERE DATE_FORMAT(sunfish_shift_syncs.shift_date, '%Y-%m') >= '2021-04'
-     AND DATE_FORMAT(sunfish_shift_syncs.shift_date, '%Y-%m') < '".$period."'
+     AND DATE_FORMAT(sunfish_shift_syncs.shift_date, '%Y-%m') <= '".$period."'
      AND sunfish_shift_syncs.shiftdaily_code not like '%OFF%'
      AND sunfish_shift_syncs.attend_code not like '%OFF%'
      GROUP BY DATE_FORMAT(sunfish_shift_syncs.shift_date, '%M %Y')
