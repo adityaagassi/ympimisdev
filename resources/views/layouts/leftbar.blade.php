@@ -740,7 +740,7 @@
   </li>
   @endif
 
-  @if(in_array('S43', $navs))
+  @if(in_array('S45', $navs))
   @if(isset($head) && $head == "Payment Request")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
       <i class="fa fa-money"></i> <span>Payment Request</span>
