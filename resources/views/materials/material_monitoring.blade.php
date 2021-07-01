@@ -308,8 +308,6 @@
 	jQuery(document).ready(function() {
 		clearData();
 		fetchChart();
-		$('.bar').hide();
-		$('.line').show();
 		// setInterval(fetchChart, 1000*60*60);
 		$('#period').datepicker({
 			autoclose: true,
@@ -355,7 +353,6 @@
 			autoclose: true,
 			todayHighlight: true
 		});
-
 
 	});
 
@@ -950,6 +947,7 @@ function fetchChart(id){
 
 
 				$('#material_monitoring').append(div_chart);
+
 				div_chart = "";
 
 				var material_number = value.material_number;
@@ -1240,6 +1238,31 @@ function fetchChart(id){
 
 				$('#loading').hide();
 			});
+
+if(chart_type == 'line'){
+	console.log(chart_type);
+	$('.bar').hide();
+	$('.line').show();
+
+	$('#bar').prop('disabled', false);
+	$('#line').prop('disabled', true);
+
+	$('#bar').css('color', 'black');
+	$('#line').css('color', 'grey');
+
+}else if(chart_type == 'bar'){
+	console.log(chart_type);
+	$('.bar').show();
+	$('.line').hide();
+
+	$('#bar').prop('disabled', true);
+	$('#line').prop('disabled', false);
+
+	$('#bar').css('color', 'grey');
+	$('#line').css('color', 'black');
+
+}
+
 }
 else{
 	$('#loading').hide();
