@@ -48,9 +48,6 @@ class RawMaterialOverUsage extends Command
         $start = date('Y-m-01');
         $end = date('Y-m-d');
 
-        $start = '2021-06-01';
-        $end = '2021-06-30';
-
         $now = WeeklyCalendar::where('week_date', $end)->first();
 
         if($now->remark != 'H'){
