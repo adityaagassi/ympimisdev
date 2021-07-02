@@ -3053,8 +3053,13 @@ public function fetchCheckCarb(Request $request){
 
 public function label_carb_fl($id){
 
-	$date = db::select("SELECT DATE_FORMAT( created_at, '%m-%Y' ) AS tgl FROM log_processes 
-		WHERE process_code = '6'
+	// $date = db::select("SELECT DATE_FORMAT( created_at, '%m-%Y' ) AS tgl FROM log_processes 
+	// 	WHERE process_code = '6'
+	// 	AND origin_group_code = '041'
+	// 	AND serial_number = '".$id."'");
+
+	$date = db::select("SELECT DATE_FORMAT( created_at, '%m-%Y' ) AS tgl FROM assembly_logs 
+		WHERE location = 'packing'
 		AND origin_group_code = '041'
 		AND serial_number = '".$id."'");
 
