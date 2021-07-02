@@ -876,6 +876,11 @@ class MutasiController extends Controller
                         $manager = 'PI9906002';
                         $nama_manager = 'Khoirul Umam';
                     }
+                    elseif 
+                        ($mutasi->departemen == 'Woodwind Instrument - Welding Process (WI-WP) Department') {
+                        $manager = 'PI0108010';
+                        $nama_manager = 'Yudi Abtadipa';
+                    }
                     else{
                         $manager = 'PI0109004';
                         $nama_manager = 'Budhi Apriyanto'; 
