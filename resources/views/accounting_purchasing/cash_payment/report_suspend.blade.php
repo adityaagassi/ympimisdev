@@ -60,12 +60,12 @@
 				</tr>
 
 				<tr>
-					<td colspan="10" style="text-align: center;font-size: 20px"><b>Detail Of Cash Payment</b></td>
+					<td colspan="10" style="text-align: center;font-size: 20px"><b>Detail Of Suspense Payment</b></td>
 				</tr>
 
 				<tr>
 					<td colspan="4"><br></td>
-					<td colspan="6" style="text-align: left;font-size: 12px"><b>Date : <?= date('d-M-y', strtotime($cash->submission_date)) ?></b>
+					<td colspan="6" style="text-align: left;font-size: 12px"><b>Date : <?= date('d-M-y', strtotime($suspend->submission_date)) ?></b>
 				</tr>
 
 				<tr>
@@ -84,8 +84,8 @@
 				</tr>
 				<tr>
 					<td colspan="1">&nbsp;</td>
-					<td colspan="4" style="border:1px solid black;height: 50px">&nbsp;&nbsp;&nbsp;<b>{{$cash->remark}}</b></td>
-					<td colspan="4" style="border:1px solid black;height: 50px">&nbsp;&nbsp;&nbsp;<b><?= $cash->currency ?> &nbsp; <?= number_format($cash->amount,2,",",".") ?></b></td>
+					<td colspan="4" style="border:1px solid black;height: 50px">&nbsp;&nbsp;&nbsp;<b>{{$suspend->remark}}</b></td>
+					<td colspan="4" style="border:1px solid black;height: 50px">&nbsp;&nbsp;&nbsp;<b><?= $suspend->currency ?> &nbsp; <?= number_format($suspend->amount,2,",",".") ?></b></td>
 					<td colspan="1">&nbsp;</td>
 				</tr>
 
@@ -108,16 +108,16 @@
 				<tr>
 					<td colspan="1" style="text-align: center;"></td>
 					<td colspan="2" style="border: 1px solid black;height: 40px;text-align: center;">
-							<?= $cash->created_name ?>
+							<?= $suspend->created_name ?>
 					</td>
 					<?php 
-						$manager_stat = explode("/",$cash->status_manager);
-						$direktur_stat = explode("/",$cash->status_direktur);
-						$presdir_stat = explode("/",$cash->status_presdir);
+						$manager_stat = explode("/",$suspend->status_manager);
+						$direktur_stat = explode("/",$suspend->status_direktur);
+						$presdir_stat = explode("/",$suspend->status_presdir);
 					?>
 					<td colspan="2" style="height: 40px;text-align: center">
 						@if($manager_stat[0] == "Approved")
-							<?= $cash->manager_name ?>
+							<?= $suspend->manager_name ?>
 						@endif
 					</td>
 					<td colspan="2" rowspan="2" style="border: 1px solid black;height: 40px">
@@ -136,7 +136,7 @@
 				</tr>
 				<tr>
 					<td colspan="1" style="text-align: center;"></td>
-					<td colspan="2" style="border: 1px solid black;text-align: center;"><?= date('d-M-y', strtotime($cash->submission_date)) ?></td>
+					<td colspan="2" style="border: 1px solid black;text-align: center;"><?= date('d-M-y', strtotime($suspend->submission_date)) ?></td>
 					<td colspan="2" style="border: 1px solid black;text-align: center;">
 						@if($manager_stat[0] != null)
 							<?= date('d-M-y', strtotime($manager_stat[1])) ?>		

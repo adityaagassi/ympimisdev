@@ -145,7 +145,7 @@
 					<!-- <div class="form-group">
 						<div class="col-md-4" style="padding-right: 0;">
 							<label style="color: white;"> x</label>
-							<button type="submit" class="btn btn-primary form-control"><i class="fa fa-download"></i> Export Cash Payment</button>
+							<button type="submit" class="btn btn-primary form-control"><i class="fa fa-download"></i> Export Suspense Payment</button>
 						</div>
 					</div> -->
 				</div>
@@ -153,7 +153,7 @@
 				<div class="col-md-2" style="padding-right: 0;">
 					<div class="form-group">
 							<label style="color: white;"> x</label>
-							<a class="btn btn-success pull-right" style="width: 100%" onclick="newData('new')"><i class="fa fa-plus"></i> &nbsp;Create Cash Payment</a>
+							<a class="btn btn-success pull-right" style="width: 100%" onclick="newData('new')"><i class="fa fa-plus"></i> &nbsp;Create Suspense Payment</a>
 					</div>
 				</div>
 			</form>
@@ -251,14 +251,18 @@
 						</div>
 
 						<div class="col-md-12" style="margin-bottom: 5px">
-							<label for="material" class="col-sm-3 control-label">Remark<span class="text-red">*</span></label>
+							<label for="remark" class="col-sm-3 control-label">Remark<span class="text-red">*</span></label>
 							<div class="col-sm-9">
 								<input type="text" class="form-control" id="remark" name="remark" placeholder="Reason / remark">
 							</div>
 						</div>
 
+						<!-- <div class="col-md-12" style="margin-bottom: 5px">
+							<label for="created_for" class="col-sm-3 control-label">Created For<span class="text-red">*</span></label>
+						</div> -->
+
 						<div class="col-md-12" style="margin-bottom: 5px">
-							<label for="file" class="col-sm-3 control-label">File PR</label>
+							<label for="file" class="col-sm-3 control-label">File Attachment</label>
 							<div class="col-sm-9">
 								<input type="file" id="file_attach" name="file_attach">
 							</div>
@@ -332,7 +336,7 @@
 	function newData(id){
 
 		if(id == 'new'){
-			$('#modalNewTitle').text('Create Cash Payment');
+			$('#modalNewTitle').text('Create Suspense Payment');
 			$('#newButton').show();
 			$('#updateButton').hide();
 			clearNew();
@@ -344,7 +348,7 @@
 			var data = {
 				id:id
 			}
-			$.get('{{ url("detail/cash_payment") }}', data, function(result, status, xhr){
+			$.get('{{ url("detail/suspend") }}', data, function(result, status, xhr){
 				if(result.status){
 
 					$('#category').html('');
@@ -353,41 +357,41 @@
 					var category = "";
 					var currency = "";
 
-					$('#submission_date').val(result.cash.submission_date);
+					$('#submission_date').val(result.suspend.submission_date);
 
-					if(result.cash.category == "Regular"){
+					if(result.suspend.category == "Regular"){
 						category += '<option value="Regular" selected>Regular Payment</option>';
 						category += '<option value="Irregular">Irregular Payment</option>';
 					}
-					else if (result.cash.category == "Irregular"){
+					else if (result.suspend.category == "Irregular"){
 						category += '<option value="Regular">Regular Payment</option>';
 						category += '<option value="Irregular" selected>Irregular Payment</option>';
 					}
 
 					$('#category').append(category);
 
-					if(result.cash.currency == "USD"){
+					if(result.suspend.currency == "USD"){
 						currency += '<option value="USD" selected>USD</option>';
 						currency += '<option value="IDR">IDR</option>';
 						currency += '<option value="JPY">JPY</option>';
 					}
-					else if (result.cash.currency == "IDR"){
+					else if (result.suspend.currency == "IDR"){
 						currency += '<option value="USD">USD</option>';
 						currency += '<option value="IDR" selected>IDR</option>';
 						currency += '<option value="JPY">JPY</option>';
 					}
-					else if (result.cash.currency == "JPY"){
+					else if (result.suspend.currency == "JPY"){
 						currency += '<option value="USD">USD</option>';
 						currency += '<option value="IDR">IDR</option>';
 						currency += '<option value="JPY" selected>JPY</option>';
 					}
 
 					$('#currency').append(currency);
-					$('#amount').val(result.cash.amount);
-					$('#remark').val(result.cash.remark);
-					$('#id_edit').val(result.cash.id);
+					$('#amount').val(result.suspend.amount);
+					$('#remark').val(result.suspend.remark);
+					$('#id_edit').val(result.suspend.id);
 
-					$('#modalNewTitle').text('Update Cash Payment');
+					$('#modalNewTitle').text('Update Suspense Payment');
 					$('#loading').hide();
 					$('#modalNew').modal('show');
 				}
@@ -421,7 +425,7 @@
 			formData.append('file_attach', $('#file_attach').prop('files')[0]);
 
 			$.ajax({
-				url:"{{ url('create/cash_payment') }}",
+				url:"{{ url('create/suspend') }}",
 				method:"POST",
 				data:formData,
 				dataType:'JSON',
@@ -464,7 +468,7 @@
 			formData.append('file_attach', $("#file_attach").prop('files')[0]);
 
 			$.ajax({
-				url:"{{ url('edit/cash_payment') }}",
+				url:"{{ url('edit/suspend') }}",
 				method:"POST",
 				data:formData,
 				dataType:'JSON',
@@ -500,7 +504,7 @@
 
 	function fetchTable(){
 		$('#loading').show();
-		$.get('{{ url("fetch/cash_payment") }}', function(result, status, xhr){
+		$.get('{{ url("fetch/suspend") }}', function(result, status, xhr){
 			if(result.status){
 				$('#listTable').DataTable().clear();
 				$('#listTable').DataTable().destroy();				
@@ -508,7 +512,7 @@
 				var listTableBody = "";
 				var count_all = 0;
 
-				$.each(result.cash, function(key, value){
+				$.each(result.suspend, function(key, value){
 					listTableBody += '<tr>';
 					listTableBody += '<td style="width:0.1%;">'+parseInt(key+1)+'</td>';
 					listTableBody += '<td style="width:1%;">'+value.submission_date+'</td>';
@@ -517,7 +521,7 @@
 					listTableBody += '<td style="width:2%;">'+value.amount.toLocaleString()+'</td>';
 
 					if (value.file != null) {
-						listTableBody += '<td style="width:0.1%;"><a target="_blank" href="{{ url("files/cash_payment") }}/'+value.file+'"><i class="fa fa-paperclip"></i></td>';
+						listTableBody += '<td style="width:0.1%;"><a target="_blank" href="{{ url("files/suspend") }}/'+value.file+'"><i class="fa fa-paperclip"></i></td>';
 					}
 					else{
 						listTableBody += '<td onclick="newData(\''+value.id+'\')" style="width:0.1%;"> - </td>';
@@ -544,11 +548,11 @@
 
 					if (value.posisi == "user")
 					{
-						listTableBody += '<td style="width:2%;"><center><button class="btn btn-md btn-primary" onclick="newData(\''+value.id+'\')"><i class="fa fa-edit"></i> </button>  <a class="btn btn-md btn-danger" target="_blank" href="{{ url("report/cash_payment") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a> <button class="btn btn-md btn-success" data-toggle="tooltip" title="Send Email" style="margin-right:5px;" onclick="sendEmail(\''+value.id+'\')"><i class="fa fa-envelope"></i></button></center></td>';
+						listTableBody += '<td style="width:2%;"><center><button class="btn btn-md btn-primary" onclick="newData(\''+value.id+'\')"><i class="fa fa-edit"></i> </button>  <a class="btn btn-md btn-danger" target="_blank" href="{{ url("report/suspend") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a> <button class="btn btn-md btn-success" data-toggle="tooltip" title="Send Email" style="margin-right:5px;" onclick="sendEmail(\''+value.id+'\')"><i class="fa fa-envelope"></i></button></center></td>';
 					}
 
 					else{
-						listTableBody += '<td style="width:2%;"><a class="btn btn-md btn-danger" target="_blank" href="{{ url("report/cash_payment") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a></center></td>';
+						listTableBody += '<td style="width:2%;"><a class="btn btn-md btn-danger" target="_blank" href="{{ url("report/suspend") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> </a></center></td>';
 					}
 
 					listTableBody += '</tr>';
@@ -646,14 +650,14 @@
         id:id
       };
 
-      if (!confirm("Apakah anda yakin ingin mengirim Cash Payment ini ke Accounting?")) {
+      if (!confirm("Apakah anda yakin ingin mengirim Suspense Payment ini ke Manager Accounting?")) {
         return false;
       }
       else{
       	$("#loading").show();
       }
 
-      $.get('{{ url("email/cash_payment") }}', data, function(result, status, xhr){
+      $.get('{{ url("email/suspend") }}', data, function(result, status, xhr){
         openSuccessGritter("Success","Email Berhasil Terkirim");
       	$("#loading").hide();
         setTimeout(function(){  window.location.reload() }, 2500);
