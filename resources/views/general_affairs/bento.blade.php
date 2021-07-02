@@ -201,7 +201,11 @@ table.table-bordered > tfoot > tr > th{
 									<select class="form-control select2" name="addEmployee" id="addEmployee" data-placeholder="Select Employee" style="width: 100%;" onchange="checkCharge(value)">
 										<option></option>
 										@foreach($employees as $employee)
+										@if($employee->employee_id == Auth::user()->username)
+										<option value="{{ $employee->employee_id }}_{{ $employee->name }}_{{ $employee->grade_code }}" selected>{{ $employee->employee_id }} - {{ $employee->name }}</option>
+										@else
 										<option value="{{ $employee->employee_id }}_{{ $employee->name }}_{{ $employee->grade_code }}">{{ $employee->employee_id }} - {{ $employee->name }}</option>
+										@endif
 										@endforeach
 									</select>
 								</div>
@@ -980,10 +984,10 @@ table.table-bordered > tfoot > tr > th{
 						eventOrder: 'color,start',
 						dayClick: function(date, jsEvent, view) { 
 							var d = addZero(formatDate(date));
-							openModalCreateCal('new', d, '');
+							openModalCreateCal('new', d, '', '');
 						},
 						eventClick: function(info) {
-							openModalCreateCal('edit', formatDate(info.start), info.title);
+							openModalCreateCal('edit', formatDate(info.start), info.title, info.backgroundColor);
 						},
 						events    : cals,
 						editable  : false
@@ -1026,11 +1030,11 @@ table.table-bordered > tfoot > tr > th{
 		});
 	}
 
-	function openModalCreateCal(cat, d, id){
+	function openModalCreateCal(cat, d, id, color){
 		if(cat == 'new'){
 			$('#addDate').val(d);
 			$('#addDate').prop('disabled', true);
-			$("#addEmployee").prop('selectedIndex', 0).change();
+			// $("#addEmployee").prop('selectedIndex', 0).change();
 			$('#checkDate').html("");
 			$('#tableOrderBody').html("")
 			employees = [];
@@ -1067,7 +1071,8 @@ table.table-bordered > tfoot > tr > th{
 			else{
 				var data = {
 					due_date:d,
-					employee_name:id
+					employee_name:id,
+					color:color
 				}
 
 				$.get('{{ url("fetch/ga_control/bento_order_edit") }}', data, function(result, status, xhr){
@@ -1318,7 +1323,7 @@ table.table-bordered > tfoot > tr > th{
 		$('#addDate').prop('disabled', false);
 		$('#modalCreate').modal('show');
 		$('#addDate').val("");
-		$("#addEmployee").prop('selectedIndex', 0).change();
+		// $("#addEmployee").prop('selectedIndex', 0).change();
 		$('#checkDate').html("");
 
 		$('#addCartBtn').removeClass('disabled');

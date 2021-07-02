@@ -156,6 +156,10 @@ Route::post('create/general/safety_riding', 'GeneralController@createSafetyRidin
 Route::get('index/general/omi_visitor', 'GeneralController@indexOmiVisitor');
 Route::get('fetch/general/omi_visitor', 'GeneralController@fetchOmiVisitor');
 
+//SMART RECRUITMENT
+Route::get('index/hr/request_manpower', 'HumanResourceController@indexRequestManpower');
+
+
 //MCU
 Route::get('index/general/queue/{remark}', 'GeneralController@indexQueue');
 Route::get('fetch/general/queue/{remark}', 'GeneralController@fetchQueue');
@@ -1986,6 +1990,14 @@ Route::post('create/cash_payment', 'AccountingController@createCashPayment');
 Route::get('detail/cash_payment', 'AccountingController@fetchCashPaymentDetail');
 Route::post('edit/cash_payment', 'AccountingController@editCashPayment');
 Route::get('report/cash_payment/{id}', 'AccountingController@reportCashPayment');
+Route::get('email/cash_payment', 'AccountingController@emailCashPayment');
+//Approval Cash Payment
+Route::get('cash_payment/approvemanager/{id}', 'AccountingController@cashapprovalmanager');
+Route::get('cash_payment/approvedirekur/{id}', 'AccountingController@cashapprovaldirektur');
+Route::get('cash_payment/approvepresdir/{id}', 'AccountingController@cashapprovalpresdir');
+Route::get('cash_payment/receiveacc/{id}', 'AccountingController@cashreceiveacc');
+Route::get('cash_payment/reject/{id}', 'AccountingController@paymentreject');
+
 
 
 Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
@@ -4982,7 +4994,7 @@ Route::get('index/request/produksi', 'WarehouseNewController@requestProd');
 Route::get('fetch/scan/Qrcode', 'WarehouseNewController@ScanQrMaterial');
 Route::post('confirm/request/produksi', 'WarehouseNewController@ConfirmRequestPrd');
 Route::get('fetch/history/request/prod', 'WarehouseNewController@fetchRequestProduksi');
-Route::get('fetch/detail/request/prd', 'WarehouseNewController@fetchDetailRequest');
+Route::get('fetch/count/request', 'WarehouseNewController@fetchCountPel');
 
 
 //Sanding
@@ -4994,6 +5006,21 @@ Route::post('input/repair/sanding', 'SandingController@inputSanding');
 Route::get('index/repair/fetch_resume_sanding', 'SandingController@fetchResumeSanding');
 Route::get('index/sanding/comparison', 'SandingController@indexSandingComparison');
 Route::get('fetch/sanding/comparison', 'SandingController@fetchComparison');
+
+//Catalog Item
+Route::get('index/catalog_item', 'CatalogController@index_catalog');
+Route::post('create/catalog/item', 'CatalogController@create_catalog');
+Route::get('fetch/detail/catalog/item', 'CatalogController@fetch_catalog');
+Route::get('fetch/edit/catalog', 'CatalogController@fetchEditCatalog');
+Route::post('edit/save/catalog', 'CatalogController@editSaveCatalog');
+Route::post('delete/catalog', 'CatalogController@deleteCatalog');
+Route::get('show/image', 'CatalogController@showImage');
+Route::get('fetch/search/item', 'CatalogController@CheckItem');
+// Route::get('catalog/get_detail/supplier/{code}', 'CatalogController@cagetsupplier');
+
+
+
+
 
 
 //Master Kanban Tools
@@ -5097,6 +5124,10 @@ Route::post('fetch/reed/finish_injection', 'ReedSyntheticController@fetchFinishI
 Route::post('scan/reed/injection_picking', 'ReedSyntheticController@scanInjectionPicking');
 Route::get('index/reed/approval/{location}/{order_id}/{employee_id}', 'ReedSyntheticController@indexApproval');
 Route::post('fetch/reed/submit_approval', 'ReedSyntheticController@fetchSubmitApproval');
+
+Route::get('index/reed/print_label_injection', 'ReedSyntheticController@fetchPrintLabelInjection');
+Route::get('index/reed/print_work_order', 'ReedSyntheticController@fetchPrintWorkOrder');
+
 
 
 
@@ -5208,6 +5239,8 @@ Route::get('fetch/fixed_asset/registration_asset_form/by', 'AccountingController
 Route::post('send/fixed_asset/registration_asset_form', 'AccountingController@assetRegistration');
 
 Route::get('approval/fixed_asset/{id}/{user}/{stat}', 'AccountingController@approvalAsset');
+Route::get('index/fixed_asset/{id}/{user}/{stat}', 'AccountingController@indexApprovalAsset');
+Route::get('upload/approval/fixed_asset', 'AccountingController@uploadApprovalAsset');
 
 Route::post('update/fixed_asset/registration_asset_form', 'AccountingController@updateAssetRegistration');
 
@@ -5244,6 +5277,22 @@ Route::get('winds/master/fetch', 'WindsController@masterfetch');
 Route::get('human_resource', 'HumanResourceController@IndexHr');
 Route::get('human_resource/get_employee', 'HumanResourceController@GetEmployee');
 Route::get('human_resource/get_section', 'HumanResourceController@GetSection');
+
 Route::post('human_resource/add/uang_pekerjaan', 'HumanResourceController@AddUangPekerjaan');
 Route::post('human_resource/add/uang_simpati', 'HumanResourceController@AddUangSimpati');
 Route::post('human_resource/add/uang_keluarga', 'HumanResourceController@AddUangKeluarga');
+
+Route::get('human_resource/resume_uang_pekerjaan', 'HumanResourceController@ResumeUangPekerjaan');
+Route::get('human_resource/resume_uang_simpati', 'HumanResourceController@ResumeUangSimpati');
+Route::get('human_resource/resume_uang_keluarga', 'HumanResourceController@ResumeUangKeluarga');
+
+Route::get('human_resource/detail_simpati/{id}', 'HumanResourceController@DetailUangSimpati');
+Route::get('human_resource/detail_keluarga/{id}', 'HumanResourceController@DetailUangKeluarga');
+
+Route::get('human_resource/approve_simpati_1/{id}', 'HumanResourceController@App_Simpati_1');
+Route::get('human_resource/approve_simpati_2/{id}', 'HumanResourceController@App_Simpati_2');
+
+Route::get('human_resource/approve_keluarga_1/{id}', 'HumanResourceController@App_Keluarga_1');
+Route::get('human_resource/approve_keluarga_2/{id}', 'HumanResourceController@App_Keluarga_2');
+
+
