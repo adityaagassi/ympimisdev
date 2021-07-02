@@ -548,6 +548,11 @@
         <a href="{{ url("warehouse/cek_kedatangan") }}"><i class="fa fa-sticky-note-o"></i>Cek Kedatangan Barang</a>
       </li>
 
+      
+      @if(isset($page) && $page == "Catalog Item")<li class="active">@else<li>@endif
+        <a href="{{ url("index/catalog_item") }}"><i class="fa fa-sticky-note-o"></i>Catalog Item</a>
+      </li>
+
     </ul>
   </li>
   @endif
