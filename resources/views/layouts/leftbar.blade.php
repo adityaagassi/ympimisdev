@@ -550,7 +550,7 @@
 
       
       @if(isset($page) && $page == "Catalog Item")<li class="active">@else<li>@endif
-        <a href="{{ url("index/catalog_item") }}"><i class="fa fa-sticky-note-o"></i>Catalog Item</a>
+        <a href="{{ url("index/catalog_item") }}"><i class="fa fa-book"></i>Catalog Item</a>
       </li>
 
     </ul>

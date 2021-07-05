@@ -120,6 +120,7 @@ class AuditKanbanController extends Controller{
             (SELECT w.week_date, w.remark, SUM(IF(p.point_check_index IS NOT NULL && w.remark <> 'H', 1, 0)) AS `check` FROM weekly_calendars w
             CROSS JOIN audit_kanban_point_checks p
             WHERE DATE_FORMAT(w.week_date,'%Y-%m') = '".$month."'
+            AND  remark <> 'H'
             GROUP BY w.week_date, w.remark) AS point
             LEFT JOIN
             (SELECT a.check_date,  SUM(IF(a.`condition` = 'OK', 1,0)) AS audit FROM audit_kanbans a
