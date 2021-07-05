@@ -15,7 +15,7 @@
 
         @if(Auth::user()->role_code != 'YEMI')
         @if(isset($page) && $page == "MIS Ticket")<li class="active">@else<li>@endif
-          <a href="{{ url("/index/ticket/mis") }}"><i class="fa fa-wrench"></i> <span>MIS Ticket</span></a>
+          <a href="{{ url("/index/ticket/monitoring/mis") }}"><i class="fa fa-wrench"></i> <span>MIS Ticket</span></a>
         </li>
         @endif
         @endif
@@ -758,6 +758,23 @@
         <a href="{{ url("payment_request") }}"><i class="fa fa-money"></i>Create Payment</a>
       </li>
 
+    </ul>
+  </li>
+  @endif
+
+  @if(in_array('S45', $navs))
+  @if(isset($head) && $head == "Cash Payment")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-money"></i> <span>Cash Payment</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Suspend")<li class="active">@else<li>@endif
+        <a href="{{ url("index/suspend") }}"><i class="fa fa-money"></i>Request Suspense Payment</a>
+      </li>
     </ul>
   </li>
   @endif
@@ -1654,7 +1671,11 @@
    <i class="fa fa-angle-left pull-right"></i>
  </span>
 </a>
+
 <ul class="treeview-menu">
+  @if(isset($page) && $page == "Request Produksi new")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/request/produksi") }}"><i class="fa fa-newspaper-o"></i> <span>RequesT Produksi new</span></a>
+</li>
  @if(isset($page) && $page == "Display Job")<li class="active">@else<li>@endif
   <a href="{{ secure_url("/index/display/job") }}"><i class="fa fa-tv"></i> <span>Display Job</span></a>
 </li>
