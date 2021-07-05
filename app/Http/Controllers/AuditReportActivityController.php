@@ -36,7 +36,7 @@ class AuditReportActivityController extends Controller
     function index($id)
     {
         $activityList = ActivityList::find($id);
-    	$auditReportActivity = AuditReportActivity::where('activity_list_id',$id)->orderBy('audit_report_activities.id','desc')
+    	$auditReportActivity = AuditReportActivity::select('audit_report_activities.*','audit_guidances.*','audit_report_activities.id as audit_id')->where('audit_report_activities.activity_list_id',$id)->leftjoin('audit_guidances','audit_guidances.id','audit_report_activities.audit_guidance_id')->orderBy('audit_report_activities.id','desc')
             ->get();
 
 
@@ -101,7 +101,7 @@ class AuditReportActivityController extends Controller
             $subsection = $request->get('subsection');
             $year = substr($request->get('month'),0,4);
             $month = substr($request->get('month'),-2);
-            $auditReportActivity = AuditReportActivity::where('audit_report_activities.activity_list_id',$id)
+            $auditReportActivity = AuditReportActivity::select('audit_report_activities.*','audit_guidances.*','audit_report_activities.id as audit_id')->where('audit_report_activities.activity_list_id',$id)
                 ->leftjoin('audit_guidances','audit_guidances.id','audit_report_activities.audit_guidance_id')
                 ->where('subsection',$subsection)
                 ->where('audit_guidances.month', '=', $request->get('month'))
@@ -111,7 +111,7 @@ class AuditReportActivityController extends Controller
         elseif ($request->get('month') > null && $request->get('subsection') == null) {
             $year = substr($request->get('month'),0,4);
             $month = substr($request->get('month'),-2);
-            $auditReportActivity = AuditReportActivity::where('audit_report_activities.activity_list_id',$id)
+            $auditReportActivity = AuditReportActivity::select('audit_report_activities.*','audit_guidances.*','audit_report_activities.id as audit_id')->where('audit_report_activities.activity_list_id',$id)
                 ->leftjoin('audit_guidances','audit_guidances.id','audit_report_activities.audit_guidance_id')
                 ->where('audit_guidances.month', '=', $request->get('month'))
                 ->orderBy('audit_report_activities.id','desc')
@@ -119,15 +119,15 @@ class AuditReportActivityController extends Controller
         }
         elseif($request->get('subsection') > null && strlen($request->get('month')) == null){
             $subsection = $request->get('subsection');
-            $auditReportActivity = AuditReportActivity::where('activity_list_id',$id)
+            $auditReportActivity = AuditReportActivity::select('audit_report_activities.*','audit_guidances.*','audit_report_activities.id as audit_id')->where('activity_list_id',$id)
                 ->where('subsection',$subsection)
+                ->leftjoin('audit_guidances','audit_guidances.id','audit_report_activities.audit_guidance_id')
                 ->orderBy('audit_report_activities.id','desc')
                 ->get();
         }
         else{
-            $auditReportActivity = AuditReportActivity::where('activity_list_id',$id)
-                ->orderBy('audit_report_activities.id','desc')
-                ->get();
+            $auditReportActivity = AuditReportActivity::select('audit_report_activities.*','audit_guidances.*','audit_report_activities.id as audit_id')->where('audit_report_activities.activity_list_id',$id)->leftjoin('audit_guidances','audit_guidances.id','audit_report_activities.audit_guidance_id')->orderBy('audit_report_activities.id','desc')
+            ->get();
         }
         $data = array(
                       'audit_report_activity' => $auditReportActivity,

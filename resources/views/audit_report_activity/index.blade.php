@@ -198,6 +198,7 @@
 									<tr>
 										<th>Group</th>
 										<th>Date</th>
+										<th>Schedule Date</th>
 										<th>Nama Dokumen</th>
 										<th>No. Dokumen</th>
 										<th>Kesesuaian Aktual Proses</th>
@@ -214,6 +215,7 @@
 									<tr>
 										<td>{{$audit_report_activity->subsection}}</td>
 										<td>{{$audit_report_activity->date}}</td>
+										<td>{{$audit_report_activity->month}}</td>
 										<td>{{$audit_report_activity->nama_dokumen}}</td>
 										<td>{{$audit_report_activity->no_dokumen}}</td>
 										<td><?php echo $audit_report_activity->kesesuaian_aktual_proses ?></td>
@@ -240,8 +242,8 @@
 						                	@endif</td>
 										<td>
 											<center>
-												<a href="{{url('index/audit_report_activity/edit/'.$id.'/'.$audit_report_activity->id)}}" class="btn btn-warning btn-sm">Edit</a>
-												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/audit_report_activity/destroy") }}', '{{ $audit_report_activity->no_dokumen }} - {{ $audit_report_activity->nama_dokumen }} - {{ $audit_report_activity->date }}','{{ $id }}', '{{ $audit_report_activity->id }}');">
+												<a href="{{url('index/audit_report_activity/edit/'.$id.'/'.$audit_report_activity->audit_id)}}" class="btn btn-warning btn-sm">Edit</a>
+												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/audit_report_activity/destroy") }}', '{{ $audit_report_activity->no_dokumen }} - {{ $audit_report_activity->nama_dokumen }} - {{ $audit_report_activity->date }}','{{ $id }}', '{{ $audit_report_activity->audit_id }}');">
 													Delete
 												</a>
 											</center>
@@ -251,6 +253,7 @@
 								</tbody>
 								<tfoot>
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
