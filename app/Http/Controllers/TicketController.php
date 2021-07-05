@@ -417,9 +417,9 @@ class TicketController extends Controller
 						'filename' => $attachment->file_name
 					];
 
-					Mail::to($next_email->approver_email)
-					->bcc(['aditya.agassi@music.yamaha.com'])
-					->send(new SendEmail($data, 'mis_ticket_approval'));
+					// Mail::to($next_email->approver_email)
+					// ->bcc(['aditya.agassi@music.yamaha.com'])
+					// ->send(new SendEmail($data, 'mis_ticket_approval'));
 				}
 				else{
 					$cd = TicketCostdown::where('ticket_id', '=', $request->get('ticket_id'))->get();
@@ -443,9 +443,9 @@ class TicketController extends Controller
 						array_push($cc, 'widura@music.yamaha.com');
 					}
 
-					Mail::to(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])
-					->cc($cc)
-					->send(new SendEmail($data, 'mis_ticket_approval'));
+					// Mail::to(['aditya.agassi@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com'])
+					// ->cc($cc)
+					// ->send(new SendEmail($data, 'mis_ticket_approval'));
 				}
 			}
 
@@ -641,9 +641,9 @@ class TicketController extends Controller
 			];
 
 			// if(Auth::user()->role_code != 'MIS'){
-			Mail::to($approve_manager->approver_email)
-			->bcc(['aditya.agassi@music.yamaha.com'])
-			->send(new SendEmail($data, 'mis_ticket_approval'));
+			// Mail::to($approve_manager->approver_email)
+			// ->bcc(['aditya.agassi@music.yamaha.com'])
+			// ->send(new SendEmail($data, 'mis_ticket_approval'));
 
 			$response = array(
 				'status' => true,
