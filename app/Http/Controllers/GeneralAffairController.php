@@ -1159,6 +1159,93 @@ public function acceptDriverRequest(Request $request){
 			$driver->remark = 'received';
 			$driver->save();
 
+			$emp = Employee::where('employee_id',$request->get('driver_id'))->first();
+
+			if(substr($emp->phone, 0, 1) == '+' ){
+				$phone = substr($emp->phone, 1, 15);
+			}
+			else if(substr($emp->phone, 0, 1) == '0'){
+				$phone = "62".substr($emp->phone, 1, 15);
+			}
+			else{
+				$phone = $emp->phone;
+			}
+
+			$start_time = date('d F Y H:i',strtotime($request->get('start_time')));
+            $start_time_replace = str_replace(" ","%20",$start_time);
+
+            $end_time = date('d F Y H:i',strtotime($request->get('end_time')));
+            $end_time_replace = str_replace(" ","%20",$end_time);
+
+            $destination = str_replace(" ", "%20", $request->get('destination_city'));
+            $name = str_replace(" ", "%20", $emp->name);
+
+            $curl = curl_init();
+
+			curl_setopt_array($curl, array(
+				CURLOPT_URL => 'https://app.whatspie.com/api/messages',
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				// CURLOPT_POSTFIELDS => 'receiver=6282244167224&device=628113669871&message=Order%20bento%20anda%20tanggal%202021-05-06.%20Telah%20dikonfirmasi.%0ASilahkan%20cek%20pada%20MIRAI.%0A%0AYMPI%20GA%20Dept.&type=chat',
+				CURLOPT_POSTFIELDS => 'receiver='.$phone.'&device=628113669871&message=Anda%20('.$name.')%20ditugaskan%20mengantar%20ke%20'.$destination.'%20pada%0A'.$start_time_replace.'%0Asampai%20dengan%0A'.$end_time_replace.'%0A%0A-YMPI%20GA%20Dept.-&type=chat',
+				CURLOPT_HTTPHEADER => array(
+					'Accept: application/json',
+					'Content-Type: application/x-www-form-urlencoded',
+					'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
+				),
+			));
+
+			curl_exec($curl);
+
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+				CURLOPT_URL => 'https://app.whatspie.com/api/messages',
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				// CURLOPT_POSTFIELDS => 'receiver=6282244167224&device=628113669871&message=Order%20bento%20anda%20tanggal%202021-05-06.%20Telah%20dikonfirmasi.%0ASilahkan%20cek%20pada%20MIRAI.%0A%0AYMPI%20GA%20Dept.&type=chat',
+				CURLOPT_POSTFIELDS => 'receiver=6282334197238&device=628113669871&message='.$name.'%20ditugaskan%20mengantar%20ke%20'.$destination.'%20pada%0A%0A'.$start_time_replace.'%0Asampai%20dengan%0A'.$end_time_replace.'%0A%0A-YMPI%20GA%20Dept.-&type=chat',
+				CURLOPT_HTTPHEADER => array(
+					'Accept: application/json',
+					'Content-Type: application/x-www-form-urlencoded',
+					'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
+				),
+			));
+
+			curl_exec($curl);
+
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+				CURLOPT_URL => 'https://app.whatspie.com/api/messages',
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				// CURLOPT_POSTFIELDS => 'receiver=6282244167224&device=628113669871&message=Order%20bento%20anda%20tanggal%202021-05-06.%20Telah%20dikonfirmasi.%0ASilahkan%20cek%20pada%20MIRAI.%0A%0AYMPI%20GA%20Dept.&type=chat',
+				CURLOPT_POSTFIELDS => 'receiver=6281333128147&device=628113669871&message='.$name.'%20ditugaskan%20mengantar%20ke%20'.$destination.'%20pada%0A%0A'.$start_time_replace.'%0Asampai%20dengan%0A'.$end_time_replace.'%0A%0A-YMPI%20GA%20Dept.-&type=chat',
+				CURLOPT_HTTPHEADER => array(
+					'Accept: application/json',
+					'Content-Type: application/x-www-form-urlencoded',
+					'Authorization: Bearer UAqINT9e23uRiQmYttEUiFQ9qRMUXk8sADK2EiVSgLODdyOhgU'
+				),
+			));
+
+			curl_exec($curl);
+
 			$response = array(
 				'status' => true,
 				'message' => 'Driver request berhasil diterima',
@@ -2040,9 +2127,9 @@ public function fetchLiveCookingEmployees(Request $request)
 
 		$emp = DB::SELECT("SELECT
 			* 
-		FROM
+			FROM
 			canteen_live_cookings 
-		WHERE
+			WHERE
 			due_date = '".$request->get('due_date')."' 
 			AND order_for = '".$request->get('employee_id')."'");
 
