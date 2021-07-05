@@ -41,7 +41,7 @@
 	@endif
   <div class="box box-solid">
       <div class="box-body">
-		<table class="table" style="font-size: 15px">
+		<table class="table" style="font-size: 15px;color: #000!important;">
 			<tbody>
 				<tr>
 					<td colspan="9" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;"><img width="80px" src="{{ public_path('images/logo_yamaha2.png') }}" alt=""></td>
