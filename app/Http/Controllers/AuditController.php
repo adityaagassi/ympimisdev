@@ -1229,7 +1229,7 @@ public function detailPenanganan(Request $request){
         });
 
         $lastrow = $excel->getActiveSheet()->getHighestRow();    
-        $excel->getActiveSheet()->getStyle('A1:F'.$lastrow)->getAlignment()->setWrapText(true); 
+        $excel->getActiveSheet()->getStyle('A1:G'.$lastrow)->getAlignment()->setWrapText(true); 
           // $excel->getActiveSheet()->getColumnDimension('A:F')->setAutoSize(false);
 
       })->export('xlsx');
