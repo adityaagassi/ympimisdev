@@ -375,6 +375,9 @@
       else if(jen2 == "Labour"){
         jenis = "L";
       }
+      else if(jen2 == "General Activity"){
+        jenis = "GA";
+      }
       else if(jen2 == "Others"){
         jenis = "etc";
       }
@@ -593,6 +596,7 @@
           list += "<option value='Training and Development'>Training and Development</option>";
           list += "<option value='Recruitment'>Recruitment</option>";
           list += "<option value='Labour'>Labour</option>";
+          list += "<option value='General Activity'>General Activity</option>";
           list += "<option value='Others'>Others</option>";
         }
 

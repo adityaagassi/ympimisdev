@@ -168,6 +168,7 @@
               <option value="Book and Periodical" <?php if($investment->type == "Book and Periodical") echo "selected"; ?>>Book and Periodical</option>
               <option value="Tax and Publicdues" <?php if($investment->type == "Tax and Publicdues") echo "selected"; ?>>Tax and Publicdues</option>
               <option value="Labour" <?php if($investment->type == "Labour") echo "selected"; ?>>Labour</option>
+              <option value="General Activity" <?php if($investment->type == "General Activity") echo "selected"; ?>>General Activity</option>
               <option value="Rent" <?php if($investment->type == "Rent") echo "selected"; ?>>Rent</option>
               <option value="Medical" <?php if($investment->type == "Medical") echo "selected"; ?>>Medical</option>
               <option value="Others" <?php if($investment->type == "Others") echo "selected"; ?>>Others</option>
@@ -1087,6 +1088,9 @@
       else if(jen2 == "Medical"){
         jenis = "Med";
       }
+      else if(jen2 == "General Activity"){
+        jenis = "GA";
+      }
       else{
         jenis = "etc";
       }
@@ -1477,6 +1481,7 @@
           list += "<option value='Training and Development'>Training and Development</option>";
           list += "<option value='Recruitment'>Recruitment</option>";
           list += "<option value='Labour'>Labour</option>";
+          list += "<option value='General Activity'>General Activity</option>";
           list += "<option value='Others'>Others</option>";
         }
 
