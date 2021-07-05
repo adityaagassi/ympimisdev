@@ -1176,11 +1176,22 @@ public function detailPenanganan(Request $request){
       $tanggal = "";
       $kategori = "";
 
-      if (strlen($request->get('date')) > 0)
+      if (strlen($request->get('date_from')) > 0)
       {
-          $date = date('Y-m-d', strtotime($request->get('date')));
-          $tanggal = "and tanggal = '" . $date . "'";
+
+          $date_from = date('Y-m-d', strtotime($request->get('date_from')));
+          $tanggal = "and tanggal = '".$date_from."'";
+
+          if (strlen($request->get('date_to')) > 0) {
+
+              $date_from = date('Y-m-d', strtotime($request->get('date_from')));
+              $date_to = date('Y-m-d', strtotime($request->get('date_to')));
+    
+              $tanggal = "and tanggal >= '".$date_from."'";
+              $tanggal = $tanggal . "and tanggal  <= '" .$date_to."'";
+          }
       }
+
 
       if (strlen($request->get('category_export')) > 0)
       {
@@ -1204,8 +1215,7 @@ public function detailPenanganan(Request $request){
           $kategori = "and kategori = '".$category."'";
       }
 
-      $detail = db::select(
-          "SELECT DISTINCT audit_all_results.* from audit_all_results WHERE audit_all_results.deleted_at IS NULL ".$tanggal." ".$kategori." order by id ASC");
+      $detail = db::select("SELECT DISTINCT audit_all_results.* from audit_all_results WHERE audit_all_results.deleted_at IS NULL ".$tanggal." ".$kategori." order by id ASC");
 
       $data = array(
           'detail' => $detail
@@ -1213,7 +1223,7 @@ public function detailPenanganan(Request $request){
 
       ob_clean();
 
-      Excel::create('Report '.$category.' '.$request->get('date'), function($excel) use ($data){
+      Excel::create('Report '.$category.' '.$request->get('date_from'), function($excel) use ($data){
           $excel->sheet('Data', function($sheet) use ($data) {
             return $sheet->loadView('audit.audit_excel', $data);
         });

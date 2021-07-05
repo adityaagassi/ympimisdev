@@ -33,11 +33,11 @@
     <table>
         <thead>
             <tr style="background-color: #ddebf7; vertical-align: middle; ">
-                <th colspan="6" style="text-align: left;">PT. Yamaha Musical Products Indonesia</th>
+                <th colspan="8" style="text-align: left;">PT. Yamaha Musical Products Indonesia</th>
             </tr>
 
             <tr style="vertical-align: middle; ">
-                <th colspan="6" style="text-align: center;">
+                <th colspan="8" style="text-align: center;">
                     @if($detail[0]->kategori == "Patrol Daily")
                         Patrol Daily Shift 1 & Shift 2
                         <br>
@@ -57,18 +57,19 @@
             <tr style="vertical-align: middle;">
                 <th colspan="2" style="text-align:left">Nama Petugas<br>パトロール担当者</th> 
             </tr>
- -->
+ --><!-- 
             <tr style="vertical-align: middle;">
                 <th colspan="2">Tanggal<br>日付</th> 
-                <th>: <?php echo date('d-m-Y', strtotime($detail[0]->tanggal)) ?></th>
+                
             </tr>
 
-            <tr></tr>
+            <tr></tr> -->
         </thead>
         <tbody>
 
             <tr>
                 <th style="border: 1px solid black;">No</th>
+                <th style="border: 1px solid black;">Tanggal<br>日付</th>
                 <th style="border: 1px solid black;">Petugas<br>パトロール担当者</th>
                 <th style="border: 1px solid black;">Lokasi<br>場所</th>
                 <th style="border: 1px solid black;">PIC<br>場所</th>
@@ -94,6 +95,7 @@
 
             <tr>
                 <td style="vertical-align: middle;text-align: left;width: 10" class="{{ $cls }}">{{ $num++ }}</td>
+                <td style="vertical-align: middle;text-align: left;width: 20" class="{{ $cls }}"><?php echo date('d-m-Y', strtotime($audit->tanggal)) ?></td>
                 <td style="vertical-align: middle;text-align: left;width: 20" class="{{ $cls }}">{{ $audit->auditor_name }}</td>
                 <td style="vertical-align: middle;text-align: left;width: 20" class="{{ $cls }}">{{ $audit->lokasi }}</td>
                 <td style="vertical-align: middle;text-align: left;width: 20" class="{{ $cls }}">{{ $audit->auditee_name }}</td>
