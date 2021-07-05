@@ -140,12 +140,6 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-md-12">
-            <div id="progressbar2">
-              <center>
-                <i class="fa fa-refresh fa-spin" style="font-size: 6em;"></i> 
-                <br><h4>Loading ...</h4>
-              </center>
-            </div>
             <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="example2">
               <thead style="background-color: rgba(126,86,134,.7);">
                 <tr>
@@ -192,6 +186,8 @@
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   });
+
+  var arr_ot = [];
 
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
@@ -425,19 +421,70 @@
       var ctg, tot_act = 0, avg = 0, tot_budget = 0, avg_fc = 0;
       var tot_day_budget = 0, tot_diff;
 
-      for(var i = 0; i < result.semua.length; i++){
-        ctg = result.semua[i].cost_center_name;
-        tot_act += result.semua[i].actual;
-        tot_budget += result.semua[i].budget;
-        tot_day_budget += result.semua[i].forecast;
+      var new_arr = [];
 
-        seriesDataBudget.push(Math.round(result.semua[i].budget * 100) / 100);
-        seriesDataAktual.push(Math.round(result.semua[i].actual * 100) / 100);
-        budgetHarian.push(Math.round(result.semua[i].forecast * 100) / 100);
-        if(xCategories2.indexOf(ctg) === -1){
-          xCategories2[xCategories2.length] = ctg.toUpperCase();
+      arr_ot = result.ot_detail;
+
+      $.each(result.ot_detail, function(key, value) {
+        if (!value.total_ot) {
+          var ot = parseInt(value.TOTAL_OVT_PLAN) / 60;
+        } else {
+          var ot = parseInt(value.total_ot) / 60;
         }
-      }
+
+        new_arr.push({'cost_center' : value.cost_center, 'total_ot' : ot});
+      })
+
+
+      var totals = [];
+      new_arr.reduce(function(res, value) {
+        if (!res[value.cost_center]) {
+          res[value.cost_center] = { cost_center: value.cost_center, ot: 0 };
+          totals.push(res[value.cost_center])
+        }
+        res[value.cost_center].ot += value.total_ot;
+        return res;
+      }, {});
+
+      $.each(result.cc, function(key, value) {
+        var stat = 0;
+        budgetHarian.push(Math.round(value.fq * 100) / 100);
+        seriesDataBudget.push(Math.round(value.bdg * 100) / 100);
+
+        if(xCategories2.indexOf(value.cost_center_name) === -1){
+          xCategories2[xCategories2.length] = value.cost_center_name.toUpperCase();
+        }
+
+        $.each(totals, function(key2, value2) {
+          if (value.cost_center_name == value2.cost_center) {
+            stat = 1;
+            seriesDataAktual.push(Math.round(value2.ot * 100) / 100);
+            tot_act += value2.ot;
+          }
+        })
+
+        if (stat == 0) {
+          seriesDataAktual.push(Math.round(0 * 100) / 100);
+        }
+
+        tot_budget += value.bdg;
+        tot_day_budget += value.fq;
+
+      })
+
+      // for(var i = 0; i < result.semua.length; i++){
+      //   ctg = result.semua[i].cost_center_name;
+      //   tot_act += result.semua[i].actual;
+      //   tot_budget += result.semua[i].budget;
+      //   tot_day_budget += result.semua[i].forecast;
+
+      //   seriesDataBudget.push(Math.round(result.semua[i].budget * 100) / 100);
+      //   seriesDataAktual.push(Math.round(result.semua[i].actual * 100) / 100);
+      //   budgetHarian.push(Math.round(result.semua[i].forecast * 100) / 100);
+      //   if(xCategories2.indexOf(ctg) === -1){
+      //     xCategories2[xCategories2.length] = ctg.toUpperCase();
+      //   }
+      // }
 
       tot_diff = tot_act - tot_day_budget;
 
@@ -478,7 +525,7 @@
           backgroundColor: null
         },
         title: {
-          text: 'Overtime Control - Forecast<br><center style="font-size: 24px;">'+ result.semua[0].tanggal +'</center>',
+          text: 'Overtime Control - Forecast<br><center style="font-size: 24px;">'+ result.ot_detail[0].dt +'</center>',
           style: {
             fontSize: '30px',
             fontWeight: 'bold'
@@ -533,7 +580,7 @@
             point: {
               events: {
                 click: function () {
-                  modalTampil(this.category, result.semua[0].tanggal);
+                  modalTampil(this.category, result.ot_detail[0].dt);
                 }
               }
             },
@@ -604,77 +651,73 @@ function modalTampil(costCenter, date) {
 
   total_budget(costCenter, date);
 
-  $.ajax({
-    type: "GET",
-    url: "{{url('fetch/chart/control/detail')}}",
-    data: {
-      cc : costCenter,
-      tgl : date
-    },
-    dataType: 'json',
-    beforeSend: function () {
-      $('#progressbar2').show();
-      $('#example2').hide();
-    },
-    complete: function () {
-      $('#progressbar2').hide();
-      $('#example2').show();
-    },
-    success: function(data) {
-      $("#tabelDetail").empty();
-      var no = 1;
-      var jml = 0;
+  $("#tabelDetail").empty();
+  var no = 1;
+  var jml = 0;
 
-      console.log(data);
-      var dataT = '';
-      var no = 1;
+  var dataT = '';
+  var no = 1;
 
-      for (var i = 0; i <   data.datas.length; i++) {
+  arr_detail = [];
 
-        var jam = parseFloat(data.datas[i].jam);
-
-        dataT += '<tr>';
-        dataT += '<td>'+ no++; +'</td>';
-        dataT += '<td>'+ data.datas[i].nik +'</td>';
-        dataT += '<td>'+ data.datas[i].name +'</td>';           
-        dataT += '<td>'+ jam.toFixed(2) +'</td>';
-        dataT += '<td style="text-align:left"> <span class="more">'+ data.datas[i].kep +'</span></td>';
-        dataT += '</tr>';
-        jml += parseFloat(data.datas[i].jam);
+  $.each(arr_ot, function(key, value) {
+    if (value.cost_center == costCenter) {
+      if (!value.total_ot) {
+        var ot = parseInt(value.TOTAL_OVT_PLAN) / 60;
+      } else {
+        var ot = parseInt(value.total_ot) / 60;
       }
-      $("#tabelDetail").append(dataT);
 
-      $('.more').each(function() {
-        var content = $(this).html();
-
-        if(content.length > showChar) {
-
-          var c = content.substr(0, showChar);
-          var h = content.substr(showChar, content.length - showChar);
-
-          var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
-
-          $(this).html(html);
-        }
-
-      });
-
-      $(".morelink").click(function(){
-        if($(this).hasClass("less")) {
-          $(this).removeClass("less");
-          $(this).html(moretext);
-        } else {
-          $(this).addClass("less");
-          $(this).html(lesstext);
-        }
-        $(this).parent().prev().toggle();
-        $(this).prev().toggle();
-        return false;
-      });
-
-      $("#tot").text(jml);
+      arr_detail.push({'nik' : value.Emp_no, 'name' : value.Full_name, 'jam' : ot, 'kep' : value.keperluan});
     }
+
   })
+
+  console.log(arr_detail);
+
+  for (var i = 0; i < arr_detail.length; i++) {
+    var jam = arr_detail[i].jam;
+
+    dataT += '<tr>';
+    dataT += '<td>'+ no++; +'</td>';
+    dataT += '<td>'+ arr_detail[i].nik +'</td>';
+    dataT += '<td>'+ arr_detail[i].name +'</td>';           
+    dataT += '<td>'+ jam.toFixed(2) +'</td>';
+    dataT += '<td style="text-align:left"> <span class="more">'+ arr_detail[i].kep +'</span></td>';
+    dataT += '</tr>';
+    jml += parseFloat(arr_detail[i].jam);
+  }
+  $("#tabelDetail").append(dataT);
+
+  $('.more').each(function() {
+    var content = $(this).html();
+
+    if(content.length > showChar) {
+
+      var c = content.substr(0, showChar);
+      var h = content.substr(showChar, content.length - showChar);
+
+      var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+
+      $(this).html(html);
+    }
+
+  });
+
+  $(".morelink").click(function(){
+    if($(this).hasClass("less")) {
+      $(this).removeClass("less");
+      $(this).html(moretext);
+    } else {
+      $(this).addClass("less");
+      $(this).html(lesstext);
+    }
+    $(this).parent().prev().toggle();
+    $(this).prev().toggle();
+    return false;
+  });
+
+  $("#tot").text(jml);
 }
 
 $('#tgl').datepicker({

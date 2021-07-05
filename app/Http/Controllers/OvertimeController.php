@@ -345,6 +345,10 @@ class OvertimeController extends Controller
 		$sunfishs = [];
 		$mirais = [];
 
+		// WHEN VIEW_YMPI_Emp_OvertimePlan.total_ot > 0 THEN
+		// 		floor( ( VIEW_YMPI_Emp_OvertimePlan.total_ot / 60.0 ) * 2 + 0.5 ) / 2 ELSE floor( ( VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+		// 		END 
+
 		if($last_sunfish >= '2020-01-01'){
 			if($first_sunfish <= '2020-01-01'){
 				$first_sunfish = '2020-01-01';
@@ -1370,30 +1374,22 @@ public function overtimeControl(Request $request)
 
 	if($tanggal >= '2020-01-01'){
 		$ot = db::connection('sunfish')->select("SELECT
-			ot.*,
-			VIEW_YMPI_Emp_OrgUnit.cost_center_code,
-			VIEW_YMPI_Emp_OrgUnit.cost_center_name 
+			A.Emp_no,
+			A.cost_center,
+			FORMAT ( A.ovtplanfrom, 'dd MMMM yyyy' ) dt,
+			FORMAT ( A.ovtplanfrom, 'yyyy-MM-dd' ) dt_raw,
+			A.total_ot , 
+			A.TOTAL_OVT_PLAN,
+			A.remark AS keperluan,
+			emp.Full_name
 			FROM
-			(
-			SELECT
-			VIEW_YMPI_Emp_OvertimePlan.emp_no,
-			ROUND(SUM (
-			CASE
-
-			WHEN COALESCE ( VIEW_YMPI_Emp_OvertimePlan.total_ot, 0 ) > 0 THEN
-			cast(VIEW_YMPI_Emp_OvertimePlan.total_ot as float)/ 60 ELSE cast(VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN as float) / 60
-			END 
-			), 2) AS jam
-			FROM
-			VIEW_YMPI_Emp_OvertimePlan 
+			VIEW_YMPI_Emp_OvertimePlan A 
+			LEFT JOIN VIEW_YMPI_Emp_OrgUnit as emp ON emp.Emp_no = A.Emp_no
 			WHERE
-			VIEW_YMPI_Emp_OvertimePlan.ShiftStart >= '".$tanggal." 00:00:00' 
-			AND VIEW_YMPI_Emp_OvertimePlan.ShiftEnd <= '".$tanggal1." 23:59:59' 
-			AND VIEW_YMPI_Emp_OvertimePlan.emp_no NOT LIKE 'OS%'
-			GROUP BY
-			VIEW_YMPI_Emp_OvertimePlan.emp_no 
-			) AS ot
-			LEFT JOIN VIEW_YMPI_Emp_OrgUnit ON VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no");
+			A.ovtplanfrom >= '".$tanggal." 00:00:00' 
+			AND A.ovtplanfrom <= '".$tanggal1." 23:59:59' 
+			AND A.Emp_no NOT LIKE 'OS%'
+			ORDER BY cost_center asc");
 
 		$main_q = "select semua.cost_center, cost_center_name, SUM(bdg) as bdg, SUM(fq) as fq, DATE_FORMAT('".$tanggal1."','%d %M %Y') as tanggal from
 		(select cost_center, round(budget / DAY(LAST_DAY('".$tanggal1."')) * DAY('".$tanggal1."'),1) as bdg, 0 as fq from budgets 
@@ -1405,25 +1401,25 @@ public function overtimeControl(Request $request)
 
 		$main = db::select($main_q);
 
-		$tot = [];
+		// $tot = [];
 
-		foreach ($main as $value2) {
-			$act = 0;
-			$arr = [];
-			foreach ($ot as $value) {
-				if ($value2->cost_center == $value->cost_center_code) {
-					$act += $value->jam;
-				}
-			}
+		// foreach ($main as $value2) {
+		// 	$act = 0;
+		// 	$arr = [];
+		// 	foreach ($ot as $value) {
+		// 		if ($value2->cost_center == $value->cost_center_code) {
+		// 			$act += $value->jam;
+		// 		}
+		// 	}
 
-			$arr['tanggal'] = $value2->tanggal;
-			$arr['cost_center'] = $value2->cost_center;
-			$arr['cost_center_name'] = $value2->cost_center_name;
-			$arr['budget'] = $value2->bdg;
-			$arr['forecast'] = $value2->fq;
-			$arr['actual'] = $act;
-			array_push($tot, $arr);
-		}
+		// 	$arr['tanggal'] = $value2->tanggal;
+		// 	$arr['cost_center'] = $value2->cost_center;
+		// 	$arr['cost_center_name'] = $value2->cost_center_name;
+		// 	$arr['budget'] = $value2->bdg;
+		// 	$arr['forecast'] = $value2->fq;
+		// 	$arr['actual'] = $act;
+		// 	array_push($tot, $arr);
+		// }
 
 		$employee =  EmployeeSync::whereNull('end_date')
 		->select(db::raw("count(employee_id) as jml"))
@@ -1442,8 +1438,8 @@ public function overtimeControl(Request $request)
 	else{
 		$q = "SELECT
 		over_time_member.nik AS emp_no,
-		sum( IF ( over_time_member.STATUS = 0, over_time_member.jam, over_time_member.final ) ) AS jam,
-		employees.cost_center AS cost_center_code,
+		sum( IF ( over_time_member.STATUS = 0, over_time_member.jam, over_time_member.final ) ) AS total_ot,
+		employees.cost_center AS cost_center,
 		cost_centers.cost_center_name 
 		FROM
 		over_time_member
@@ -1471,25 +1467,25 @@ public function overtimeControl(Request $request)
 
 		$main = db::select($main_q);
 
-		$tot = [];
+		// $tot = [];
 
-		foreach ($main as $value2) {
-			$act = 0;
-			$arr = [];
-			foreach ($ot as $value) {
-				if ($value2->cost_center == $value->cost_center_code) {
-					$act += $value->jam;
-				}
-			}
+		// foreach ($main as $value2) {
+		// 	$act = 0;
+		// 	$arr = [];
+		// 	foreach ($ot as $value) {
+		// 		if ($value2->cost_center == $value->cost_center_code) {
+		// 			$act += $value->jam;
+		// 		}
+		// 	}
 
-			$arr['tanggal'] = $value2->tanggal;
-			$arr['cost_center'] = $value2->cost_center;
-			$arr['cost_center_name'] = $value2->cost_center_name;
-			$arr['budget'] = $value2->bdg;
-			$arr['forecast'] = $value2->fq;
-			$arr['actual'] = $act;
-			array_push($tot, $arr);
-		}
+		// 	$arr['tanggal'] = $value2->tanggal;
+		// 	$arr['cost_center'] = $value2->cost_center;
+		// 	$arr['cost_center_name'] = $value2->cost_center_name;
+		// 	$arr['budget'] = $value2->bdg;
+		// 	$arr['forecast'] = $value2->fq;
+		// 	$arr['actual'] = $act;
+		// 	array_push($tot, $arr);
+		// }
 
 		$employee =  EmployeeSync::whereNull('end_date')
 		->select(db::raw("count(employee_id) as jml"))
@@ -1509,7 +1505,7 @@ public function overtimeControl(Request $request)
 	$response = array(
 		'status' => true,
 		'ot_detail' => $ot,
-		'semua' => $tot,
+		'cc' => $main,
 		'emp_total' => $employee,
 		'emp_fc' => $employee_fc,
 		'emp_bdg' => $employee_bdg
@@ -1941,7 +1937,7 @@ public function overtimeDetail(Request $request)
 
 		$cost_center = db::table('cost_centers2')->where('cost_center_name',$request->get('cc'))
 		->select('cost_center')->first();
-		DB::connection()->enableQueryLog();
+		
 
 		$datas = db::connection('sunfish')->select("SELECT
 			ot.Emp_no as nik,
@@ -1978,29 +1974,6 @@ public function overtimeDetail(Request $request)
 			LEFT JOIN VIEW_YMPI_Emp_OrgUnit ON VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no
 			where 
 			VIEW_YMPI_Emp_OrgUnit.cost_center_code  = '".$cost_center->cost_center."'");
-
-		// $datas = db::connection('sunfish')->select("
-		// 	select ot.emp_no as nik, VIEW_YMPI_Emp_OrgUnit.Full_name as name, ot.jam, ot.kep from
-		// 	(
-		// 	select A.emp_no,
-		// 	sum(
-		// 	CASE
-		// 	WHEN A.total_ot > 0 THEN
-		// 	floor((A.total_ot / 60.0) * 2  + 0.5) / 2
-		// 	ELSE
-		// 	floor((A.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
-		// 	END) as jam,
-		// 	STUFF((
-		// 	SELECT distinct ',' + T.remark
-		// 	FROM VIEW_YMPI_Emp_OvertimePlan T
-		// 	WHERE A.emp_no = T.emp_no
-		// 	and T.ShiftStart >= '".$from." 00:00:00' 
-		// 	and T.ShiftEnd <= '".$to." 23:59:59'
-		// 	FOR XML PATH('')), 1, 1, '') as kep
-		// 	from VIEW_YMPI_Emp_OvertimePlan A
-		// 	where A.ovtplanfrom >= '".$from." 00:00:00' and A.ovtplanfrom <= '".$to." 23:59:59'
-		// 	group by A.emp_no
-		// ) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where VIEW_YMPI_Emp_OrgUnit.cost_center_code = '".$cost_center->cost_center."' order by ot.jam desc");
 	}
 	else{
 		$cost_center = db::table('cost_centers')->where('cost_center_name',$request->get('cc'))
