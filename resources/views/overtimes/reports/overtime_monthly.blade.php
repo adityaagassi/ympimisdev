@@ -525,7 +525,7 @@
           backgroundColor: null
         },
         title: {
-          text: 'Overtime Control - Forecast<br><center style="font-size: 24px;">'+ result.ot_detail[0].dt +'</center>',
+          text: 'Overtime Control - Forecast<br><center style="font-size: 24px;">'+ result.dt +'</center>',
           style: {
             fontSize: '30px',
             fontWeight: 'bold'

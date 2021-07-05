@@ -1508,7 +1508,8 @@ public function overtimeControl(Request $request)
 		'cc' => $main,
 		'emp_total' => $employee,
 		'emp_fc' => $employee_fc,
-		'emp_bdg' => $employee_bdg
+		'emp_bdg' => $employee_bdg,
+		'dt' => date('d M Y', strtotime($tanggal1))
 	);
 
 	return Response::json($response);
