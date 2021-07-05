@@ -500,7 +500,7 @@ class TicketController extends Controller
 			$ticket_timeline->save();
 
 			// $timelines = TicketTimeline::where('ticket_id', '=', $request->input('ticket_id'))->get();
-			$ticket = Ticket::where('ticket_id', '=', $request->input('ticket_id'))->get();
+			$ticket = Ticket::where('ticket_id', '=', $request->input('ticket_id'))->first();
 			$ticket->progress = $request->input('progress');
 			$ticket->save();
 
