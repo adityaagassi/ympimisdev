@@ -44,7 +44,7 @@
 		padding-left: 35px;
 		margin-bottom: 12px;
 		cursor: pointer;
-		font-size: 16px;
+		font-size: 12px;
 		-webkit-user-select: none;
 		-moz-user-select: none;
 		-ms-user-select: none;
@@ -292,9 +292,9 @@
             	<table class="table table-bordered table-striped table-hover">
             		<thead style="background-color: rgba(126,86,134,.7);color: white">
             			<tr>
-            				<th style="width: 1%">No.<br>番</th>
-            				<th style="width: 74%">Point Check<br>監査箇所</th>
-            				<th style="width: 25%">Condition<br>調子</th>
+            				<th style="width: 5%">No.<br>番</th>
+            				<th style="width: 60%">Point Check<br>監査箇所</th>
+            				<th style="width: 35%">Condition<br>調子</th>
             			</tr>
             		</thead>
             		<tbody>
@@ -313,6 +313,10 @@
 								&nbsp;&nbsp;
 								<label class="radio" style="margin-top: 5px">NG
 									<input type="radio" id="condition_{{$index}}" name="condition_{{$index}}" value="NG">
+									<span class="checkmark"></span>
+								</label>
+								<label class="radio" style="margin-top: 5px">Tidak Ada
+									<input type="radio" id="condition_{{$index}}" name="condition_{{$index}}" value="Tidak Ada">
 									<span class="checkmark"></span>
 								</label>
 							</td>
@@ -385,6 +389,10 @@
 								&nbsp;&nbsp;
 								<label class="radio" style="margin-top: 5px">NG
 									<input type="radio" id="editcondition_{{$index}}" name="editcondition_{{$index}}" value="NG">
+									<span class="checkmark"></span>
+								</label>
+								<label class="radio" style="margin-top: 5px">Tidak Ada
+									<input type="radio" id="editcondition_{{$index}}" name="editcondition_{{$index}}" value="Tidak Ada">
 									<span class="checkmark"></span>
 								</label>
 							</td>
@@ -534,8 +542,10 @@
 					bodyAudit += '<td>'+result.audit_kanban[i].point_check_name+'<br>'+result.audit_kanban[i].point_check_jp+'</td>';
 					if (result.audit_kanban[i].condition == 'OK') {
 						bodyAudit += '<td style="background-color:#c5ffb8">'+result.audit_kanban[i].condition+'</td>';
-					}else{
+					}else if(result.audit_kanban[i].condition == 'NG'){
 						bodyAudit += '<td style="background-color:#ffbcb8">'+result.audit_kanban[i].condition+'</td>';
+					}else if(result.audit_kanban[i].condition == 'Tidak Ada'){
+						bodyAudit += '<td style="background-color:#b8caff">'+result.audit_kanban[i].condition+'</td>';
 					}
 					if (result.audit_kanban[i].send_status == null) {
 						bodyAudit += '<td><span class="label label-danger">Belum Terkirim</span></td>';

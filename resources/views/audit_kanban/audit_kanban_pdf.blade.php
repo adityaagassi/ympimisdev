@@ -73,8 +73,10 @@
 				@else
 				@if($audit_kanban[$k]->condition == 'OK')
 				<td style="width: 1%; text-align: center;">&#9711;</td>
-				@else
+				@elseif($audit_kanban[$k]->condition == 'NG')
 				<td style="width: 1%; text-align: center;">&#9747;</td>
+				@else
+				<td style="width: 1%; text-align: center;">&#9866;</td>
 				@endif
 				@endif
 				@endif
