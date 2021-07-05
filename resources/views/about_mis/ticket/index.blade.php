@@ -270,6 +270,12 @@ table.table-bordered > tbody > tr > td{
 		});
 	});
 
+	$(function () {
+		$('#createDepartment').select2({
+			dropdownParent: $('#modalCreate')
+		});
+	});
+
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 	var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
 	var costdowns = [];
