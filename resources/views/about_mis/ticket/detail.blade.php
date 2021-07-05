@@ -783,7 +783,7 @@ tfoot>tr>th{
 	var equipment_count = 0;
 
 	function editTicket(){
-		if(confirm("Apakah anda yakin akan mengajukan tiket ini?")){
+		if(confirm("Apakah anda yakin akan merubah tiket ini?")){
 			var ticket_id = $('#editTicketId').val();
 			var status = $('#editStatus').val();
 			var department = $('#editDepartment').val();
@@ -853,10 +853,11 @@ tfoot>tr>th{
 				success:function(data)
 				{
 					if (data.status) {
-						// clearAll();
+						clearAll();
 						$('#loading').hide();
 						openSuccessGritter('Success!',data.message);
 						audio_ok.play();
+						location.reload(true);
 					}
 					else{
 						$('#loading').hide();
