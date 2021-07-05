@@ -263,6 +263,13 @@ table.table-bordered > tbody > tr > td{
 		});
 	});
 
+	$(function () {
+		$('#createPriority').select2({
+			dropdownParent: $('#modalCreate'),
+			minimumResultsForSearch: -1
+		});
+	});
+
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 	var audio_ok = new Audio('{{ url("sounds/sukses.mp3") }}');
 	var costdowns = [];
