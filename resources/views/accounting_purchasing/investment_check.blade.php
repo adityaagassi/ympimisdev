@@ -239,19 +239,20 @@
 
                 <?php $no = 1; ?>
                 @foreach($invest_item as $item)
-                  <div class="col-sm-6" style="margin-top: 10px">
-                    {{$item->detail}}
+                  <div class="col-sm-12">
+                    <div class="col-sm-6" style="margin-top: 10px">
+                      {{$item->detail}}
+                    </div>
+
+                    <input type="hidden" name="id_item<?= $no ?>" id="id_item<?= $no ?>" value="<?= $item->id ?>">
+
+                    <div class="col-sm-6" style="margin-top: 10px">
+                      <select class="form-control select2" data-placeholder="VAT Status" name="vat_item<?= $no ?>" id="vat_item<?= $no ?>" style="width: 100% height: 35px;" required>
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                      </select>
+                    </div>
                   </div>
-
-                  <input type="hidden" name="id_item<?= $no ?>" id="id_item<?= $no ?>" value="<?= $item->id ?>">
-
-                  <div class="col-sm-6" style="margin-top: 10px">
-                    <select class="form-control select2" data-placeholder="VAT Status" name="vat_item<?= $no ?>" id="vat_item<?= $no ?>" style="width: 100% height: 35px;" required>
-                      <option value="No">No</option>
-                      <option value="Yes">Yes</option>
-                    </select>
-                  </div>
-
 
                   <?php $no++; ?>
                 @endforeach
