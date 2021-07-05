@@ -70,15 +70,15 @@ class AuditKanbanController extends Controller{
                     $last = date('Y-m-d');
                 }else{
                     $first = date('Y-m-d');
-                    $last = "'".$date_to."'";
+                    $last = $date_to;
                 }
             }else{
                 if ($date_to == "") {
-                    $first = "'".$date_from."'";
+                    $first = $date_from;
                     $last = date('Y-m-d');
                 }else{
-                    $first = "'".$date_from."'";
-                    $last = "'".$date_to."'";
+                    $first = $date_from;
+                    $last = $date_to;
                 }
             }
             $audit_kanban = AuditKanban::select('audit_kanbans.*','audit_kanban_point_checks.*','audit_kanbans.id as id_audit_kanban','activity_lists.remark')
@@ -120,7 +120,7 @@ class AuditKanbanController extends Controller{
             (SELECT w.week_date, w.remark, SUM(IF(p.point_check_index IS NOT NULL && w.remark <> 'H', 1, 0)) AS `check` FROM weekly_calendars w
             CROSS JOIN audit_kanban_point_checks p
             WHERE DATE_FORMAT(w.week_date,'%Y-%m') = '".$month."'
-            AND  remark <> 'H'
+            AND  w.remark <> 'H'
             GROUP BY w.week_date, w.remark) AS point
             LEFT JOIN
             (SELECT a.check_date,  SUM(IF(a.`condition` = 'OK', 1,0)) AS audit FROM audit_kanbans a
