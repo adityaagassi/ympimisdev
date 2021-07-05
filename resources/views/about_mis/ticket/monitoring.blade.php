@@ -217,6 +217,9 @@ table.table-bordered > tbody > tr:hover {
 						else if(value.status == 'OnHold'){
 							ticketTableBody += '<td font-weight: bold;"><span class="label" style="color: black; background-color: #e0e0e0; border: 1px solid black;">'+value.status+'</span></td>';
 						}
+						else if(value.status == 'Finished'){
+							ticketTableBody += '<td font-weight: bold;"><span class="label" style="color: black; background-color: #f9a825; border: 1px solid black;">'+value.status+'</span></td>';
+						}
 						else{
 							ticketTableBody += '<td font-weight: bold;"><span class="label" style="color: black; background-color: #e0e0e0; border: 1px solid black;">'+value.status+'</span></td>';
 						}
