@@ -557,7 +557,11 @@
 					}else{
 						bodyAudit += '<td><span class="label label-success">Approved</span></td>';
 					}
-					bodyAudit += '<td><button class="btn btn-warning" onclick="edit(\''+result.audit_kanban[i].id_audit_kanban+'\')">Edit</button></td>';
+					if (result.audit_kanban[i].send_status == null) {
+						bodyAudit += '<td><button class="btn btn-warning" onclick="edit(\''+result.audit_kanban[i].id_audit_kanban+'\')">Edit</button></td>';
+					}else{
+						bodyAudit += '<td></td>';
+					}
 					bodyAudit += '</tr>';
 				}
 				$('#bodyTableAudit').append(bodyAudit);
