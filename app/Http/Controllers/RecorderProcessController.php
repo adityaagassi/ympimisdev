@@ -8262,105 +8262,130 @@ class RecorderProcessController extends Controller
           array_push($resumes, $resume);
 
           $trend_detail = DB::SELECT("SELECT DISTINCT
-            ( rc_kensas.material_number ),
-            '".$week_date[$i]->week_date."' AS week_date,
-            (
-          SELECT
-            GROUP_CONCAT( ng_name SEPARATOR '_' ) 
-          FROM
-            rc_kensas namekensa 
-          WHERE
-            DATE( namekensa.created_at ) = '".$week_date[$i]->week_date."' 
-            AND namekensa.ng_name IS NOT NULL 
-            AND namekensa.material_number = rc_kensas.material_number 
-            ) AS ng_name_kensa,
-            (
-          SELECT
-            GROUP_CONCAT( ng_count SEPARATOR '_' ) 
-          FROM
-            rc_kensas namekensa 
-          WHERE
-            DATE( namekensa.created_at ) = '".$week_date[$i]->week_date."' 
-            AND namekensa.ng_name IS NOT NULL 
-            AND namekensa.material_number = rc_kensas.material_number 
-            ) AS ng_count_kensa,
-            (
-          SELECT
-            GROUP_CONCAT( serial_number SEPARATOR '_' ) 
-          FROM
-            rc_kensas namekensa 
-          WHERE
-            DATE( namekensa.created_at ) = '".$week_date[$i]->week_date."' 
-            AND namekensa.ng_name IS NOT NULL 
-            AND namekensa.material_number = rc_kensas.material_number 
-            ) AS serial_number,
-            (
-          SELECT
-            GROUP_CONCAT( CONCAT( operator_kensa, '<br>', empkensa.`name` ) SEPARATOR '_' ) 
-          FROM
-            rc_kensas namekensa
-            LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = namekensa.operator_kensa 
-          WHERE
-            DATE( namekensa.created_at ) = '".$week_date[$i]->week_date."' 
-            AND namekensa.ng_name IS NOT NULL 
-            AND namekensa.material_number = rc_kensas.material_number 
-            ) AS op_kensa,
-            (
-          SELECT
-            GROUP_CONCAT( product SEPARATOR '_' ) 
-          FROM
-            rc_kensas namekensa 
-          WHERE
-            DATE( namekensa.created_at ) = '".$week_date[$i]->week_date."' 
-            AND namekensa.ng_name IS NOT NULL 
-            AND namekensa.material_number = rc_kensas.material_number 
-            ) AS product,
-            ( SELECT GROUP_CONCAT( CONCAT( part_name, ' ', part_type ) SEPARATOR '_' ) FROM rc_kensa_initials namekensa WHERE namekensa.kensa_initial_code = rc_kensas.kensa_initial_code ) AS part_name,
-            ( SELECT GROUP_CONCAT( color SEPARATOR '_' ) FROM rc_kensa_initials namekensa WHERE namekensa.kensa_initial_code = rc_kensas.kensa_initial_code ) AS color,
-            GROUP_CONCAT(
-            (
-          SELECT
-            GROUP_CONCAT( DISTINCT ( cavity ) SEPARATOR '_' ) 
-          FROM
-            rc_kensa_initials namekensa 
-          WHERE
-            namekensa.material_number = rc_kensas.material_number 
-            AND namekensa.serial_number = rc_kensas.serial_number 
-            ) 
-            ) AS cavity,
-            ( SELECT GROUP_CONCAT( operator_molding SEPARATOR '_' ) FROM rc_kensa_initials namekensa WHERE namekensa.kensa_initial_code = rc_kensas.kensa_initial_code ) AS op_molding,
-            ( SELECT GROUP_CONCAT( molding SEPARATOR '_' ) FROM rc_kensa_initials namekensa WHERE namekensa.kensa_initial_code = rc_kensas.kensa_initial_code ) AS molding,
-            (
-          SELECT
-            GROUP_CONCAT( CONCAT( operator_injection, '<br>', empkensa.`name` ) SEPARATOR '_' ) 
-          FROM
-            rc_kensa_initials namekensa
-            LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = namekensa.operator_injection 
-          WHERE
-            namekensa.kensa_initial_code = rc_kensas.kensa_initial_code 
-            ) AS op_injeksi,
-            ( SELECT GROUP_CONCAT( mesin_injection SEPARATOR '_' ) FROM rc_kensa_initials namekensa WHERE namekensa.kensa_initial_code = rc_kensas.kensa_initial_code ) AS mesin,
-            (
-          SELECT
-            GROUP_CONCAT( CONCAT( operator_resin, '<br>', empkensa.`name` ) SEPARATOR '_' ) 
-          FROM
-            rc_kensa_initials namekensa
-            LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = namekensa.operator_resin 
-          WHERE
-            namekensa.kensa_initial_code = rc_kensas.kensa_initial_code 
-            ) AS op_resin,
-            ( SELECT GROUP_CONCAT( lot_number_resin SEPARATOR '_' ) FROM rc_kensa_initials namekensa WHERE namekensa.kensa_initial_code = rc_kensas.kensa_initial_code ) AS resin,
-            ( SELECT GROUP_CONCAT( dryer_resin SEPARATOR '_' ) FROM rc_kensa_initials namekensa WHERE namekensa.kensa_initial_code = rc_kensas.kensa_initial_code ) AS dryer_resin 
-          FROM
-            rc_kensas 
-          WHERE
-            DATE( rc_kensas.created_at ) = '".$week_date[$i]->week_date."' 
-            AND rc_kensas.ng_name IS NOT NULL 
-          GROUP BY
-            material_number,
-            week_date 
-          ORDER BY
-            material_number");
+  ( rc_kensas.material_number ),
+  '".$week_date[$i]->week_date."' AS week_date,--  rc_kensas.cavity,
+  (
+SELECT
+  GROUP_CONCAT( ng_name SEPARATOR '_' ) 
+FROM
+  rc_kensas namekensa 
+WHERE
+  DATE( namekensa.created_at ) = '".$week_date[$i]->week_date."' 
+  AND namekensa.ng_name IS NOT NULL 
+  AND namekensa.material_number = rc_kensas.material_number 
+  ) AS ng_name_kensa,
+  (
+SELECT
+  GROUP_CONCAT( ng_count SEPARATOR '_' ) 
+FROM
+  rc_kensas namekensa 
+WHERE
+  DATE( namekensa.created_at ) = '".$week_date[$i]->week_date."' 
+  AND namekensa.ng_name IS NOT NULL 
+  AND namekensa.material_number = rc_kensas.material_number 
+  ) AS ng_count_kensa,
+  (
+SELECT
+  GROUP_CONCAT( serial_number SEPARATOR '_' ) 
+FROM
+  rc_kensas namekensa 
+WHERE
+  DATE( namekensa.created_at ) = '".$week_date[$i]->week_date."' 
+  AND namekensa.ng_name IS NOT NULL 
+  AND namekensa.material_number = rc_kensas.material_number 
+  ) AS serial_number,
+  (
+SELECT
+  GROUP_CONCAT( CONCAT( operator_kensa, '<br>', empkensa.`name` ) SEPARATOR '_' ) 
+FROM
+  rc_kensas namekensa
+  LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = namekensa.operator_kensa 
+WHERE
+  DATE( namekensa.created_at ) = '".$week_date[$i]->week_date."' 
+  AND namekensa.ng_name IS NOT NULL 
+  AND namekensa.material_number = rc_kensas.material_number 
+  ) AS op_kensa,
+  (
+SELECT
+  GROUP_CONCAT( product SEPARATOR '_' ) 
+FROM
+  rc_kensas namekensa 
+WHERE
+  DATE( namekensa.created_at ) = '".$week_date[$i]->week_date."' 
+  AND namekensa.ng_name IS NOT NULL 
+  AND namekensa.material_number = rc_kensas.material_number 
+  ) AS product,
+  ( SELECT GROUP_CONCAT( CONCAT( part_name, ' ', part_type ) SEPARATOR '_' ) FROM rc_kensa_initials namekensa WHERE namekensa.kensa_initial_code = rc_kensas.kensa_initial_code ) AS part_name,
+  ( SELECT GROUP_CONCAT( color SEPARATOR '_' ) FROM rc_kensa_initials namekensa WHERE namekensa.kensa_initial_code = rc_kensas.kensa_initial_code ) AS color,
+  GROUP_CONCAT(
+  (
+SELECT
+  GROUP_CONCAT( DISTINCT ( cavity ) SEPARATOR '_' ) 
+FROM
+  rc_kensa_initials namekensa 
+WHERE
+  namekensa.material_number = rc_kensas.material_number 
+  AND namekensa.serial_number = rc_kensas.serial_number 
+  ) 
+  ) AS cavity,
+  ( SELECT GROUP_CONCAT( operator_molding SEPARATOR '_' ) FROM rc_kensa_initials namekensa WHERE namekensa.kensa_initial_code = rc_kensas.kensa_initial_code ) AS op_molding,
+  ( SELECT GROUP_CONCAT( molding SEPARATOR '_' ) FROM rc_kensa_initials namekensa WHERE namekensa.kensa_initial_code = rc_kensas.kensa_initial_code ) AS molding,
+  (
+SELECT
+  GROUP_CONCAT( CONCAT( operator_injection, '<br>', empkensa.`name` ) SEPARATOR '_' ) 
+FROM
+  rc_kensa_initials namekensa
+  LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = namekensa.operator_injection 
+WHERE
+  namekensa.kensa_initial_code = rc_kensas.kensa_initial_code 
+  ) AS op_injeksi,
+  (
+SELECT
+  GROUP_CONCAT( mesin_injection SEPARATOR '_' ) 
+FROM
+  rc_kensa_initials namekensa 
+WHERE
+  namekensa.material_number = rc_kensas.material_number 
+  AND namekensa.serial_number = rc_kensas.serial_number 
+  ) AS mesin,
+  (
+SELECT
+  GROUP_CONCAT( CONCAT( operator_resin, '<br>', empkensa.`name` ) SEPARATOR '_' ) 
+FROM
+  rc_kensa_initials namekensa
+  LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = namekensa.operator_resin 
+WHERE
+  namekensa.material_number = rc_kensas.material_number 
+  AND namekensa.serial_number = rc_kensas.serial_number 
+  ) AS op_resin,
+  (
+SELECT
+  GROUP_CONCAT( lot_number_resin SEPARATOR '_' ) 
+FROM
+  rc_kensa_initials namekensa 
+WHERE
+  namekensa.material_number = rc_kensas.material_number 
+  AND namekensa.serial_number = rc_kensas.serial_number 
+  ) AS resin,
+  (
+SELECT
+  GROUP_CONCAT( dryer_resin SEPARATOR '_' ) 
+FROM
+  rc_kensa_initials namekensa 
+WHERE
+  namekensa.material_number = rc_kensas.material_number 
+  AND namekensa.serial_number = rc_kensas.serial_number 
+  ) AS dryer_resin 
+FROM
+  rc_kensas 
+WHERE
+  DATE( rc_kensas.created_at ) = '".$week_date[$i]->week_date."' 
+  AND rc_kensas.ng_name IS NOT NULL 
+GROUP BY
+  material_number,
+  week_date 
+ORDER BY
+  material_number");
 
           array_push($resume_trend, $trend_detail);
         }
