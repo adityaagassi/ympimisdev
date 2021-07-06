@@ -134,24 +134,6 @@
 						<div class="col-xs-8">
 							<div id="container1" class="container1" style="width: 100%;"></div>
 						</div>
-						<div class="col-xs-2" style="padding-left: 0px;padding-right: 5px">
-							<div class="gambar">
-								<table style="text-align:center;width:100%">
-									<tr>
-										<td style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;">BEST QUALITY EMPLOYEE<br>OF THE WEEK</td>
-									</tr>
-									<tr>
-										<td id="lowest_avatar" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 15px;font-weight: bold;"></td>
-									</tr>
-									<tr>
-										<td id="lowest_name" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;"></td>
-									</tr>
-									<tr>
-										<td id="lowest_ng" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;"></td>
-									</tr>
-								</table>
-							</div>
-						</div>
 						<div class="col-xs-2" style="padding-left: 0px">
 							<div class="gambar">
 								<table style="text-align:center;width:100%">
@@ -170,6 +152,24 @@
 								</table>
 							</div>
 						</div>
+						<div class="col-xs-2" style="padding-left: 0px;padding-right: 5px">
+							<div class="gambar">
+								<table style="text-align:center;width:100%">
+									<tr>
+										<td style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;">BEST QUALITY EMPLOYEE<br>OF THE WEEK</td>
+									</tr>
+									<tr>
+										<td id="lowest_avatar" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 15px;font-weight: bold;"></td>
+									</tr>
+									<tr>
+										<td id="lowest_name" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;"></td>
+									</tr>
+									<tr>
+										<td id="lowest_ng" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;"></td>
+									</tr>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 				<hr style="border:3px solid white">
@@ -177,27 +177,6 @@
 					<div class="row">
 						<div class="col-xs-8">
 							<div id="container2" class="container2" style="width: 100%;"></div>
-						</div>
-						<div class="col-xs-2" style="padding-left: 0px;padding-right: 5px">
-							<div class="gambar">
-								<table style="text-align:center;width:100%">
-									<tr>
-										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" onclick="councelingModal()" class="sedang" id="highest_title">BAD QUALITY EMPLOYEE<br>OF THE WEEK</td>
-									</tr>
-									<tr id="not_counceled">
-										<td onclick="councelingModal()" id="not_counceled_td" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang">BELUM TRAINING & KONSELING</td>
-									</tr>
-									<tr>
-										<td id="highest_avatar" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 15px;font-weight: bold;cursor: pointer;"></td>
-									</tr>
-									<tr>
-										<td id="highest_name" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
-									</tr>
-									<tr>
-										<td id="highest_ng" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
-									</tr>
-								</table>
-							</div>
 						</div>
 						<div class="col-xs-2" style="padding-left: 0px">
 							<div class="gambar">
@@ -216,6 +195,27 @@
 									</tr>
 									<tr>
 										<td id="highest_ng_daily" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" ></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-2" style="padding-left: 0px;padding-right: 5px">
+							<div class="gambar">
+								<table style="text-align:center;width:100%">
+									<tr>
+										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" onclick="councelingModal()" class="sedang" id="highest_title">BAD QUALITY EMPLOYEE<br>OF THE WEEK</td>
+									</tr>
+									<tr id="not_counceled">
+										<td onclick="councelingModal()" id="not_counceled_td" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang">BELUM TRAINING & KONSELING</td>
+									</tr>
+									<tr>
+										<td id="highest_avatar" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 15px;font-weight: bold;cursor: pointer;"></td>
+									</tr>
+									<tr>
+										<td id="highest_name" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
+									</tr>
+									<tr>
+										<td id="highest_ng" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
 									</tr>
 								</table>
 							</div>
@@ -1166,7 +1166,7 @@
 
 									}else{
 										countsngkensa = countsngkensa + parseInt(countskensa[k]);
-										ngnamekensa.push(result.resumeyesterday[j].operator_injection+'_'+nameskensa[k]+'_'+countskensa[k]);
+										ngnamekensa.push(result.resumeyesterday[j].part_name+'_'+result.resumeyesterday[j].operator_injection+'_'+nameskensa[k]+'_'+countskensa[k]);
 									}
 								}
 							}
@@ -1189,8 +1189,8 @@
 				var resume_ng_name = [];
 
 				for (var i = 0; i <ngnamekensa.length;i++ ) {
-					if (ngnamekensa[i].split('_')[0] == highest_emp) {
-						resume_ng_name.push({y:parseInt(ngnamekensa[i].split('_')[2]),key:ngnamekensa[i].split('_')[1]});
+					if (ngnamekensa[i].split('_')[1] == highest_emp) {
+						resume_ng_name.push({y:parseInt(ngnamekensa[i].split('_')[3]),key:ngnamekensa[i].split('_')[2],product:ngnamekensa[i].split('_')[0]});
 						// for (var j = 0; j <names.length;j++ ) {
 						// 	if (names[j] == ngnamekensa[i].split('_')[1]) {
 						// 	}
@@ -1198,12 +1198,12 @@
 					}
 				}
 
-				var newObjectsMerged = resume_ng_name.reduce((r, { key, y }) => {
+				var newObjectsMerged = resume_ng_name.reduce((r, { key, y,product }) => {
 			        var temp = r.find(o => o.key === key);
 			        if (temp) {
 			            temp.y += y;
 			        } else {
-			            r.push({ key, y });
+			            r.push({ key, y,product });
 			        }
 			        return r;
 			    }, []);
@@ -1211,10 +1211,12 @@
 				newObjectsMerged.sort(dynamicSort('y'));
 
 				var ng_name_highest = "";
+				var product_highest = "";
 				var ng_count_highest = 0;
 				for (var i = 0; i < newObjectsMerged.length; i++) {
 					ng_name_highest = newObjectsMerged[i].key;
 					ng_count_highest = newObjectsMerged[i].y;
+					product_highest = newObjectsMerged[i].product.split(' ').slice(0,2).join(' ');
 				}
 
 				var low = ngcountkensa[0].key.split('_');
@@ -1239,7 +1241,7 @@
 				// $('#not_counceled_td_daily').html('BELUM TRAINING & KONSELING');
 				// document.getElementById('not_counceled_td').style.backgroundColor = '#ff8080';
 				$('#highest_avatar_daily').html('<img style="width:80px" src="'+url_highest+'" class="user-image" alt="User image">');
-				$('#not_counceled_td_daily').html('NG Terbanyak<br>'+ng_name_highest+' = '+ng_count_highest);
+				$('#not_counceled_td_daily').html('NG Terbanyak<br>'+product_highest+' '+ng_name_highest+' = '+ng_count_highest);
 				// $('#highest_title_daily').prop('class','sedang');
 				// $('#not_counceled_td_daily').prop('class','sedang');
 				// $('#highest_name_daily').prop('class','sedang');
