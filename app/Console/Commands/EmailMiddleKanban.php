@@ -43,8 +43,6 @@ class EmailMiddleKanban extends Command
         $mail_to = db::table('send_emails')
         ->where('remark', '=', 'middle')
         ->WhereNull('deleted_at')
-        ->orWhere('remark', '=', 'superman')
-        ->WhereNull('deleted_at')
         ->select('email')
         ->get();
 
