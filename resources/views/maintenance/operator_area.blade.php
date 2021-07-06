@@ -350,6 +350,7 @@
         $.each(result.loc_temp, function(index, value){
           if (value.employee_id == ("{{ Auth::user()->username }}").toUpperCase()) {
             $("#this_area").css('background-color', '#2ed573');
+            $("#code").val(value.qr_code);
             $("#desc").val(value.description);
             $("#loc").val(value.location);
             $("#login_time").val(value.created_at);
@@ -357,7 +358,7 @@
             var utc = new Date(time).toUTCString();
             var dateNow = new Date();
 
-            console.log(utc);
+            $("#logout").show();
           }
         })
       }
@@ -383,9 +384,10 @@
           $("#login_time").val(result.op_time.updated_at);
           $("#this_area").css('background-color', '#2ed573');
           $("#ket").hide();
+          $("#logout").show();
         } else {
           openSuccessGritter('Success', 'Logged Out');
-          $("#code").val("");
+          // $("#code").val("");
           $("#desc").val("");
           $("#loc").val("");
           $("#login_time").val("");
