@@ -83,8 +83,13 @@ class EmailMiddleKanban extends Command
             'jml' => $dataJml
         ];
 
+        $bcc = array();
+        array_push($bcc, 'muhammad.ikhlas@music.yamaha.com');
+
         if(count($dataKanban) > 0){
-            Mail::to($mail_to)->send(new SendEmail($data, 'middle_kanban'));
+            Mail::to($mail_to)
+            ->bcc($bcc)
+            ->send(new SendEmail($data, 'middle_kanban'));
         }
     }
 }
