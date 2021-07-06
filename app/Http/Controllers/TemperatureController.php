@@ -1692,7 +1692,7 @@ public function fetchMinMoeMonitoring(Request $request)
           SELECT
                date_in,
                employee_id,
-               GROUP_CONCAT( date_in, '_', temperature, '_', point SEPARATOR ',' ) AS temp 
+               GROUP_CONCAT( DISTINCT(date_in), '_', temperature, '_', point SEPARATOR ',' ) AS temp 
           FROM
                ivms_temperatures 
           WHERE
