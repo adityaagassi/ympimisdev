@@ -64,7 +64,7 @@ class LiveCookingCommand extends Command
             );
             $general_attendance->save();
 
-            $liveupdate = CanteenLiveCooking::where('id',$key->id_live)->first();
+            $liveupdate = CanteenLiveCooking::where('id',$live_cooking_attendance[$i]->id_live)->first();
             $liveupdate->attendance_generate_status = 1;
             $liveupdate->save();
         }
