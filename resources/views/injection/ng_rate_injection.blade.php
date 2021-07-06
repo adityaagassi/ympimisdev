@@ -1240,7 +1240,7 @@
 
 				// $('#not_counceled_td_daily').html('BELUM TRAINING & KONSELING');
 				// document.getElementById('not_counceled_td').style.backgroundColor = '#ff8080';
-				$('#highest_avatar_daily').html('<img style="width:80px" src="'+url_highest+'" class="user-image" alt="User image">');
+				$('#highest_avatar_daily').html('<img style="width:80px" src="'+url_highest+'" class="user-image" alt="User image"> <img style="width:80px" src="'+ganbatte+'" class="user-image" alt="User image">');
 				$('#not_counceled_td_daily').html('NG Terbanyak<br>'+product_highest+' '+ng_name_highest+' = '+ng_count_highest);
 				// $('#highest_title_daily').prop('class','sedang');
 				// $('#not_counceled_td_daily').prop('class','sedang');
