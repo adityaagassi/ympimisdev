@@ -85,6 +85,12 @@ table.table-bordered > tbody > tr:hover {
 @endsection
 
 @section('scripts')
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/highcharts.js")}}"></script>
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
@@ -134,6 +140,8 @@ table.table-bordered > tbody > tr:hover {
 
 		$.get('{{ url("fetch/ticket/monitoring") }}', function(result, status, xhr){			
 			if(result.status){
+				$('#ticketTable').DataTable().clear();
+				$('#ticketTable').DataTable().destroy();
 
 				$('#ticketTableBody').html('');
 				var ticketTableBody = "";
@@ -182,10 +190,10 @@ table.table-bordered > tbody > tr:hover {
 					if(value.status != 'Finished' || value.status != 'Rejected'){
 						var cnt = 0;
 						ticketTableBody += '<tr>';
-						ticketTableBody += '<td onclick="detailTicket(\''+value.ticket_id+'\')">'+value.ticket_id+'</td>';
-						ticketTableBody += '<td onclick="detailTicket(\''+value.ticket_id+'\')">'+value.department_shortname+'</td>';
-						ticketTableBody += '<td onclick="detailTicket(\''+value.ticket_id+'\')">'+value.case_title+'</td>';
-						ticketTableBody += '<td>';
+						ticketTableBody += '<td style="width: 1%;" onclick="detailTicket(\''+value.ticket_id+'\')">'+value.ticket_id+'</td>';
+						ticketTableBody += '<td style="width: 1%;" onclick="detailTicket(\''+value.ticket_id+'\')">'+value.department_shortname+'</td>';
+						ticketTableBody += '<td style="width: 10%;" onclick="detailTicket(\''+value.ticket_id+'\')">'+value.case_title+'</td>';
+						ticketTableBody += '<td style="width: 10%;">';
 						for(var i = 0; i < result.ticket_approvers.length; i++){
 							if(result.ticket_approvers[i].ticket_id == value.ticket_id){
 								cnt += 1;
@@ -206,29 +214,81 @@ table.table-bordered > tbody > tr:hover {
 						}
 						ticketTableBody += '</td>';
 						if(value.status == 'Approval'){
-							ticketTableBody += '<td font-weight: bold;"><span class="label" style="color: black; background-color: white; border: 1px solid black;">'+value.status+'</span></td>';
+							ticketTableBody += '<td style="font-weight: bold; width: 1%;"><span class="label" style="color: black; background-color: white; border: 1px solid black;">'+value.status+'</span></td>';
 						}
 						else if(value.status == 'Waiting'){
-							ticketTableBody += '<td font-weight: bold;"><span class="label" style="color: black; background-color: yellow; border: 1px solid black;">'+value.status+'</span></td>';
+							ticketTableBody += '<td style="font-weight: bold; width: 1%;"><span class="label" style="color: black; background-color: yellow; border: 1px solid black;">'+value.status+'</span></td>';
 						}
 						else if(value.status == 'InProgress'){
-							ticketTableBody += '<td font-weight: bold;"><span class="label" style="color: black; background-color: #aee571; border: 1px solid black;">'+value.status+'</span></td>';
+							ticketTableBody += '<td style="font-weight: bold; width: 1%;"><span class="label" style="color: black; background-color: #aee571; border: 1px solid black;">'+value.status+'</span></td>';
 						}
 						else if(value.status == 'OnHold'){
-							ticketTableBody += '<td font-weight: bold;"><span class="label" style="color: black; background-color: #e0e0e0; border: 1px solid black;">'+value.status+'</span></td>';
+							ticketTableBody += '<td style="font-weight: bold; width: 1%;"><span class="label" style="color: black; background-color: #e0e0e0; border: 1px solid black;">'+value.status+'</span></td>';
 						}
 						else if(value.status == 'Finished'){
-							ticketTableBody += '<td font-weight: bold;"><span class="label" style="color: black; background-color: #f9a825; border: 1px solid black;">'+value.status+'</span></td>';
+							ticketTableBody += '<td style="font-weight: bold; width: 1%;"><span class="label" style="color: black; background-color: #f9a825; border: 1px solid black;">'+value.status+'</span></td>';
 						}
 						else{
-							ticketTableBody += '<td font-weight: bold;"><span class="label" style="color: black; background-color: #e0e0e0; border: 1px solid black;">'+value.status+'</span></td>';
+							ticketTableBody += '<td style="font-weight: bold; width: 1%;"><span class="label" style="color: black; background-color: #e0e0e0; border: 1px solid black;">'+value.status+'</span></td>';
 						}
-						ticketTableBody += '<td onclick="detailTicket(\''+value.ticket_id+'\')">'+value.progress+'%</td>';
+						ticketTableBody += '<td style="width: 1%;" onclick="detailTicket(\''+value.ticket_id+'\')">'+value.progress+'%</td>';
 						ticketTableBody += '</tr>';						
 					}
 				});
 
 $('#ticketTableBody').append(ticketTableBody);
+
+$('#ticketTable').DataTable({
+	'dom': 'Bfrtip',
+	'responsive':true,
+	'lengthMenu': [
+	[ 25, 50, -1 ],
+	[ '25 rows', '50 rows', 'Show all' ]
+	],
+	'buttons': {
+		buttons:[
+		{
+			extend: 'pageLength',
+			className: 'btn btn-default',
+		},
+		{
+			extend: 'copy',
+			className: 'btn btn-success',
+			text: '<i class="fa fa-copy"></i> Copy',
+			exportOptions: {
+				columns: ':not(.notexport)'
+			}
+		},
+		{
+			extend: 'excel',
+			className: 'btn btn-info',
+			text: '<i class="fa fa-file-excel-o"></i> Excel',
+			exportOptions: {
+				columns: ':not(.notexport)'
+			}
+		},
+		{
+			extend: 'print',
+			className: 'btn btn-warning',
+			text: '<i class="fa fa-print"></i> Print',
+			exportOptions: {
+				columns: ':not(.notexport)'
+			}
+		},
+		]
+	},
+	'paging': true,
+	'lengthChange': true,
+	'searching': true,
+	'ordering': true,
+	'order': [],
+	'info': true,
+	'autoWidth': true,
+	"sPaginationType": "full_numbers",
+	"bJQueryUI": true,
+	"bAutoWidth": false,
+	"processing": true
+});
 
 var approval = [];
 var waiting = [];
