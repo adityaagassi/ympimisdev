@@ -203,19 +203,19 @@
 							<div class="gambar">
 								<table style="text-align:center;width:100%">
 									<tr>
-										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang" id="highest_title_daily">BAD QUALITY EMPLOYEE<br>OF THE DAY</td>
+										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" id="highest_title_daily">BAD QUALITY EMPLOYEE<br>OF THE DAY</td>
 									</tr>
 									<tr id="not_counceled">
-										<td id="not_counceled_td_daily" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
+										<td id="not_counceled_td_daily" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" ></td>
 									</tr>
 									<tr>
 										<td id="highest_avatar_daily" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 15px;font-weight: bold;cursor: pointer;"></td>
 									</tr>
 									<tr>
-										<td id="highest_name_daily" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
+										<td id="highest_name_daily" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" ></td>
 									</tr>
 									<tr>
-										<td id="highest_ng_daily" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
+										<td id="highest_ng_daily" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" ></td>
 									</tr>
 								</table>
 							</div>
@@ -747,7 +747,7 @@
 					],
 					tooltip: {
 						headerFormat: '<span>Total NG Assy</span><br/>',
-						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name} </span>: <b>{point.y}</b><br/>',
+						pointFormat: '<span style="color:{point.color};font-weight: bold;">{this.category} </span>: <b>{point.y}</b><br/>',
 					},
 					legend: {
 						layout: 'horizontal',
@@ -827,22 +827,22 @@
 						if (result.resumes[j].ng_name_kensa != null) {
 							if (result.resumes[j].operator_injection == result.emp[i].employee_id) {
 								ngall.push(result.resumes[j].operator_injection+'_'+result.resumes[j].name+'_'+result.resumes[j].product+'_'+result.resumes[j].material_number+'_'+result.resumes[j].part_code+'_'+result.resumes[j].part_name+'_'+result.resumes[j].cavity+'_'+result.resumes[j].ng_name+'_'+result.resumes[j].ng_count);
-								ngall_detail.push(result.resumes[j].ng_name+'_'+result.resumes[j].ng_count);
+								ngall_detail.push(result.resumes[j].operator_injection+'_'+result.resumes[j].ng_name+'_'+result.resumes[j].ng_count);
 							}
 						}
 					}
 					var ng_counts = ngall_detail.filter(onlyUnique);
 					var ngalldetailtable = ngall.filter(onlyUnique);
-					for (var l = 0; l < ng_counts.length; l++) {
-						var ngcountsss = ngall_detail[l].split('_');
-						var ngcountssss = ngcountsss[1].split(',');
-						var ng_names = ngcountsss[0].split(',');
+					// for (var l = 0; l < ng_counts.length; l++) {
+					// 	var ngcountsss = ngall_detail[l].split('_');
+					// 	var ngcountssss = ngcountsss[1].split(',');
+					// 	var ng_names = ngcountsss[0].split(',');
 
-						for (var k = 0; k < ngcountssss.length; k++) {
-							countsngkensa = countsngkensa + parseInt(ngcountssss[k]);
-						}
-					}
-					ngcountkensa.push(countsngkensa);
+					// 	for (var k = 0; k < ngcountssss.length; k++) {
+					// 		countsngkensa = countsngkensa + parseInt(ngcountssss[k]);
+					// 	}
+					// }
+					
 
 					for (var z = 0; z < ngalldetailtable.length; z++) {
 						var ngalldetailtablesplit = ngalldetailtable[z].split('_');
@@ -860,8 +860,11 @@
 								ng_name: ng_name_split[y],
 								ng_count: ng_count_split[y],
 							});
+							countsngkensa = countsngkensa + parseInt(ng_count_split[y]);
 						}
 					}
+
+					ngcountkensa.push(countsngkensa);
 				}
 
 				Highcharts.chart('container2', {
@@ -919,7 +922,7 @@
 					],
 					tooltip: {
 						headerFormat: '<span>Total NG Injection</span><br/>',
-						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name} </span>: <b>{point.y}</b><br/>',
+						pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b><br/>',
 					},
 					legend: {
 						layout: 'horizontal',
@@ -1237,10 +1240,10 @@
 				// document.getElementById('not_counceled_td').style.backgroundColor = '#ff8080';
 				$('#highest_avatar_daily').html('<img style="width:80px" src="'+url_highest+'" class="user-image" alt="User image"> <img style="width:80px" src="'+thumbs_down+'" class="user-image" alt="User image">');
 				$('#not_counceled_td_daily').html('NG Terbanyak<br>'+ng_name_highest+' = '+ng_count_highest);
-				$('#highest_title_daily').prop('class','sedang');
-				$('#not_counceled_td_daily').prop('class','sedang');
-				$('#highest_name_daily').prop('class','sedang');
-				$('#highest_ng_daily').prop('class','sedang');
+				// $('#highest_title_daily').prop('class','sedang');
+				// $('#not_counceled_td_daily').prop('class','sedang');
+				// $('#highest_name_daily').prop('class','sedang');
+				// $('#highest_ng_daily').prop('class','sedang');
 			}
 			else{
 				alert('Attempt to retrieve data failed');
