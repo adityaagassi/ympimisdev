@@ -34,8 +34,8 @@
 	    width: 100%;
 	    background-color: none;
 	    border-radius: 5px;
-	    margin-left: 15px;
-	    margin-top: 15px;
+	    margin-left: 0px;
+	    margin-top: 10px;
 	    display: inline-block;
 	    border: 2px solid white;
 	  }
@@ -131,23 +131,41 @@
 				</div> -->
 				<div class="col-xs-12">
 					<div class="row">
-						<div class="col-xs-9">
+						<div class="col-xs-8">
 							<div id="container1" class="container1" style="width: 100%;"></div>
 						</div>
-						<div class="col-xs-3" style="padding-left: 10px">
+						<div class="col-xs-2" style="padding-left: 0px;padding-right: 5px">
 							<div class="gambar">
 								<table style="text-align:center;width:100%">
 									<tr>
-										<td style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 20px;font-weight: bold;">BEST QUALITY EMPLOYEE<br>OF THE WEEK</td>
+										<td style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;">BEST QUALITY EMPLOYEE<br>OF THE WEEK</td>
 									</tr>
 									<tr>
-										<td id="lowest_avatar" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 20px;font-weight: bold;"></td>
+										<td id="lowest_avatar" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 15px;font-weight: bold;"></td>
 									</tr>
 									<tr>
-										<td id="lowest_name" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 20px;font-weight: bold;"></td>
+										<td id="lowest_name" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;"></td>
 									</tr>
 									<tr>
-										<td id="lowest_ng" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 20px;font-weight: bold;"></td>
+										<td id="lowest_ng" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;"></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-2" style="padding-left: 0px">
+							<div class="gambar">
+								<table style="text-align:center;width:100%">
+									<tr>
+										<td style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;">BEST QUALITY EMPLOYEE<br>OF THE DAY</td>
+									</tr>
+									<tr>
+										<td id="lowest_avatar_daily" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 15px;font-weight: bold;"></td>
+									</tr>
+									<tr>
+										<td id="lowest_name_daily" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;"></td>
+									</tr>
+									<tr>
+										<td id="lowest_ng_daily" style="border: 1px solid #fff !important;background-color: #80ff91;color: black;font-size: 15px;font-weight: bold;"></td>
 									</tr>
 								</table>
 							</div>
@@ -157,26 +175,47 @@
 				<hr style="border:3px solid white">
 				<div class="col-xs-12">
 					<div class="row">
-						<div class="col-xs-9">
+						<div class="col-xs-8">
 							<div id="container2" class="container2" style="width: 100%;"></div>
 						</div>
-						<div class="col-xs-3" style="padding-left: 10px">
+						<div class="col-xs-2" style="padding-left: 0px;padding-right: 5px">
 							<div class="gambar">
 								<table style="text-align:center;width:100%">
 									<tr>
-										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;" onclick="councelingModal()" class="sedang" id="highest_title">BAD QUALITY EMPLOYEE<br>OF THE WEEK</td>
+										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" onclick="councelingModal()" class="sedang" id="highest_title">BAD QUALITY EMPLOYEE<br>OF THE WEEK</td>
 									</tr>
 									<tr id="not_counceled">
-										<td onclick="councelingModal()" id="not_counceled_td" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;" class="sedang">BELUM TRAINING & KONSELING</td>
+										<td onclick="councelingModal()" id="not_counceled_td" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang">BELUM TRAINING & KONSELING</td>
 									</tr>
 									<tr>
-										<td id="highest_avatar" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 20px;font-weight: bold;cursor: pointer;"></td>
+										<td id="highest_avatar" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 15px;font-weight: bold;cursor: pointer;"></td>
 									</tr>
 									<tr>
-										<td id="highest_name" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;" class="sedang"></td>
+										<td id="highest_name" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
 									</tr>
 									<tr>
-										<td id="highest_ng" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 20px;font-weight: bold;cursor: pointer;" class="sedang"></td>
+										<td id="highest_ng" onclick="councelingModal()" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-2" style="padding-left: 0px">
+							<div class="gambar">
+								<table style="text-align:center;width:100%">
+									<tr>
+										<td style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang" id="highest_title_daily">BAD QUALITY EMPLOYEE<br>OF THE DAY</td>
+									</tr>
+									<tr id="not_counceled">
+										<td id="not_counceled_td_daily" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
+									</tr>
+									<tr>
+										<td id="highest_avatar_daily" style="border: 1px solid #fff !important;background-color:white;color: black;font-size: 15px;font-weight: bold;cursor: pointer;"></td>
+									</tr>
+									<tr>
+										<td id="highest_name_daily" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
+									</tr>
+									<tr>
+										<td id="highest_ng_daily" style="border: 1px solid #fff !important;background-color: #ff8080;color: black;font-size: 15px;font-weight: bold;cursor: pointer;" class="sedang"></td>
 									</tr>
 								</table>
 							</div>
@@ -969,6 +1008,19 @@
 						
 				// }
 				);
+				var emp = [];
+				for (var j = 0; j < result.resumeweek.length; j++) {
+					// if (result.resumeweek[j].ng_name_kensa != null) {
+					// 	var countskensa = result.resumeweek[j].ng_count_kensa.split(',');
+					// 	for (var k = 0; k < countskensa.length; k++) {
+					// 		countsngkensa = countsngkensa + parseInt(countskensa[k]);
+					// 	}
+					// }
+					// counceling = result.resumeweek[j].counceled_employee;
+					emp.push(result.resumeweek[j].operator_injection+'_'+result.resumeweek[j].name);
+				}
+
+				var emps = emp.filter(onlyUnique);
 
 				var operator = [];
 				var ngname = [];
@@ -977,23 +1029,31 @@
 				var ngcountkensa = [];
 				var ngall = [];
 				var counceling = "";
-				for (var i = 0; i < result.emp.length; i++) {
-					operator.push(result.emp[i].name);
+
+				for (var i = 0; i < emps.length; i++) {
+					operator.push(emps[i].name);
 					var countsngkensa = 0;
 					for (var j = 0; j < result.resumeweek.length; j++) {
 						if (result.resumeweek[j].ng_name_kensa != null) {
-							if (result.resumeweek[j].operator_injection == result.emp[i].employee_id) {
+							if (result.resumeweek[j].operator_injection == emps[i].split('_')[0]) {
+								var nameskensa = result.resumeweek[j].ng_name_kensa.split(',');
 								var countskensa = result.resumeweek[j].ng_count_kensa.split(',');
 								for (var k = 0; k < countskensa.length; k++) {
-									countsngkensa = countsngkensa + parseInt(countskensa[k]);
+									if (nameskensa[k] == 'NG Gate Cut' || nameskensa[k] == 'NG Top Side' || nameskensa[k] == 'NG Hot Stamp') {
+
+									}else{
+										countsngkensa = countsngkensa + parseInt(countskensa[k]);
+									}
 								}
 							}
 						}
 						counceling = result.resumeweek[j].counceled_employee;
 					}
-					ngcountkensa.push({y:parseInt(countsngkensa),key:result.emp[i].employee_id+'_'+result.emp[i].name});
+					ngcountkensa.push({y:parseInt(countsngkensa),key:emps[i].split('_')[0]+'_'+emps[i].split('_')[1]});
 				}
 				ngcountkensa.sort(dynamicSort('y'));
+
+				// console.log(ngcountkensa);
 				var highest_emp = "";
 				var highest_name = "";
 				var highest_ng = 0;
@@ -1021,7 +1081,7 @@
 				var thumbs_down = '{{ url("data_file/injection/not_ok.png") }}';
 				var ganbatte = '{{ url("data_file/injection/ganbatte.png") }}';
 
-				$('#lowest_avatar').html('<img style="width:120px" src="'+url_lowest+'" class="user-image" alt="User image"> <img style="width:120px" src="'+thumbs_up+'" class="user-image" alt="User image">');
+				$('#lowest_avatar').html('<img style="width:80px" src="'+url_lowest+'" class="user-image" alt="User image"> <img style="width:80px" src="'+thumbs_up+'" class="user-image" alt="User image">');
 
 				$('#firstDate').val(result.firstdayweek);
 				$('#lastDate').val(result.lastdayweek);
@@ -1029,7 +1089,7 @@
 				if (counceling == null) {
 					$('#not_counceled_td').html('BELUM TRAINING & KONSELING');
 					document.getElementById('not_counceled_td').style.backgroundColor = '#ff8080';
-					$('#highest_avatar').html('<img style="width:120px" src="'+url_highest+'" class="user-image" alt="User image"> <img style="width:120px" src="'+thumbs_down+'" class="user-image" alt="User image">');
+					$('#highest_avatar').html('<img style="width:80px" src="'+url_highest+'" class="user-image" alt="User image"> <img style="width:80px" src="'+thumbs_down+'" class="user-image" alt="User image">');
 					$('#highest_title').prop('class','sedang');
 					$('#not_counceled_td').prop('class','sedang');
 					$('#highest_name').prop('class','sedang');
@@ -1037,13 +1097,150 @@
 				}else{
 					// $('#not_counceled').show();
 					document.getElementById('not_counceled_td').style.backgroundColor = '#82ff80';
-					$('#highest_avatar').html('<img style="width:120px" src="'+url_highest+'" class="user-image" alt="User image"> <img style="width:120px" src="'+ganbatte+'" class="user-image" alt="User image">');
+					$('#highest_avatar').html('<img style="width:80px" src="'+url_highest+'" class="user-image" alt="User image"> <img style="width:80px" src="'+ganbatte+'" class="user-image" alt="User image">');
 					$('#not_counceled_td').html('SUDAH TRAINING &KONSELING');
 					$('#highest_title').removeAttr('class');
 					$('#not_counceled_td').removeAttr('class');
 					$('#highest_name').removeAttr('class');
 					$('#highest_ng').removeAttr('class');
 				}
+
+
+				//RESUME YESTERDAY
+				var emp = [];
+				var name = [];
+				for (var j = 0; j < result.resumeyesterday.length; j++) {
+					// if (result.resumeweek[j].ng_name_kensa != null) {
+					// 	var countskensa = result.resumeweek[j].ng_count_kensa.split(',');
+					// 	for (var k = 0; k < countskensa.length; k++) {
+					// 		countsngkensa = countsngkensa + parseInt(countskensa[k]);
+					// 	}
+					// }
+					// counceling = result.resumeweek[j].counceled_employee;
+					emp.push(result.resumeyesterday[j].operator_injection+'_'+result.resumeyesterday[j].name);
+					if (result.resumeyesterday[j].ng_name_kensa != null) {
+						var namekensa = result.resumeyesterday[j].ng_name_kensa.split(',');
+						for (var k = 0; k < result.resumeyesterday.length; k++) {
+							name.push(result.resumeyesterday[j].ng_name_kensa);
+						}
+					}
+				}
+				var emps = emp.filter(onlyUnique);
+				var names = name.filter(onlyUnique);
+
+				var operator = [];
+				var ngname = [];
+				var ngcount = [];
+				var ngnamekensa = [];
+				var ngcountkensa = [];
+				var ngall = [];
+				// for (var i = 0; i < emps.length; i++) {
+				// 	operator.push(emps[i].split('_')[1]);
+				// 	var countsngkensa = 0;
+				// 	for (var j = 0; j < result.resumeyesterday.length; j++) {
+				// 		if (result.resumeyesterday[j].ng_name_kensa != null) {
+				// 			if (result.resumeyesterday[j].operator_injection == emps[i].split('_')[0]) {
+				// 				var namekensa = result.resumeyesterday[j].ng_name_kensa.split(',');
+				// 				for (var k = 0; k < namekensa.length; k++) {
+				// 					ngnamekensa.push(namekensa[k]);
+				// 				}
+				// 			}
+				// 		}
+				// 	}
+				// }
+				var ngnames = ngname.filter(onlyUnique);
+				for (var i = 0; i < emps.length; i++) {
+					operator.push(emps[i].split('_')[1]);
+					var countsngkensa = 0;
+					for (var j = 0; j < result.resumeyesterday.length; j++) {
+						if (result.resumeyesterday[j].ng_name_kensa != null) {
+							var ng_names = [];
+							if (result.resumeyesterday[j].operator_injection == emps[i].split('_')[0]) {
+								var countskensa = result.resumeyesterday[j].ng_count_kensa.split(',');
+								var nameskensa = result.resumeyesterday[j].ng_name_kensa.split(',');
+								for (var k = 0; k < countskensa.length; k++) {
+									if (nameskensa[k] == 'NG Gate Cut' || nameskensa[k] == 'NG Top Side' || nameskensa[k] == 'NG Hot Stamp') {
+
+									}else{
+										countsngkensa = countsngkensa + parseInt(countskensa[k]);
+										ngnamekensa.push(result.resumeyesterday[j].operator_injection+'_'+nameskensa[k]+'_'+countskensa[k]);
+									}
+								}
+							}
+						}
+					}
+					ngcountkensa.push({y:parseInt(countsngkensa),key:emps[i].split('_')[0]+'_'+emps[i].split('_')[1]});
+				}
+				ngcountkensa.sort(dynamicSort('y'));
+
+				var highest_emp = "";
+				var highest_name = "";
+				var highest_ng = 0;
+				for (var i = 0; i < ngcountkensa.length; i++) {
+					var high = ngcountkensa[i].key.split('_');
+					highest_emp = high[0];
+					highest_name = high[1];
+					highest_ng = ngcountkensa[i].y;
+				}
+
+				var resume_ng_name = [];
+
+				for (var i = 0; i <ngnamekensa.length;i++ ) {
+					if (ngnamekensa[i].split('_')[0] == highest_emp) {
+						resume_ng_name.push({y:parseInt(ngnamekensa[i].split('_')[2]),key:ngnamekensa[i].split('_')[1]});
+						// for (var j = 0; j <names.length;j++ ) {
+						// 	if (names[j] == ngnamekensa[i].split('_')[1]) {
+						// 	}
+						// }
+					}
+				}
+
+				var newObjectsMerged = resume_ng_name.reduce((r, { key, y }) => {
+			        var temp = r.find(o => o.key === key);
+			        if (temp) {
+			            temp.y += y;
+			        } else {
+			            r.push({ key, y });
+			        }
+			        return r;
+			    }, []);
+
+				newObjectsMerged.sort(dynamicSort('y'));
+
+				var ng_name_highest = "";
+				var ng_count_highest = 0;
+				for (var i = 0; i < newObjectsMerged.length; i++) {
+					ng_name_highest = newObjectsMerged[i].key;
+					ng_count_highest = newObjectsMerged[i].y;
+				}
+
+				var low = ngcountkensa[0].key.split('_');
+				var lowest_emp = low[0];
+				var lowest_name = low[1];
+				var lowest_ng = ngcountkensa[0].y;
+
+				$('#highest_name_daily').html(highest_emp+' - '+highest_name.split(' ').slice(0,2).join(' '));
+				$('#highest_ng_daily').html('Jumlah NG = '+highest_ng);
+
+				$('#lowest_name_daily').html(lowest_emp+' - '+lowest_name.split(' ').slice(0,2).join(' '));
+				$('#lowest_ng_daily').html('Jumlah NG = '+lowest_ng);
+
+				var url_lowest = '{{ url("images/avatar/") }}/'+lowest_emp+'.jpg';
+				var thumbs_up = '{{ url("data_file/injection/ok.png") }}';
+				var url_highest = '{{ url("images/avatar/") }}/'+highest_emp+'.jpg';
+				var thumbs_down = '{{ url("data_file/injection/not_ok.png") }}';
+				var ganbatte = '{{ url("data_file/injection/ganbatte.png") }}';
+
+				$('#lowest_avatar_daily').html('<img style="width:80px" src="'+url_lowest+'" class="user-image" alt="User image"> <img style="width:80px" src="'+thumbs_up+'" class="user-image" alt="User image">');
+
+				// $('#not_counceled_td_daily').html('BELUM TRAINING & KONSELING');
+				// document.getElementById('not_counceled_td').style.backgroundColor = '#ff8080';
+				$('#highest_avatar_daily').html('<img style="width:80px" src="'+url_highest+'" class="user-image" alt="User image"> <img style="width:80px" src="'+thumbs_down+'" class="user-image" alt="User image">');
+				$('#not_counceled_td_daily').html('NG Terbanyak<br>'+ng_name_highest+' = '+ng_count_highest);
+				$('#highest_title_daily').prop('class','sedang');
+				$('#not_counceled_td_daily').prop('class','sedang');
+				$('#highest_name_daily').prop('class','sedang');
+				$('#highest_ng_daily').prop('class','sedang');
 			}
 			else{
 				alert('Attempt to retrieve data failed');

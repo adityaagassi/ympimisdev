@@ -7324,9 +7324,12 @@ class InjectionsController extends Controller
         try {
             if ($request->get('tanggal') == "") {
               $now = date('Y-m-d');
+              $yesterday = date('Y-m-d',strtotime("-1 days"));
             }else{
-              $now = $request->get('tanggal');
+              $now = date('Y-m-d',strtotime($request->get('tanggal')));
+              $yesterday = date('Y-m-d',strtotime("-1 days",strtotime($now)));
             }
+
             $emp = DB::SELECT("SELECT DISTINCT
                     ( rc_kensa_initials.operator_injection ) AS employee_id,
                     employee_syncs.`name` 
@@ -7496,11 +7499,68 @@ class InjectionsController extends Controller
             AND DATE( rc_kensa_initials.created_at ) >= '".$firstdayweek."' 
             AND DATE( rc_kensa_initials.created_at ) <= '".$lastdayweek."'  ");
 
+            $resumeyesterday = DB::SELECT("SELECT DISTINCT
+                ( rc_kensa_initials.operator_injection ),
+                employee_syncs.`name`,
+                rc_kensa_initials.ng_name,
+                rc_kensa_initials.ng_count,
+                empkensa.`name` AS name_kensa,
+                operator_kensa AS emp_kensa,
+                serial_number,
+                rc_kensa_initials.product,
+                rc_kensa_initials.material_number,
+                part_code,
+                injection_parts.part_name,
+                rc_kensa_initials.cavity,
+                (
+                SELECT
+                    GROUP_CONCAT( rc_kensas.ng_name ) 
+                FROM
+                    rc_kensas
+                    LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
+                WHERE
+                    rc_kensas.kensa_initial_code = rc_kensa_initials.kensa_initial_code 
+                    AND ng_name IS NOT NULL 
+                    AND DATE( rc_kensas.created_at ) = '".$yesterday."' 
+                    AND injection_parts.deleted_at IS NULL 
+                    AND injection_parts.remark = 'injection' 
+                    AND injection_parts.part_code NOT LIKE '%MJ%' 
+                    AND injection_parts.part_code NOT LIKE '%BJ%' 
+                ) AS ng_name_kensa,
+                (
+                SELECT
+                    GROUP_CONCAT( rc_kensas.ng_count ) 
+                FROM
+                    rc_kensas
+                    LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensas.material_number 
+                WHERE
+                    rc_kensas.kensa_initial_code = rc_kensa_initials.kensa_initial_code 
+                    AND ng_name IS NOT NULL 
+                    AND DATE( rc_kensas.created_at ) = '".$yesterday."' 
+                    AND injection_parts.deleted_at IS NULL 
+                    AND injection_parts.remark = 'injection' 
+                    AND injection_parts.part_code NOT LIKE '%MJ%' 
+                    AND injection_parts.part_code NOT LIKE '%BJ%' 
+                ) AS ng_count_kensa 
+            FROM
+                rc_kensa_initials
+                LEFT JOIN employee_syncs ON employee_syncs.employee_id = rc_kensa_initials.operator_injection 
+                LEFT JOIN injection_parts ON injection_parts.gmc = rc_kensa_initials.material_number
+                LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = rc_kensa_initials.operator_kensa
+            WHERE
+                rc_kensa_initials.ng_name IS NOT NULL
+            AND rc_kensa_initials.part_type NOT LIKE '%MJ%' 
+            AND rc_kensa_initials.part_type NOT LIKE '%BJ%'
+            AND injection_parts.deleted_at IS NULL 
+            AND injection_parts.remark = 'injection'
+            AND DATE( rc_kensa_initials.created_at ) = '".$yesterday."'");
+
             $response = array(
               'status' => true,
               'emp' => $emp,
               'resumes' => $resumes,
               'resumeweek' => $resumeweek,
+              'resumeyesterday' => $resumeyesterday,
               'dateTitle' => $dateTitle,
               'firstdayweek' => $firstdayweek,
               'lastdayweek' => $lastdayweek,
