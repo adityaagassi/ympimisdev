@@ -2413,6 +2413,8 @@ class KnockDownController extends Controller{
 			$storage = "('WELDING') AND m.kd_name = 'KEY POST'";
 		}else if($id == 'mouthpiece-packed'){
 			$storage = "('MP') AND m.kd_name = 'MP'";
+		}else if($id == 'pn-part'){
+			$storage = "('PN-PART')";
 		}
 
 		// $target = db::select("select target.material_number, target.material_description, sum(target.quantity ) as target from

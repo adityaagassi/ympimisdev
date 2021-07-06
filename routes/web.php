@@ -2054,7 +2054,7 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 //PIANICA
 Route::group(['nav' => 'S55', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_pn_part/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print_pn_part', 'KnockDownController@printLabelNew');
+	Route::post('fetch/kd_print_pn_part', 'KnockDownController@printLabelNewSingle');
 
 	Route::get('index/print_label_pn_part/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });

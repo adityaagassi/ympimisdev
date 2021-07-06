@@ -98,10 +98,9 @@
 							<table class="table table-hover table-bordered table-striped" id="tableList">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width: 15%;">Stuffing Date</th>
+										<th style="width: 15%;">Due Date</th>
 										<th style="width: 10%;">Material</th>
 										<th style="width: 50%;">Description</th>
-										<th style="width: 15%;">Destination</th>
 										<th style="width: 10%;">Target</th>
 									</tr>					
 								</thead>
@@ -109,7 +108,7 @@
 								</tbody>
 								<tfoot style="background-color: rgb(252, 248, 227);">
 									<tr>
-										<th colspan="4" style="text-align:center;">Total:</th>
+										<th colspan="3" style="text-align:center;">Total:</th>
 										<th></th>
 									</tr>
 								</tfoot>
@@ -119,26 +118,20 @@
 				</div>
 				<div class="col-xs-5" style="margin-top: 3%;">
 					<div class="row">
-						<input type="hidden" id="shipment_id">
+						<input type="hidden" id="production_id">
 						<input type="hidden" id="target">
 
 						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Stuffing Date:</span>
+							<span style="font-weight: bold; font-size: 16px;">Due Date:</span>
 						</div>
 						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Destination:</span>
-						</div>
-						<div class="col-xs-6">
-							<input type="text" id="st_date" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-						</div>
-						<div class="col-xs-6">
-							<input type="text" id="destination"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-						</div>						
-						<div class="col-xs-12">
 							<span style="font-weight: bold; font-size: 16px;">Material Number:</span>
 						</div>
-						<div class="col-xs-12">
-							<input type="text" id="material_number" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+						<div class="col-xs-6">
+							<input type="text" id="due_date" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+						</div>
+						<div class="col-xs-6">
+							<input type="text" id="material_number"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
 						<div class="col-xs-12">
 							<span style="font-weight: bold; font-size: 16px;">Material Description:</span>
@@ -174,8 +167,6 @@
 									<th style="width: 5%">Material Description</th>
 									<th style="width: 2%">Location</th>
 									<th style="width: 1%">Qty</th>
-									<th style="width: 2%">Stuffing Date</th>
-									<th style="width: 2%">Destination</th>
 									<th style="width: 3%">Created At</th>
 									<th style="width: 1%">Reprint</th>
 									<th style="width: 1%">Delete</th>
@@ -185,8 +176,6 @@
 							</tbody>
 							<tfoot>
 								<tr>
-									<th></th>
-									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -374,8 +363,6 @@
 			{ "data": "material_description" },
 			{ "data": "location" },
 			{ "data": "quantity" },
-			{ "data": "st_date" },
-			{ "data": "destination_shortname" },
 			{ "data": "updated_at" },
 			{ "data": "reprintKDO" },
 			{ "data": "deleteKDO" }
@@ -416,16 +403,8 @@
 		var location = "{{ $location }}";
 
 		var url = '';
-		if(location == 'case'){
-			url = '{{ url("index/print_label_case") }}'+'/'+kd_detail;
-		}else if(location == 'mouthpiece-packed'){
-			url = '{{ url("index/print_label_mouthpiece") }}'+'/'+kd_detail;
-		}else if(location == 'pn-part'){
+		if(location == 'pn-part'){
 			url = '{{ url("index/print_label_pn_part") }}'+'/'+kd_detail;
-		}else if(location == 'vn-assy'){
-			url = '{{ url("index/print_label_vn_assy") }}'+'/'+kd_detail;
-		}else if(location == 'vn-injection'){
-			url = '{{ url("index/print_label_vn_injection") }}'+'/'+kd_detail;
 		}
 
 		newwindow = window.open(url, windowName, 'height=250,width=450');
@@ -439,26 +418,18 @@
 
 
 	function print() {
-		var shipment_id = $("#shipment_id").val();
+		var production_id = $("#production_id").val();
 		var material_number = $("#material_number").val();
 		var quantity = $("#qty_packing").val();
 		var location = "{{ $location }}";
 
 		var url = '';
-		if(location == 'case'){
-			url = '{{ url("fetch/kd_print_case") }}';
-		}else if(location == 'mouthpiece-packed'){
-			url = '{{ url("fetch/kd_print_mp") }}';
-		}else if(location == 'pn-part'){
+		if(location == 'pn-part'){
 			url = '{{ url("fetch/kd_print_pn_part") }}';
-		}else if(location == 'vn-assy'){
-			url = '{{ url("fetch/kd_print_vn_assy") }}';
-		}else if(location == 'vn-njection'){
-			url = '{{ url("fetch/kd_print_vn_injection") }}';
 		}
 
 		var data = {
-			shipment_id : shipment_id,
+			production_id : production_id,
 			material_number : material_number,
 			quantity : quantity,
 			location : location,
@@ -478,15 +449,14 @@
 		$("#loading").show();
 		$.post(url, data,  function(result, status, xhr){
 			if(result.status){
-				var id = result.knock_down_detail_id;
+				var id = result.knock_down_detail.id;
 				printLabelSubassy(id, ('print'+id));
 
 				fillTableList();
 				$('#kdo_detail').DataTable().ajax.reload();
 
-				$('#shipment_id').val('');
-				$('#st_date').val('');
-				$('#destination').val('');
+				$('#production_id').val('');
+				$('#due_date').val('');
 				$('#material_number').val('');
 				$('#material_description').val('');
 				$('#qty_packing').val('');
@@ -506,15 +476,13 @@
 		var id = data[0];
 		var lot_completion = data[1];
 
-		var st_date = $('#'+param).find('td').eq(0).text();
+		var due_date = $('#'+param).find('td').eq(0).text();
 		var material_number = $('#'+param).find('td').eq(1).text();
 		var material_description = $('#'+param).find('td').eq(2).text();
-		var destination = $('#'+param).find('td').eq(3).text();
-		var target = $('#'+param).find('td').eq(4).text();
+		var target = $('#'+param).find('td').eq(3).text();
 
-		$('#shipment_id').val(id);
-		$('#st_date').val(st_date);
-		$('#destination').val(destination);
+		$('#production_id').val(id);
+		$('#due_date').val(due_date);
 		$('#material_number').val(material_number);
 		$('#material_description').val(material_description);
 		$('#target').val(target);
@@ -562,7 +530,7 @@
 
 	function fillTableList(){
 
-		$.get('{{ url("fetch/kd_new/".$location) }}',  function(result, status, xhr){
+		$.get('{{ url("fetch/kd/".$location) }}',  function(result, status, xhr){
 			$('#tableList').DataTable().clear();
 			$('#tableList').DataTable().destroy();
 			$('#tableBodyList').html("");
@@ -571,10 +539,9 @@
 			var total_target = 0;
 			$.each(result.target, function(key, value) {
 				tableData += '<tr id="'+value.id+'_'+value.lot_completion+'" onclick="fillField(id)">';
-				tableData += '<td>'+ value.st_date +'</td>';
+				tableData += '<td>'+ value.due_date +'</td>';
 				tableData += '<td>'+ value.material_number +'</td>';
 				tableData += '<td>'+ value.material_description +'</td>';
-				tableData += '<td>'+ value.destination_shortname +'</td>';
 				tableData += '<td>'+ value.target +'</td>';
 				tableData += '</tr>';
 				total_target += value.target;
@@ -629,10 +596,10 @@
 						i : 0;
 					};
 					var api = this.api();
-					var totalPlan = api.column(4).data().reduce(function (a, b) {
+					var totalPlan = api.column(3).data().reduce(function (a, b) {
 						return intVal(a)+intVal(b);
 					}, 0)
-					$(api.column(4).footer()).html(totalPlan);
+					$(api.column(3).footer()).html(totalPlan);
 				},
 				'paging': true,
 				'lengthChange': true,
