@@ -3855,6 +3855,8 @@ Route::get('index/recorder/display/kensa', 'RecorderProcessController@indexDispl
 Route::get('fetch/recorder/display/kensa', 'RecorderProcessController@fetchDisplayKensa');
 Route::get('index/recorder/display/ng_rate_kensa', 'RecorderProcessController@indexNgRateKensa');
 Route::get('fetch/recorder/display/ng_rate_kensa', 'RecorderProcessController@fetchNgRateKensa');
+Route::get('index/recorder/display/ng_trend', 'RecorderProcessController@indexNgTrend');
+Route::get('fetch/recorder/display/ng_trend', 'RecorderProcessController@fetchNgTrend');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');

@@ -8043,7 +8043,7 @@ class RecorderProcessController extends Controller
     {
       return view('recorder.process.clean_kanban', array(
         'title' => 'Clean Kanban Recorder',
-        'title_jp' => '??'
+        'title_jp' => 'リコーダーかんばんのフォーマット'
       ))->with('page', 'Clean Kanban Recorder');
     }
 
@@ -8051,7 +8051,7 @@ class RecorderProcessController extends Controller
     {
       return view('recorder.display.kensa')
       ->with('title', 'Display Kensa Kakuning Recorder')
-      ->with('title_jp', '')
+      ->with('title_jp', 'リコーダー検査の画面')
       ->with('page', 'Display Kensa Kakuning Recorder');
     }
 
@@ -8119,9 +8119,9 @@ class RecorderProcessController extends Controller
     public function indexNgRateKensa()
     {
       return view('recorder.display.ng_rate_kensa')
-      ->with('title', 'Display Kensa Kakuning Recorder')
-      ->with('title_jp', '')
-      ->with('page', 'Display Kensa Kakuning Recorder');
+      ->with('title', 'Display NG Rate Recorder')
+      ->with('title_jp', 'リコーダー不良率の画面')
+      ->with('page', 'Display NG Rate Recorder');
     }
 
     public function fetchNgRateKensa(Request $request)
@@ -8161,6 +8161,154 @@ class RecorderProcessController extends Controller
           'status' => true,
           'resumes' => $resumes,
           'dateTitle' => $dateTitle
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function indexNgTrend()
+    {
+      return view('recorder.display.ng_trend')
+      ->with('title', 'Display NG Trend Recorder')
+      ->with('title_jp', 'リコーダー不良傾向の画面')
+      ->with('page', 'Display NG Trend Recorder');
+    }
+
+    public function fetchNgTrend(Request $request)
+    {
+      try {
+        $date_from = $request->get('date_from');
+        $date_to = $request->get('date_to');
+        if ($date_from == "") {
+             if ($date_to == "") {
+                  $first = "'".date('Y-m-01')."'";
+                  $last = "'".date('Y-m-d')."'";
+                  $dateTitleFirst = date('d M Y',strtotime(date('Y-m-01')));
+                  $dateTitleLast = date('d M Y',strtotime(date('Y-m-d')));
+             }else{
+                  $first = "'".date('Y-m-01')."'";
+                  $last = "'".$date_to."'";
+                  $dateTitleFirst = date('d M Y',strtotime(date('Y-m-01')));
+                  $dateTitleLast = date('d M Y',strtotime($date_to));
+             }
+        }else{
+             if ($date_to == "") {
+                  $first = "'".$date_from."'";
+                  $last = "'".date('Y-m-d')."'";
+                  $dateTitleFirst = date('d M Y',strtotime($date_from));
+                  $dateTitleLast = date('d M Y',strtotime(date('Y-m-d')));
+             }else{
+                  $first = "'".$date_from."'";
+                  $last = "'".$date_to."'";
+                  $dateTitleFirst = date('d M Y',strtotime($date_from));
+                  $dateTitleLast = date('d M Y',strtotime($date_to));
+             }
+        }
+
+        $week_date = DB::SELECT("SELECT
+          week_date 
+        FROM
+          weekly_calendars 
+        WHERE
+          week_date >= ".$first."
+          AND week_date <= ".$last."
+          AND remark != 'H'");
+
+        $resumes = [];
+        $resume_trend = [];
+
+        for ($i=0; $i < count($week_date); $i++) { 
+          $resume = DB::SELECT("SELECT DISTINCT
+            ( part_code ),
+            '".$week_date[$i]->week_date."' AS week_date,
+            (
+            SELECT
+              GROUP_CONCAT( ng_name ) 
+            FROM
+              rc_kensas
+              LEFT JOIN injection_parts a ON a.gmc = rc_kensas.material_number 
+            WHERE
+              DATE( rc_kensas.created_at ) = '".$week_date[$i]->week_date."' 
+              AND rc_kensas.ng_name IS NOT NULL 
+              AND a.deleted_at IS NULL 
+              AND a.remark = 'injection' 
+              AND a.part_code = injection_parts.part_code 
+            ) AS ng_name,
+            (
+            SELECT
+              GROUP_CONCAT( ng_count ) 
+            FROM
+              rc_kensas
+              LEFT JOIN injection_parts a ON a.gmc = rc_kensas.material_number 
+            WHERE
+              DATE( rc_kensas.created_at ) = '".$week_date[$i]->week_date."' 
+              AND rc_kensas.ng_name IS NOT NULL 
+              AND a.deleted_at IS NULL 
+              AND a.remark = 'injection' 
+              AND a.part_code = injection_parts.part_code 
+            ) AS ng_count 
+          FROM
+            injection_parts 
+          WHERE
+            injection_parts.deleted_at IS NULL 
+            AND injection_parts.remark = 'injection'");
+
+          array_push($resumes, $resume);
+
+          $trend_detail = DB::SELECT("SELECT
+            GROUP_CONCAT( a.ng_name_kensa ) AS ng_names,
+            GROUP_CONCAT( a.ng_count_kensa ) AS ng_counts,
+            a.*,
+            '".$week_date[$i]->week_date."' AS week_date,
+            rc_kensa_initials.*,
+            empinjeksi.`name` as injeksi_name,
+            empresin.`name` as resin_name
+          FROM
+            (
+            SELECT
+              rc_kensas.kensa_initial_code,
+              rc_kensas.serial_number,
+              rc_kensas.operator_kensa,
+              empkensa.`name`,
+              rc_kensas.tag,
+              rc_kensas.product,
+              rc_kensas.material_number,
+              rc_kensas.cavity,
+              rc_kensas.ng_name AS ng_name_kensa,
+              rc_kensas.ng_count AS ng_count_kensa
+              
+            FROM
+              rc_kensas
+              LEFT JOIN injection_parts a ON a.gmc = rc_kensas.material_number
+              LEFT JOIN employee_syncs empkensa ON empkensa.employee_id = rc_kensas.operator_kensa 
+            WHERE
+              DATE( rc_kensas.created_at ) = '".$week_date[$i]->week_date."' 
+              AND rc_kensas.ng_name IS NOT NULL 
+              AND a.deleted_at IS NULL 
+              AND a.remark = 'injection' 
+            ) a
+            LEFT JOIN rc_kensa_initials ON rc_kensa_initials.kensa_initial_code = a.kensa_initial_code 
+            LEFT JOIN employee_syncs empinjeksi ON empinjeksi.employee_id = rc_kensa_initials.operator_injection
+            LEFT JOIN employee_syncs empresin ON empresin.employee_id = rc_kensa_initials.operator_resin 
+          GROUP BY
+            a.material_number");
+
+          array_push($resume_trend, $trend_detail);
+        }
+
+        $response = array(
+          'status' => true,
+          'resumes' => $resumes,
+          'resume_trend' => $resume_trend,
+          'week_date' => $week_date,
+          'dateTitleFirst' => $dateTitleFirst,
+          'dateTitleLast' => $dateTitleLast
         );
         return Response::json($response);
       } catch (\Exception $e) {
