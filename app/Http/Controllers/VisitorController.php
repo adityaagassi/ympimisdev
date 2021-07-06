@@ -234,7 +234,7 @@ class VisitorController extends Controller
 
 				$contactList = [];
 		        $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
-		        $contactList[1] = 'aditya.agassi@music.yamaha.com';
+		        $contactList[1] = 'rio.irvansyah@music.yamaha.com';
 				Mail::to($mail_to)->bcc($contactList,'Contact List')->send(new SendEmail($namamanager, 'incoming_visitor'));
 			}
 
@@ -702,7 +702,7 @@ public function updateremarkall(Request $request){
 
 				$contactList = [];
 		        $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
-		        $contactList[1] = 'aditya.agassi@music.yamaha.com';
+		        $contactList[1] = 'rio.irvansyah@music.yamaha.com';
 				Mail::to($mail_to)->bcc($contactList,'Contact List')->send(new SendEmail($namamanager, 'visitor_to_manager'));
 			}
 			
@@ -815,7 +815,7 @@ public function confirm_manager($id){
 
 			$contactList = [];
 	        $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
-	        $contactList[1] = 'aditya.agassi@music.yamaha.com';
+	        $contactList[1] = 'rio.irvansyah@music.yamaha.com';
 			Mail::to($mail_to)->bcc($contactList,'Contact List')->send(new SendEmail($namamanager, 'visitor_to_manager'));
 		}
 		return view('visitors.visitor_confirm_manager', array(

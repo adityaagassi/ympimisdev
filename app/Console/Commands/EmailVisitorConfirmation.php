@@ -255,7 +255,7 @@ class EmailVisitorConfirmation extends Command
         $mail_to = DB::SELECT("select email from visitor_confirmers ".$dept2);
         $contactList = [];
         $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
-        $contactList[1] = 'aditya.agassi@music.yamaha.com';
+        $contactList[1] = 'rio.irvansyah@music.yamaha.com';
         if(count($visitor_departments) > 0){
             Mail::to($mail_to)->bcc($contactList,'Contact List')->send(new SendEmail($visitor_departments, 'visitor_confirmation'));
         }
