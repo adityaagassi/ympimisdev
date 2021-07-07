@@ -14,27 +14,29 @@
 		cursor: pointer;
 		background-color: #7dfa8c;
 	}
-
 	#tableBodyResume > tr:hover {
 		cursor: pointer;
 		background-color: #7dfa8c;
 	}
-
-	input::-webkit-outer-spin-button,
-	input::-webkit-inner-spin-button {
-		/* display: none; <- Crashes Chrome on hover */
+	input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 		-webkit-appearance: none;
-		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+		margin: 0;
 	}
-
 	input[type=number] {
-		-moz-appearance:textfield; /* Firefox */
+		-moz-appearance:textfield;
 	}
-
-	.nmpd-grid {border: none; padding: 20px;}
-	.nmpd-grid>tbody>tr>td {border: none;}
-	
-	#loading { display: none; }
+	.nmpd-grid {
+		border: none; padding: 20px;
+	}
+	.nmpd-grid>tbody>tr>td {
+		border: none;
+	}
+	#loading {
+		display: none;
+	}
+	#qr_item:hover{
+		color:#ffffff
+	}
 </style>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('header'); ?>
@@ -179,6 +181,8 @@
 			</div>
 			<div class="modal-header">
 				<center><h3 style="background-color: #ff851b;">Terima Material Return</h3></center>
+				<input id="qr_item" type="text" style="border:0; width: 100%; text-align: center; height: 20px; color: #3c3c3c; height: 50px;">
+
 				<div class="modal-body table-responsive no-padding">
 					<div id='scanner' class="col-xs-12">
 						<div class="col-xs-12">
@@ -230,7 +234,7 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
-		
+
 		$('.select2').select2();
 		$('#modalLocation').modal({
 			backdrop: 'static',
@@ -263,6 +267,8 @@
 
 	$( "#modalLocation" ).on('shown.bs.modal', function(){
 		showCheck('123');
+		$('#qr_item').show();
+		$('#qr_item').focus();
 	});
 
 	$('#modalLocation').on('hidden.bs.modal', function () {
@@ -339,6 +345,25 @@
 		$('#quantity').val(parseInt($('#quantity').val())-1);
 	}
 
+	$('#qr_item').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			var qr_item = $('#qr_item').val();
+
+
+			var video = document.createElement("video");
+			vdo = video;
+			var canvasElement = document.getElementById("canvas");
+			var canvas = canvasElement.getContext("2d");
+			var loadingMessage = document.getElementById("loadingMessage");
+
+			var outputContainer = document.getElementById("output");
+			var outputMessage = document.getElementById("outputMessage");
+
+
+			receiveReturn(video, qr_item);
+		}
+	});
+
 	function receiveReturn(video, data){
 		$('#scanner').hide();
 		$('#modalReceive').modal('hide');
@@ -364,9 +389,13 @@
 				re += '</tbody></table>';
 
 				$('#receiveReturn').append(re);
+				$('#qr_item').val('');
+				$('#qr_item').hide();
 			}
 			else{
 				$('#receiveReturn').html("");
+				$('#qr_item').val('');
+
 				showCheck();
 				$('#loading').hide();
 				openErrorGritter('Error!', result.message);
@@ -381,13 +410,18 @@
 		}
 		$.post('<?php echo e(url("confirm/return")); ?>', data, function(result, status, xhr){
 			if(result.status){
-
 				$('#receiveReturn').html("");
 				showCheck();
+
+				$('#qr_item').show();
+				$('#qr_item').focus();
+
 				$('#loading').hide();
 				openSuccessGritter('Success!', result.message);
-			}
-			else{
+			}else{
+				$('#qr_item').show();
+				$('#qr_item').focus();
+
 				$('#loading').hide();
 				openErrorGritter('Error!', result.message);
 			}
