@@ -191,7 +191,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('sync:greatday_attendance')->dailyAt('17:00');
         $schedule->command('update:geocode')->dailyAt('18:00');
 
-        $schedule->command('generate:live_cooking')->dailyAt('04:00');
+        $schedule->command('generate:live_cooking')->dailyAt('07:00');
 
         $schedule->command('mtc:op_reset 1')->weekdays()->dailyAt('07:00');
         $schedule->command('mtc:op_reset 2')->weekdays()->dailyAt('16:30');
