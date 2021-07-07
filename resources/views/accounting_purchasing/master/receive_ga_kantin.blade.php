@@ -96,7 +96,6 @@
 	<div class="row" style="margin-left: 1%; margin-right: 1%;" id="main">
 		<div class="col-xs-6 col-xs-offset-3" style="padding-left: 0px;">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-				
 				<select class="form-control select2" id="no_po" name="no_po" style="width: 100%;" data-placeholder="Pilih Nomor PO" onchange="cekPO()">
 	              <option value=""></option>
 	              @foreach($po_detail as $po)
@@ -145,7 +144,7 @@
 	    <hr style="color:red"> 
 			<div class="row">
 				<div class="col-xs-12">
-					<div class="col-md-3" style="padding:0">
+					<div class="col-xs-3" style="padding:0">
 						<div class="form-group">
 							<label style="color:white">Date From</label>
 							<div class="input-group date">
@@ -156,7 +155,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-3" >
+					<div class="col-xs-3" style="padding-right:0">
 						<div class="form-group">
 							<label style="color:white">Date To</label>
 							<div class="input-group date">
