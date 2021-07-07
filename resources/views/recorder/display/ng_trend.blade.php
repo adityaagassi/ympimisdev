@@ -111,7 +111,7 @@
 				</div> -->
 				<div class="col-xs-12">
 					<div id="container" class="container" style="width: 100%;"></div>
-					<table class="table table-hover table-bordered" style="padding-top: 10px">
+					<!-- <table class="table table-hover table-bordered" id="tableTrend" style="padding-top: 10px">
 						<thead style="background-color: rgba(126,86,134,.7);color: white">
 							<tr>
 								<th style="width: 1%;">Date</th>
@@ -127,17 +127,12 @@
 								<th style="width: 1%;">Resin</th>
 								<th style="width: 1%;">Dryer</th>
 								<th style="width: 1%;">OP Kensa</th>
+								<th style="width: 1%;">NG Kensa</th>
 							</tr>
 						</thead>
 						<tbody id="tableTrendBody">
 						</tbody>
-						<!-- <tfoot style="background-color: rgba(126,86,134,.7);">
-							<tr>
-								<th colspan="8">TOTAL</th>
-								<th id="total_all"></th>
-							</tr>
-						</tfoot> -->
-					</table>
+					</table> -->
 				</div>
 			</div>
 		</div>
@@ -145,38 +140,34 @@
 </section>
 
 <div class="modal fade" id="modalDetail">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-lg" style="width: 1200px">
 		<div class="modal-content">
 			<div class="modal-header">
 				<div style="background-color: #fcba03;text-align: center;">
 					<h4 class="modal-title" style="font-weight: bold;padding: 10px;font-size: 20px" id="modalDetailTitle"></h4>
 				</div>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
-					<!-- <center>
-						<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
-					</center> -->
-					<table class="table table-hover table-bordered table-striped" id="tableDetail">
-						<thead style="background-color: rgba(126,86,134,.7);">
+					<table class="table table-hover table-bordered" id="tableTrend" style="padding-top: 10px">
+						<thead style="background-color: rgba(126,86,134,.7);color: white">
 							<tr>
-								<th style="width: 1%;">#</th>
-								<th style="width: 9%;">Code</th>
-								<th style="width: 3%;">Product</th>
-								<th style="width: 3%;">Material</th>
-								<th style="width: 3%;">Cav</th>
-								<th style="width: 9%;">Employee</th>
-								<th style="width: 3%;">At</th>
-								<th style="width: 3%;">NG Name</th>
-								<th style="width: 3%;">Qty</th>
+								<th style="width: 1%;">Date</th>
+								<th style="width: 1%;">Product</th>
+								<th style="width: 1%;">Part</th>
+								<th style="width: 1%;">Color</th>
+								<th style="width: 1%;">Cav</th>
+								<th style="width: 1%;">OP Molding</th>
+								<th style="width: 1%;">Molding</th>
+								<th style="width: 1%;">OP Injeksi</th>
+								<th style="width: 1%;">Mesin</th>
+								<th style="width: 1%;">OP Resin</th>
+								<th style="width: 1%;">Resin</th>
+								<th style="width: 1%;">Dryer</th>
+								<th style="width: 1%;">OP Kensa</th>
+								<th style="width: 1%;">NG Kensa</th>
 							</tr>
 						</thead>
-						<tbody id="tableDetailBody">
+						<tbody id="tableTrendBody">
 						</tbody>
-						<tfoot style="background-color: rgba(126,86,134,.7);">
-							<tr>
-								<th colspan="8">TOTAL</th>
-								<th id="total_all"></th>
-							</tr>
-						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -207,8 +198,13 @@
 		});
 		$('.select2').select2();
 		fetchChart();
-		// setInterval(fetchChart, 20000);
+		setInterval(fetchChart, 20000);
 	});
+
+	function topFunction() {
+	  document.body.scrollTop = 0;
+	  document.documentElement.scrollTop = 0;
+	}
 
 	Highcharts.createElement('link', {
 		href: '{{ url("fonts/UnicaOne.css")}}',
@@ -748,145 +744,351 @@
 				for (var i = 0; i < result.week_date.length; i++) {
 					var color = "#ffffff";
 					for(var j = 0; j < result.resume_trend.length;j++){
-						if (result.week_date[i].week_date == result.resume_trend[j][0].week_date) {
-							for(var k = 0; k < result.resume_trend[j].length;k++){
-								if (totalbyday[i] == 'head') {
-									if (result.resume_trend[j][k].part_type == 'HJ') {
-										tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-										tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].product+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+result.resume_trend[j][k].part_name+' '+result.resume_trend[j][k].part_type+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].color+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].cavity+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_injection+'<br>'+result.resume_trend[j][k].injeksi_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].mesin_injection+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_resin+'<br>'+result.resume_trend[j][k].resin_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].lot_number_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].dryer_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_kensa+'<br>'+result.resume_trend[j][k].name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '</tr>';
-									}
-								}
+						if (result.resume_trend[j].length > 0) {
+							if (result.week_date[i].week_date == result.resume_trend[j][0].week_date) {
+								for(var k = 0; k < result.resume_trend[j].length;k++){
+									if (totalbyday[i] == 'head') {
+										if (result.resume_trend[j][k].part_type.match(/HJ/gi)) {
 
-								if (totalbyday[i] == 'middle') {
-									if (result.resume_trend[j][k].part_type.match(/MJ/gi)) {
-										tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-										tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].product+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+result.resume_trend[j][k].part_name+' '+result.resume_trend[j][k].part_type+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].color+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].cavity+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_injection+'<br>'+result.resume_trend[j][k].injeksi_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].mesin_injection+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_resin+'<br>'+result.resume_trend[j][k].resin_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].lot_number_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].dryer_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_kensa+'<br>'+result.resume_trend[j][k].name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '</tr>';
-									}
-								}
+											var product = result.resume_trend[j][k].product.split('_');
+											var ng_name_kensa = result.resume_trend[j][k].ng_name_kensa.split('_');
+											var ng_count_kensa = result.resume_trend[j][k].ng_count_kensa.split('_');
+											var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+											var cavity = result.resume_trend[j][k].cavity.split('_');
+											var product = result.resume_trend[j][k].product.split('_');
+											var part_name = result.resume_trend[j][k].part_name.split('_');
+											var part_type = result.resume_trend[j][k].part_type.split('_');
+											var colors = result.resume_trend[j][k].color.split('_');
+											var molding = result.resume_trend[j][k].molding.split('_');
+											var mesin = result.resume_trend[j][k].mesin.split('_');
+											var operator_injeksi = result.resume_trend[j][k].operator_injeksi.split('_');
+											var injeksi_name = result.resume_trend[j][k].injeksi_name.split('_');
+											var operator_resin = result.resume_trend[j][k].operator_resin.split('_');
+											var resin_name = result.resume_trend[j][k].resin_name.split('_');
+											var resin = result.resume_trend[j][k].resin.split('_');
+											var dryer = result.resume_trend[j][k].dryer.split('_');
+											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
+											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
 
-								if (totalbyday[i] == 'foot') {
-									if (result.resume_trend[j][k].part_type.match(/FJ/gi)) {
-										tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-										tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].product+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+result.resume_trend[j][k].part_name+' '+result.resume_trend[j][k].part_type+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].color+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].cavity+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_injection+'<br>'+result.resume_trend[j][k].injeksi_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].mesin_injection+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_resin+'<br>'+result.resume_trend[j][k].resin_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].lot_number_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].dryer_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_kensa+'<br>'+result.resume_trend[j][k].name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '</tr>';
+											for(var l = 0; l < product.length;l++){
+												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+												tableTrend += '<td>'+product[l]+'</td>';
+												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+												tableTrend += '<td>'+colors[l]+'</td>';
+												tableTrend += '<td>'+cavity[l]+'</td>';
+												tableTrend += '<td>'+operator_molding[l]+'</td>';
+												tableTrend += '<td>'+molding[l]+'</td>';
+												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+mesin[l]+'</td>';
+												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+resin[l]+'</td>';
+												tableTrend += '<td>'+dryer[l]+'</td>';
+												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												var ng_name_kensas = ng_name_kensa[l].split(',');
+												var ng_count_kensas = ng_count_kensa[l].split(',');
+												tableTrend += '<td>';
+												for(var m = 0; m < ng_name_kensas.length;m++){
+													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+												}
+												tableTrend += '</td>';
+												tableTrend += '</tr>';
+											}
+										}
 									}
-								}
 
-								if (totalbyday[i] == 'block') {
-									if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
-										tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-										tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].product+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+result.resume_trend[j][k].part_name+' '+result.resume_trend[j][k].part_type+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].color+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].cavity+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_injection+'<br>'+result.resume_trend[j][k].injeksi_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].mesin_injection+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_resin+'<br>'+result.resume_trend[j][k].resin_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].lot_number_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].dryer_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_kensa+'<br>'+result.resume_trend[j][k].name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '</tr>';
+									if (totalbyday[i] == 'middle') {
+										if (result.resume_trend[j][k].part_type.match(/MJ/gi)) {
+											var product = result.resume_trend[j][k].product.split('_');
+											var ng_name_kensa = result.resume_trend[j][k].ng_name_kensa.split('_');
+											var ng_count_kensa = result.resume_trend[j][k].ng_count_kensa.split('_');
+											var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+											var cavity = result.resume_trend[j][k].cavity.split('_');
+											var product = result.resume_trend[j][k].product.split('_');
+											var part_name = result.resume_trend[j][k].part_name.split('_');
+											var part_type = result.resume_trend[j][k].part_type.split('_');
+											var colors = result.resume_trend[j][k].color.split('_');
+											var molding = result.resume_trend[j][k].molding.split('_');
+											var mesin = result.resume_trend[j][k].mesin.split('_');
+											var operator_injeksi = result.resume_trend[j][k].operator_injeksi.split('_');
+											var injeksi_name = result.resume_trend[j][k].injeksi_name.split('_');
+											var operator_resin = result.resume_trend[j][k].operator_resin.split('_');
+											var resin_name = result.resume_trend[j][k].resin_name.split('_');
+											var resin = result.resume_trend[j][k].resin.split('_');
+											var dryer = result.resume_trend[j][k].dryer.split('_');
+											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
+											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
+
+											for(var l = 0; l < product.length;l++){
+												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+												tableTrend += '<td>'+product[l]+'</td>';
+												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+												tableTrend += '<td>'+colors[l]+'</td>';
+												tableTrend += '<td>'+cavity[l]+'</td>';
+												tableTrend += '<td>'+operator_molding[l]+'</td>';
+												tableTrend += '<td>'+molding[l]+'</td>';
+												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+mesin[l]+'</td>';
+												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+resin[l]+'</td>';
+												tableTrend += '<td>'+dryer[l]+'</td>';
+												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												var ng_name_kensas = ng_name_kensa[l].split(',');
+												var ng_count_kensas = ng_count_kensa[l].split(',');
+												tableTrend += '<td>';
+												for(var m = 0; m < ng_name_kensas.length;m++){
+													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+												}
+												tableTrend += '</td>';
+												tableTrend += '</tr>';
+											}
+										}
 									}
-								}
 
-								if (totalbyday[i] == 'headyrf') {
-									if (result.resume_trend[j][k].part_type.match(/A YRF H/gi)) {
-										tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-										tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].product+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+result.resume_trend[j][k].part_name+' '+result.resume_trend[j][k].part_type+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].color+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].cavity+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_injection+'<br>'+result.resume_trend[j][k].injeksi_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].mesin_injection+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_resin+'<br>'+result.resume_trend[j][k].resin_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].lot_number_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].dryer_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_kensa+'<br>'+result.resume_trend[j][k].name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '</tr>';
+									if (totalbyday[i] == 'foot') {
+										if (result.resume_trend[j][k].part_type.match(/FJ/gi)) {
+											var product = result.resume_trend[j][k].product.split('_');
+											var ng_name_kensa = result.resume_trend[j][k].ng_name_kensa.split('_');
+											var ng_count_kensa = result.resume_trend[j][k].ng_count_kensa.split('_');
+											var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+											var cavity = result.resume_trend[j][k].cavity.split('_');
+											var product = result.resume_trend[j][k].product.split('_');
+											var part_name = result.resume_trend[j][k].part_name.split('_');
+											var part_type = result.resume_trend[j][k].part_type.split('_');
+											var colors = result.resume_trend[j][k].color.split('_');
+											var molding = result.resume_trend[j][k].molding.split('_');
+											var mesin = result.resume_trend[j][k].mesin.split('_');
+											var operator_injeksi = result.resume_trend[j][k].operator_injeksi.split('_');
+											var injeksi_name = result.resume_trend[j][k].injeksi_name.split('_');
+											var operator_resin = result.resume_trend[j][k].operator_resin.split('_');
+											var resin_name = result.resume_trend[j][k].resin_name.split('_');
+											var resin = result.resume_trend[j][k].resin.split('_');
+											var dryer = result.resume_trend[j][k].dryer.split('_');
+											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
+											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
+
+											for(var l = 0; l < product.length;l++){
+												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+												tableTrend += '<td>'+product[l]+'</td>';
+												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+												tableTrend += '<td>'+colors[l]+'</td>';
+												tableTrend += '<td>'+cavity[l]+'</td>';
+												tableTrend += '<td>'+operator_molding[l]+'</td>';
+												tableTrend += '<td>'+molding[l]+'</td>';
+												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+mesin[l]+'</td>';
+												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+resin[l]+'</td>';
+												tableTrend += '<td>'+dryer[l]+'</td>';
+												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												var ng_name_kensas = ng_name_kensa[l].split(',');
+												var ng_count_kensas = ng_count_kensa[l].split(',');
+												tableTrend += '<td>';
+												for(var m = 0; m < ng_name_kensas.length;m++){
+													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+												}
+												tableTrend += '</td>';
+												tableTrend += '</tr>';
+											}
+										}
 									}
-								}
 
-								if (totalbyday[i] == 'bodyyrf') {
-									if (result.resume_trend[j][k].part_type.match(/A YRF B/gi)) {
-										tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-										tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].product+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+result.resume_trend[j][k].part_name+' '+result.resume_trend[j][k].part_type+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].color+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].cavity+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_injection+'<br>'+result.resume_trend[j][k].injeksi_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].mesin_injection+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_resin+'<br>'+result.resume_trend[j][k].resin_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].lot_number_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].dryer_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_kensa+'<br>'+result.resume_trend[j][k].name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '</tr>';
+									if (totalbyday[i] == 'block') {
+										if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
+											var product = result.resume_trend[j][k].product.split('_');
+											var ng_name_kensa = result.resume_trend[j][k].ng_name_kensa.split('_');
+											var ng_count_kensa = result.resume_trend[j][k].ng_count_kensa.split('_');
+											var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+											var cavity = result.resume_trend[j][k].cavity.split('_');
+											var product = result.resume_trend[j][k].product.split('_');
+											var part_name = result.resume_trend[j][k].part_name.split('_');
+											var part_type = result.resume_trend[j][k].part_type.split('_');
+											var colors = result.resume_trend[j][k].color.split('_');
+											var molding = result.resume_trend[j][k].molding.split('_');
+											var mesin = result.resume_trend[j][k].mesin.split('_');
+											var operator_injeksi = result.resume_trend[j][k].operator_injeksi.split('_');
+											var injeksi_name = result.resume_trend[j][k].injeksi_name.split('_');
+											var operator_resin = result.resume_trend[j][k].operator_resin.split('_');
+											var resin_name = result.resume_trend[j][k].resin_name.split('_');
+											var resin = result.resume_trend[j][k].resin.split('_');
+											var dryer = result.resume_trend[j][k].dryer.split('_');
+											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
+											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
+
+											for(var l = 0; l < product.length;l++){
+												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+												tableTrend += '<td>'+product[l]+'</td>';
+												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+												tableTrend += '<td>'+colors[l]+'</td>';
+												tableTrend += '<td>'+cavity[l]+'</td>';
+												tableTrend += '<td>'+operator_molding[l]+'</td>';
+												tableTrend += '<td>'+molding[l]+'</td>';
+												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+mesin[l]+'</td>';
+												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+resin[l]+'</td>';
+												tableTrend += '<td>'+dryer[l]+'</td>';
+												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												var ng_name_kensas = ng_name_kensa[l].split(',');
+												var ng_count_kensas = ng_count_kensa[l].split(',');
+												tableTrend += '<td>';
+												for(var m = 0; m < ng_name_kensas.length;m++){
+													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+												}
+												tableTrend += '</td>';
+												tableTrend += '</tr>';
+											}
+										}
 									}
-								}
 
-								if (totalbyday[i] == 'stopperyrf') {
-									if (result.resume_trend[j][k].part_type.match(/A YRF S/gi)) {
-										tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-										tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].product+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+result.resume_trend[j][k].part_name+' '+result.resume_trend[j][k].part_type+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].color+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].cavity+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].molding+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_injection+'<br>'+result.resume_trend[j][k].injeksi_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].mesin_injection+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_resin+'<br>'+result.resume_trend[j][k].resin_name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].lot_number_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].dryer_resin+'</td>';
-										tableTrend += '<td>'+result.resume_trend[j][k].operator_kensa+'<br>'+result.resume_trend[j][k].name.replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-										tableTrend += '</tr>';
+									if (totalbyday[i] == 'headyrf') {
+										if (result.resume_trend[j][k].part_type.match(/A YRF H/gi)) {
+											var product = result.resume_trend[j][k].product.split('_');
+											var ng_name_kensa = result.resume_trend[j][k].ng_name_kensa.split('_');
+											var ng_count_kensa = result.resume_trend[j][k].ng_count_kensa.split('_');
+											var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+											var cavity = result.resume_trend[j][k].cavity.split('_');
+											var product = result.resume_trend[j][k].product.split('_');
+											var part_name = result.resume_trend[j][k].part_name.split('_');
+											var part_type = result.resume_trend[j][k].part_type.split('_');
+											var colors = result.resume_trend[j][k].color.split('_');
+											var molding = result.resume_trend[j][k].molding.split('_');
+											var mesin = result.resume_trend[j][k].mesin.split('_');
+											var operator_injeksi = result.resume_trend[j][k].operator_injeksi.split('_');
+											var injeksi_name = result.resume_trend[j][k].injeksi_name.split('_');
+											var operator_resin = result.resume_trend[j][k].operator_resin.split('_');
+											var resin_name = result.resume_trend[j][k].resin_name.split('_');
+											var resin = result.resume_trend[j][k].resin.split('_');
+											var dryer = result.resume_trend[j][k].dryer.split('_');
+											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
+											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
+
+											for(var l = 0; l < product.length;l++){
+												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+												tableTrend += '<td>'+product[l]+'</td>';
+												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+												tableTrend += '<td>'+colors[l]+'</td>';
+												tableTrend += '<td>'+cavity[l]+'</td>';
+												tableTrend += '<td>'+operator_molding[l]+'</td>';
+												tableTrend += '<td>'+molding[l]+'</td>';
+												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+mesin[l]+'</td>';
+												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+resin[l]+'</td>';
+												tableTrend += '<td>'+dryer[l]+'</td>';
+												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												var ng_name_kensas = ng_name_kensa[l].split(',');
+												var ng_count_kensas = ng_count_kensa[l].split(',');
+												tableTrend += '<td>';
+												for(var m = 0; m < ng_name_kensas.length;m++){
+													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+												}
+												tableTrend += '</td>';
+												tableTrend += '</tr>';
+											}
+										}
+									}
+
+									if (totalbyday[i] == 'bodyyrf') {
+										if (result.resume_trend[j][k].part_type.match(/A YRF B/gi)) {
+											var product = result.resume_trend[j][k].product.split('_');
+											var ng_name_kensa = result.resume_trend[j][k].ng_name_kensa.split('_');
+											var ng_count_kensa = result.resume_trend[j][k].ng_count_kensa.split('_');
+											var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+											var cavity = result.resume_trend[j][k].cavity.split('_');
+											var product = result.resume_trend[j][k].product.split('_');
+											var part_name = result.resume_trend[j][k].part_name.split('_');
+											var part_type = result.resume_trend[j][k].part_type.split('_');
+											var colors = result.resume_trend[j][k].color.split('_');
+											var molding = result.resume_trend[j][k].molding.split('_');
+											var mesin = result.resume_trend[j][k].mesin.split('_');
+											var operator_injeksi = result.resume_trend[j][k].operator_injeksi.split('_');
+											var injeksi_name = result.resume_trend[j][k].injeksi_name.split('_');
+											var operator_resin = result.resume_trend[j][k].operator_resin.split('_');
+											var resin_name = result.resume_trend[j][k].resin_name.split('_');
+											var resin = result.resume_trend[j][k].resin.split('_');
+											var dryer = result.resume_trend[j][k].dryer.split('_');
+											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
+											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
+
+											for(var l = 0; l < product.length;l++){
+												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+												tableTrend += '<td>'+product[l]+'</td>';
+												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+												tableTrend += '<td>'+colors[l]+'</td>';
+												tableTrend += '<td>'+cavity[l]+'</td>';
+												tableTrend += '<td>'+operator_molding[l]+'</td>';
+												tableTrend += '<td>'+molding[l]+'</td>';
+												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+mesin[l]+'</td>';
+												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+resin[l]+'</td>';
+												tableTrend += '<td>'+dryer[l]+'</td>';
+												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												var ng_name_kensas = ng_name_kensa[l].split(',');
+												var ng_count_kensas = ng_count_kensa[l].split(',');
+												tableTrend += '<td>';
+												for(var m = 0; m < ng_name_kensas.length;m++){
+													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+												}
+												tableTrend += '</td>';
+												tableTrend += '</tr>';
+											}
+										}
+									}
+
+									if (totalbyday[i] == 'stopperyrf') {
+										if (result.resume_trend[j][k].part_type.match(/A YRF S/gi)) {
+											var product = result.resume_trend[j][k].product.split('_');
+											var ng_name_kensa = result.resume_trend[j][k].ng_name_kensa.split('_');
+											var ng_count_kensa = result.resume_trend[j][k].ng_count_kensa.split('_');
+											var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+											var cavity = result.resume_trend[j][k].cavity.split('_');
+											var product = result.resume_trend[j][k].product.split('_');
+											var part_name = result.resume_trend[j][k].part_name.split('_');
+											var part_type = result.resume_trend[j][k].part_type.split('_');
+											var colors = result.resume_trend[j][k].color.split('_');
+											var molding = result.resume_trend[j][k].molding.split('_');
+											var mesin = result.resume_trend[j][k].mesin.split('_');
+											var operator_injeksi = result.resume_trend[j][k].operator_injeksi.split('_');
+											var injeksi_name = result.resume_trend[j][k].injeksi_name.split('_');
+											var operator_resin = result.resume_trend[j][k].operator_resin.split('_');
+											var resin_name = result.resume_trend[j][k].resin_name.split('_');
+											var resin = result.resume_trend[j][k].resin.split('_');
+											var dryer = result.resume_trend[j][k].dryer.split('_');
+											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
+											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
+
+											for(var l = 0; l < product.length;l++){
+												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+												tableTrend += '<td>'+product[l]+'</td>';
+												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+												tableTrend += '<td>'+colors[l]+'</td>';
+												tableTrend += '<td>'+cavity[l]+'</td>';
+												tableTrend += '<td>'+operator_molding[l]+'</td>';
+												tableTrend += '<td>'+molding[l]+'</td>';
+												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+mesin[l]+'</td>';
+												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												tableTrend += '<td>'+resin[l]+'</td>';
+												tableTrend += '<td>'+dryer[l]+'</td>';
+												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+												var ng_name_kensas = ng_name_kensa[l].split(',');
+												var ng_count_kensas = ng_count_kensa[l].split(',');
+												tableTrend += '<td>';
+												for(var m = 0; m < ng_name_kensas.length;m++){
+													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+												}
+												tableTrend += '</td>';
+												tableTrend += '</tr>';
+											}
+										}
 									}
 								}
 							}
@@ -902,113 +1104,131 @@
 			}
 		});
 }
-
 function showHighlight(name,date) {
 	for (var i = 0; i < date_all.length; i++) {
-		document.getElementById(date_all[i]).style.backgroundColor = '#fff';
-	}
-	document.getElementById(date).scrollIntoView({
-	  behavior: 'smooth'
-	});
-	document.getElementById(date).style.backgroundColor = '#ffb3b3';
-}
-
-function ShowModal(ng_name,part_code) {
-	$('#tableDetailBody').html('');
-	var bodyDetail = '';
-	var modalDetailTitle = '';
-	var total = 0;
-	if (part_code === 'HJ') {
-		var index = 1;
-		for (var i = 0; i < detail_all_hj.length; i++) {
-			if (ng_name === detail_all_hj[i].ng_name) {
-				bodyDetail += '<tr>';
-				bodyDetail += '<td>'+index+'</td>';
-				bodyDetail += '<td>'+detail_all_hj[i].serial_number+'</td>';
-				bodyDetail += '<td>'+detail_all_hj[i].product+'</td>';
-				bodyDetail += '<td>'+detail_all_hj[i].material_number+'<br>'+detail_all_hj[i].part_name+'</td>';
-				bodyDetail += '<td>'+detail_all_hj[i].cavity+'</td>';
-				bodyDetail += '<td>'+detail_all_hj[i].operator_kensa+'<br>'+detail_all_hj[i].name+'</td>';
-				bodyDetail += '<td>'+detail_all_hj[i].created_at+'</td>';
-				bodyDetail += '<td>'+detail_all_hj[i].ng_name+'</td>';
-				bodyDetail += '<td>'+detail_all_hj[i].ng_count+'</td>';
-				bodyDetail += '</tr>';
-				index++;
-				total = total + parseInt(detail_all_hj[i].ng_count);
+		if (document.getElementById(date_all[i]) != null) {
+			var elms = document.querySelectorAll("[id='"+date_all[i]+"']");
+			for(var j = 0; j < elms.length; j++){
+				// elms[j].style.backgroundColor = '#fff';
+				elms[j].style.display = 'none';
 			}
 		}
-		modalDetailTitle = 'Head YRS / Head YRF NG Resume';
 	}
-	if (part_code === 'MJ') {
-		var index = 1;
-		for (var i = 0; i < detail_all_mj.length; i++) {
-			if (ng_name === detail_all_mj[i].ng_name) {
-				bodyDetail += '<tr>';
-				bodyDetail += '<td>'+index+'</td>';
-				bodyDetail += '<td>'+detail_all_mj[i].serial_number+'</td>';
-				bodyDetail += '<td>'+detail_all_mj[i].product+'</td>';
-				bodyDetail += '<td>'+detail_all_mj[i].material_number+'<br>'+detail_all_mj[i].part_name+'</td>';
-				bodyDetail += '<td>'+detail_all_mj[i].cavity+'</td>';
-				bodyDetail += '<td>'+detail_all_mj[i].operator_kensa+'<br>'+detail_all_mj[i].name+'</td>';
-				bodyDetail += '<td>'+detail_all_mj[i].created_at+'</td>';
-				bodyDetail += '<td>'+detail_all_mj[i].ng_name+'</td>';
-				bodyDetail += '<td>'+detail_all_mj[i].ng_count+'</td>';
-				bodyDetail += '</tr>';
-				index++;
-				total = total + parseInt(detail_all_mj[i].ng_count);
-			}
-		}
-		modalDetailTitle = 'Middle / Body YRF NG Resume';
-	}
-	if (part_code === 'FJ') {
-		var index = 1;
-		for (var i = 0; i < detail_all_fj.length; i++) {
-			if (ng_name === detail_all_fj[i].ng_name) {
-				bodyDetail += '<tr>';
-				bodyDetail += '<td>'+index+'</td>';
-				bodyDetail += '<td>'+detail_all_fj[i].serial_number+'</td>';
-				bodyDetail += '<td>'+detail_all_fj[i].product+'</td>';
-				bodyDetail += '<td>'+detail_all_fj[i].material_number+'<br>'+detail_all_fj[i].part_name+'</td>';
-				bodyDetail += '<td>'+detail_all_fj[i].cavity+'</td>';
-				bodyDetail += '<td>'+detail_all_fj[i].operator_kensa+'<br>'+detail_all_fj[i].name+'</td>';
-				bodyDetail += '<td>'+detail_all_fj[i].created_at+'</td>';
-				bodyDetail += '<td>'+detail_all_fj[i].ng_name+'</td>';
-				bodyDetail += '<td>'+detail_all_fj[i].ng_count+'</td>';				
-				bodyDetail += '</tr>';
-				index++;
-				total = total + parseInt(detail_all_fj[i].ng_count);
-			}
-		}
-		modalDetailTitle = 'Foot NG Resume';
-	}
-	if (part_code === 'BJ') {
-		var index = 1;
-		for (var i = 0; i < detail_all_bj.length; i++) {
-			if (ng_name === detail_all_bj[i].ng_name) {
-				bodyDetail += '<tr>';
-				bodyDetail += '<td>'+index+'</td>';
-				bodyDetail += '<td>'+detail_all_bj[i].serial_number+'</td>';
-				bodyDetail += '<td>'+detail_all_bj[i].product+'</td>';
-				bodyDetail += '<td>'+detail_all_bj[i].material_number+'<br>'+detail_all_bj[i].part_name+'</td>';
-				bodyDetail += '<td>'+detail_all_bj[i].cavity+'</td>';
-				bodyDetail += '<td>'+detail_all_bj[i].operator_kensa+'<br>'+detail_all_bj[i].name+'</td>';
-				bodyDetail += '<td>'+detail_all_bj[i].created_at+'</td>';
-				bodyDetail += '<td>'+detail_all_bj[i].ng_name+'</td>';
-				bodyDetail += '<td>'+detail_all_bj[i].ng_count+'</td>';
-				bodyDetail += '</tr>';
-				index++;
-				total = total + parseInt(detail_all_bj[i].ng_count);
-			}
-		}
-		modalDetailTitle = 'Block / Stopper YRF NG Resume';
+	var elms = document.querySelectorAll("[id='"+date+"']");
+	for(var i = 0; i < elms.length; i++){
+		// elms[i].scrollIntoView({
+		//   behavior: 'smooth'
+		// });
+		// elms[i].style.backgroundColor = '#9ccaff';
+		elms[i].style.display = '';
 	}
 
-	$('#total_all').html(total);
+	$('#modalDetailTitle').html('DETAIL HIGHEST NG ON '+date);
 
-	$('#tableDetailBody').append(bodyDetail);
-	$('#modalDetailTitle').html(modalDetailTitle);
 	$('#modalDetail').modal('show');
+  		
+	// document.getElementById(date).scrollIntoView({
+	//   behavior: 'smooth'
+	// });
+	// document.getElementById(date).style.backgroundColor = '#ffb3b3';
 }
+
+// function ShowModal(ng_name,part_code) {
+// 	$('#tableDetailBody').html('');
+// 	var bodyDetail = '';
+// 	var modalDetailTitle = '';
+// 	var total = 0;
+// 	if (part_code === 'HJ') {
+// 		var index = 1;
+// 		for (var i = 0; i < detail_all_hj.length; i++) {
+// 			if (ng_name === detail_all_hj[i].ng_name) {
+// 				bodyDetail += '<tr>';
+// 				bodyDetail += '<td>'+index+'</td>';
+// 				bodyDetail += '<td>'+detail_all_hj[i].serial_number+'</td>';
+// 				bodyDetail += '<td>'+detail_all_hj[i].product+'</td>';
+// 				bodyDetail += '<td>'+detail_all_hj[i].material_number+'<br>'+detail_all_hj[i].part_name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_hj[i].cavity+'</td>';
+// 				bodyDetail += '<td>'+detail_all_hj[i].operator_kensa+'<br>'+detail_all_hj[i].name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_hj[i].created_at+'</td>';
+// 				bodyDetail += '<td>'+detail_all_hj[i].ng_name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_hj[i].ng_count+'</td>';
+// 				bodyDetail += '</tr>';
+// 				index++;
+// 				total = total + parseInt(detail_all_hj[i].ng_count);
+// 			}
+// 		}
+// 		modalDetailTitle = 'Head YRS / Head YRF NG Resume';
+// 	}
+// 	if (part_code === 'MJ') {
+// 		var index = 1;
+// 		for (var i = 0; i < detail_all_mj.length; i++) {
+// 			if (ng_name === detail_all_mj[i].ng_name) {
+// 				bodyDetail += '<tr>';
+// 				bodyDetail += '<td>'+index+'</td>';
+// 				bodyDetail += '<td>'+detail_all_mj[i].serial_number+'</td>';
+// 				bodyDetail += '<td>'+detail_all_mj[i].product+'</td>';
+// 				bodyDetail += '<td>'+detail_all_mj[i].material_number+'<br>'+detail_all_mj[i].part_name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_mj[i].cavity+'</td>';
+// 				bodyDetail += '<td>'+detail_all_mj[i].operator_kensa+'<br>'+detail_all_mj[i].name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_mj[i].created_at+'</td>';
+// 				bodyDetail += '<td>'+detail_all_mj[i].ng_name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_mj[i].ng_count+'</td>';
+// 				bodyDetail += '</tr>';
+// 				index++;
+// 				total = total + parseInt(detail_all_mj[i].ng_count);
+// 			}
+// 		}
+// 		modalDetailTitle = 'Middle / Body YRF NG Resume';
+// 	}
+// 	if (part_code === 'FJ') {
+// 		var index = 1;
+// 		for (var i = 0; i < detail_all_fj.length; i++) {
+// 			if (ng_name === detail_all_fj[i].ng_name) {
+// 				bodyDetail += '<tr>';
+// 				bodyDetail += '<td>'+index+'</td>';
+// 				bodyDetail += '<td>'+detail_all_fj[i].serial_number+'</td>';
+// 				bodyDetail += '<td>'+detail_all_fj[i].product+'</td>';
+// 				bodyDetail += '<td>'+detail_all_fj[i].material_number+'<br>'+detail_all_fj[i].part_name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_fj[i].cavity+'</td>';
+// 				bodyDetail += '<td>'+detail_all_fj[i].operator_kensa+'<br>'+detail_all_fj[i].name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_fj[i].created_at+'</td>';
+// 				bodyDetail += '<td>'+detail_all_fj[i].ng_name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_fj[i].ng_count+'</td>';				
+// 				bodyDetail += '</tr>';
+// 				index++;
+// 				total = total + parseInt(detail_all_fj[i].ng_count);
+// 			}
+// 		}
+// 		modalDetailTitle = 'Foot NG Resume';
+// 	}
+// 	if (part_code === 'BJ') {
+// 		var index = 1;
+// 		for (var i = 0; i < detail_all_bj.length; i++) {
+// 			if (ng_name === detail_all_bj[i].ng_name) {
+// 				bodyDetail += '<tr>';
+// 				bodyDetail += '<td>'+index+'</td>';
+// 				bodyDetail += '<td>'+detail_all_bj[i].serial_number+'</td>';
+// 				bodyDetail += '<td>'+detail_all_bj[i].product+'</td>';
+// 				bodyDetail += '<td>'+detail_all_bj[i].material_number+'<br>'+detail_all_bj[i].part_name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_bj[i].cavity+'</td>';
+// 				bodyDetail += '<td>'+detail_all_bj[i].operator_kensa+'<br>'+detail_all_bj[i].name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_bj[i].created_at+'</td>';
+// 				bodyDetail += '<td>'+detail_all_bj[i].ng_name+'</td>';
+// 				bodyDetail += '<td>'+detail_all_bj[i].ng_count+'</td>';
+// 				bodyDetail += '</tr>';
+// 				index++;
+// 				total = total + parseInt(detail_all_bj[i].ng_count);
+// 			}
+// 		}
+// 		modalDetailTitle = 'Block / Stopper YRF NG Resume';
+// 	}
+
+// 	$('#total_all').html(total);
+
+// 	$('#tableDetailBody').append(bodyDetail);
+// 	$('#modalDetailTitle').html(modalDetailTitle);
+// 	$('#modalDetail').modal('show');
+// }
 
 function dynamicSort(property) {
     var sortOrder = 1;
