@@ -318,10 +318,11 @@
 
 		            <div class="form-group">
 		              <div class="col-xs-12" style="padding-left: 0px;">
-		              	<label for="">Upload Document Training</label>
+		              	<label for="">Document Training</label>
 		              </div>
 					  <div class="col-xs-10" style="padding-left: 0px;">
-					  	<input type="file" name="counceled_image" id="counceled_image" class="form-control" placeholder="Scan ID Card Sub Leader / Leader">
+					  	<!-- <input type="file" name="counceled_image" id="counceled_image" class="form-control" placeholder="Scan ID Card Sub Leader / Leader"> -->
+					  	<a href="{{url('input/injection/training_document')}}" target="_blank" class="btn btn-primary">Input Document Training</a>
 					  </div>
 		            </div>
 				</div>
@@ -360,7 +361,7 @@
 		$('#modalDetail').on('hidden.bs.modal', function () {
 			$('#tableDetail').DataTable().clear();
 		});
-		setInterval(fetchChart, 20000);
+		// setInterval(fetchChart, 20000);
 	});
 
 	Highcharts.createElement('link', {
@@ -1364,7 +1365,7 @@ function councelingModal() {
 
 		$('#tag_employee').val('');
 		$('#tag_leader').val('');
-		document.getElementById("counceled_image").value = "";
+		// document.getElementById("counceled_image").value = "";
 		$('#tag_employee').removeAttr('disabled');
 		$('#tag_leader').removeAttr('disabled');
 		$('#tag_employee').focus();
@@ -1382,18 +1383,18 @@ function submitCouncel() {
 	var counceled_by = $("#tag_leader").val();
 	var first_date = $("#firstDate").val();
 	var last_date = $("#lastDate").val();
-	var fileData  = $('#counceled_image').prop('files')[0];
+	// var fileData  = $('#counceled_image').prop('files')[0];
 
-	var file=$('#counceled_image').val().replace(/C:\\fakepath\\/i, '').split(".");
+	// var file=$('#counceled_image').val().replace(/C:\\fakepath\\/i, '').split(".");
 
 	var formData = new FormData();
-	formData.append('fileData', fileData);
+	// formData.append('fileData', fileData);
 	formData.append('counceled_employee', counceled_employee);
 	formData.append('counceled_by', counceled_by);
 	formData.append('first_date', first_date);
 	formData.append('last_date', last_date);
-	formData.append('extension', file[1]);
-	formData.append('foto_name', file[0]);
+	// formData.append('extension', file[1]);
+	// formData.append('foto_name', file[0]);
 
 	$.ajax({		
 		url:"{{ url('input/injection/counceling') }}",

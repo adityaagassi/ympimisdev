@@ -13,7 +13,7 @@ class TrainingReport extends Model
 
 	protected $fillable = [
         'activity_list_id', 'department', 'section', 'product', 'periode', 'date', 'time', 'trainer', 'theme'
-        ,'isi_training','tujuan','standard','leader','foreman','notes','created_by'
+        ,'isi_training','tujuan','standard','leader','foreman','notes','created_by','remark'
     ];
     
     public function activity_lists()

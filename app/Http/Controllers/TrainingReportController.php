@@ -369,7 +369,7 @@ class TrainingReportController extends Controller
             )->with('page', 'Training Report');
     }
 
-    function insertpicture(Request $request, $id)
+    function insertpicture(Request $request, $id,$session_training)
     {
             $id_user = Auth::id();
             $tujuan_upload = 'data_file/training';
@@ -390,7 +390,7 @@ class TrainingReportController extends Controller
             ]);
         
 
-        return redirect('index/training_report/details/'.$id.'/view')
+        return redirect('index/training_report/details/'.$id.'/'.$session_training)
             ->with('page', 'Training Report')->with('status', 'Foto Training Berhasil Dimasukkan.');
     }
 
@@ -410,29 +410,29 @@ class TrainingReportController extends Controller
             ->with('page', 'Training Report')->with('status', 'Peserta Berhasil Dimasukkan.');
     }
 
-    public function destroypicture($id,$picture_id)
+    public function destroypicture($id,$picture_id,$session)
     {
       $trainingPicture = TrainingPicture::find($picture_id);
       $trainingPicture->delete();
 
-      return redirect('/index/training_report/details/'.$id.'/view')
+      return redirect('/index/training_report/details/'.$id.'/'.$session)
         ->with('status', 'Training Picture has been deleted.')
         ->with('page', 'Training Report');
         //
     }
 
-    public function destroyparticipant($id,$participant_id)
+    public function destroyparticipant($id,$participant_id,$session)
     {
       $trainingParticipant = TrainingParticipant::find($participant_id);
       $trainingParticipant->delete();
 
-      return redirect('/index/training_report/details/'.$id.'/view')
+      return redirect('/index/training_report/details/'.$id.'/'.$session)
         ->with('status', 'Training Participant has been deleted.')
         ->with('page', 'Training Report');
         //
     }
 
-    function editpicture(Request $request, $id,$picture_id)
+    function editpicture(Request $request, $id,$picture_id,$session)
     {
         try{
             $tujuan_upload = 'data_file/training';
@@ -450,7 +450,7 @@ class TrainingReportController extends Controller
             $training_picture->extension = $extension;
             $training_picture->save();
 
-            return redirect('/index/training_report/details/'.$id.'/view')->with('status', 'Training Picture data has been updated.')->with('page', 'Training Report');
+            return redirect('/index/training_report/details/'.$id.'/'.$session)->with('status', 'Training Picture data has been updated.')->with('page', 'Training Report');
           }
           catch (QueryException $e){
             $error_code = $e->errorInfo[1];
@@ -463,14 +463,14 @@ class TrainingReportController extends Controller
           }
     }
 
-    function editparticipant(Request $request, $id,$participant_id)
+    function editparticipant(Request $request, $id,$participant_id,$session)
     {
         try{
             $training_participant = TrainingParticipant::find($participant_id);
             $training_participant->participant_id = $request->input('participant_name');
             $training_participant->save();
 
-            return redirect('/index/training_report/details/'.$id.'/view')->with('status', 'Training Picture data has been updated.')->with('page', 'Training Report');
+            return redirect('/index/training_report/details/'.$id.'/'.$session)->with('status', 'Training Picture data has been updated.')->with('page', 'Training Report');
           }
           catch (QueryException $e){
             $error_code = $e->errorInfo[1];

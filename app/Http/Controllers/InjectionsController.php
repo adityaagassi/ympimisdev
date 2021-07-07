@@ -53,6 +53,8 @@ use App\InjectionScheduleMoldingLog;
 use App\InjectionScheduleAdjustmentLog;
 use App\RcKensaInitial;
 use App\Employee;
+use App\WeeklyCalendar;
+use App\TrainingReport;
 use Response;
 use DataTables;
 use Carbon\Carbon;
@@ -7579,10 +7581,10 @@ class InjectionsController extends Controller
     {
         try {
               $id_user = Auth::id();
-              $tujuan_upload = 'data_file/injection/counceling';
-              $file = $request->file('fileData');
-              $filename = md5($request->input('counceled_employee').$request->input('counceled_by').date('YmdHisa')).'.'.$request->input('extension');
-              $file->move($tujuan_upload,$filename);
+              // $tujuan_upload = 'data_file/injection/counceling';
+              // $file = $request->file('fileData');
+              // $filename = md5($request->input('counceled_employee').$request->input('counceled_by').date('YmdHisa')).'.'.$request->input('extension');
+              // $file->move($tujuan_upload,$filename);
 
               $emp = explode('-', $request->input('counceled_employee'));
               $leader = explode('-', $request->input('counceled_by'));
@@ -7593,7 +7595,7 @@ class InjectionsController extends Controller
                   $kensainitial->counceled_employee = $emp[0];
                   $kensainitial->counceled_by = $leader[0];
                   $kensainitial->counceled_at = date('Y-m-d H:i:s');
-                  $kensainitial->counceled_image = $filename;
+                  // $kensainitial->counceled_image = $filename;
                   $kensainitial->save();
               }
 
@@ -7609,6 +7611,35 @@ class InjectionsController extends Controller
             );
             return Response::json($response);
         }
+    }
+
+    public function inputInjectionDocument()
+    {
+        $id_user = Auth::id();
+        $fy = WeeklyCalendar::where('week_date',date('Y-m-d'))->first();
+        $training = TrainingReport::create([
+            'activity_list_id' => 477,
+            'department' => 'Educational Instrument (EI) Department',
+            'section' => 'Recorder Proces',
+            'product' => 'Recorder',
+            'periode' => $fy->fiscal_year,
+            'date' => date('Y-m-d'),
+            'time' => '00:30:00',
+            'trainer' => 'M. Afif Fahamsyah',
+            'theme' => 'Training NG Rate Operator Injeksi',
+            'isi_training' => 'Training NG Rate Operator Injeksi',
+            'tujuan' => 'Evaluasi Hasil NG Per Operator Injeksi',
+            'standard' => '-',
+            'leader' => 'M. Afif',
+            'foreman' => 'Eko Prasetyo Wicaksono',
+            'notes' => '-',
+            'remark' => date('Y-m-d H:i:s'),
+            'created_by' => $id_user
+        ]);
+        $id = $training->id;
+
+        return redirect('index/training_report/details/'.$id.'/injeksi')
+            ->with('page', 'Training Report')->with('status', 'Training Berhasil Dibuat.')->with('session_training','injeksi');
     }
 
     public function scanInjectionCounceledEmployee(Request $request)

@@ -1,53 +1,53 @@
 @extends('layouts.master')
 @section('stylesheets')
 <style type="text/css">
-    thead input {
-        width: 100%;
-        padding: 3px;
-        box-sizing: border-box;
-    }
-    thead>tr>th{
-        text-align:center;
-    }
-    tbody>tr>td{
-        text-align:center;
-    }
-    tfoot>tr>th{
-        text-align:center;
-    }
-    td:hover {
-        overflow: visible;
-    }
-    table.table-bordered{
-        border:1px solid black;
-        margin-bottom: 5px;
-    }
-    table.table-bordered > thead > tr > th{
-        border:1px solid black;
-        margin:0;
-        padding:0;
-    }
-    table.table-bordered > tbody > tr > td{
-        border:1px solid rgb(180,180,180);
-        font-size: 12px;
-        background-color: rgb(240,240,240);
-        padding-top: 2px;
-        padding-bottom: 2px;
-        padding-left: 3px;
-        padding-right: 3px;
-    }
-    table.table-bordered > tfoot > tr > th{
-        border:1px solid rgb(211,211,211);
-    }
-    #loading, #error { display: none; }
-    .marquee {
-        width: 100%;
-        overflow: hidden;
-        margin: 0px;
-        padding: 0px;
-        text-align: center;
-        height: 35px;
-    }
+thead input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+}
+thead>tr>th{
+    text-align:center;
+}
+tbody>tr>td{
+    text-align:center;
+}
+tfoot>tr>th{
+    text-align:center;
+}
+td:hover {
+    overflow: visible;
+}
+table.table-bordered{
+    border:1px solid black;
+    margin-bottom: 5px;
+}
+table.table-bordered > thead > tr > th{
+    border:1px solid black;
+    margin:0;
+    padding:0;
+}
+table.table-bordered > tbody > tr > td{
+    border:1px solid rgb(180,180,180);
+    font-size: 12px;
+    background-color: rgb(240,240,240);
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+table.table-bordered > tfoot > tr > th{
+    border:1px solid rgb(211,211,211);
+}
+#loading, #error { display: none; }
+.marquee {
+    width: 100%;
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    height: 35px;
+}
 </style>
 @stop
 @section('header')
@@ -100,6 +100,9 @@
                                 <i class="fa fa-caret-right"></i> Mutasi Antar Department (部門跨ぐ部署移動)
                             </a>
                             <br>
+                            <a href="{{ url("index/hr/request_manpower") }}">
+                                <i class="fa fa-caret-right"></i> Request Manpower ()
+                            </a>
                         </td>
                     </tr>
                     <tr>
@@ -497,7 +500,7 @@
             </thead>
             <tbody>
                 <tr>
-                   <td>
+                 <td>
                         {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a> --}}
@@ -668,6 +671,10 @@
                                 <i class="fa fa-caret-right"></i> Allowance Application Form (手当申請書)
                             </a>
                             <br>
+                            <a href="{{ url("index/human_resource/leave_permit") }}">
+                                <i class="fa fa-caret-right"></i> Leave Work Permit Form ()
+                            </a>
+                            <br>
                         </td>
                     </tr>
                     {{--  <tr>
@@ -820,15 +827,15 @@
                         <a href="{{ url("index/maintenance/spk/workload") }}">
                             <i class="fa fa-caret-right"></i> SPK Workload (??)
                         </a>
-                        <!--<br>
+                        <br>
                         <a href="{{ url("index/maintenance/spk/weekly") }}">
                             <i class="fa fa-caret-right"></i> SPK Weekly Report (??)
                         </a>
-                        <br>
+                        <!-- <br>
                          <a href="{{ url("index/report/urgent_monitoring") }}">
                             <i class="fa fa-caret-right"></i> Urgent SPK Monitoring (??)
                         </a>
-                        <br> -->
+                        <br>  -->
 
                     </td>
                 </tr>
@@ -1108,17 +1115,21 @@
                                 <a href="{{ url("/index/production_report/index/13") }}">
                                     <i class="fa fa-caret-right"></i> PE Field Report (PEフィールドレポート)
                                 </a>
-                            </td>
-                        </tr>
-                        <!-- <tr>
-                            <td>
-                                <span style="font-weight: bold;">Information & Evidence ()</span>
                                 <br>
-                                <a href="{{ url("/index/packing_documentation") }}">
-                                    <i class="fa fa-caret-right"></i> Packing Documentation ()
+                                <a href="{{ url("/index/production_report/index/9") }}">
+                                    <i class="fa fa-caret-right"></i> EI Report (教育楽器レポート)
                                 </a>
                             </td>
-                        </tr> -->
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-weight: bold;">WINDS</span>
+                                <br>
+                                <a href="{{ url("winds") }}">
+                                    <i class="fa fa-caret-right"></i> WINDS
+                                </a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -1279,6 +1290,22 @@
                                                             </a> --}}
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <span style="font-weight: bold;">Others (他の情報)</span>
+                                                            <br>
+                                                            <a href="{{ url("/index/display/efficiency_monitoring_monthly") }}">
+                                                                <i class="fa fa-caret-right"></i> YMPI Efficiency ()
+                                                            </a>
+                                                            <br>
+                                                            <a href="{{ url("/index/display/efficiency_monitoring_monthly") }}">
+                                                                <i class="fa fa-caret-right"></i> Monthly Efficiency Monitoring (月次効率の監視)
+                                                            </a>
+                                                            <br>
+                                                            <a href="{{ url("/index/display/eff_scrap") }}">
+                                                                <i class="fa fa-caret-right"></i> Scrap Monitoring (スクラップの監視)
+                                                            </a>
+                                                        </tr>
                                                     {{-- <tr>
                                                         <td>
                                                             <span style="font-weight: bold;">Additional</span>

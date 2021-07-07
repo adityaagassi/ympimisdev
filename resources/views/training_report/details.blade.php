@@ -121,6 +121,9 @@ table.table-bordered > tfoot > tr > th{
 		@if($session_training == "view")
 	      	<a href="{{ url('index/training_report/index/'.$activity_id) }}" class="btn btn-warning pull-right">Kembali</a>
 	    @endif
+	    @if($session_training == "injeksi")
+	      	<button class="btn btn-warning pull-right" type="button" onclick="windowclose()" >Kembali</button>
+	    @endif
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -240,7 +243,7 @@ table.table-bordered > tfoot > tr > th{
 					<div class="box-body">
 						<div class="col-xs-6">
 							<h3 class="box-title">Foto Training <span class="text-purple"></span></h3>
-							<form role="form" method="post" action="{{url('index/training_report/insertpicture/'.$id)}}" enctype="multipart/form-data">
+							<form role="form" method="post" action="{{url('index/training_report/insertpicture/'.$id.'/'.$session_training)}}" enctype="multipart/form-data">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
 								<div class="col-xs-8">
@@ -573,6 +576,11 @@ table.table-bordered > tfoot > tr > th{
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
+	function windowclose() {
+		        window.open("", "_self");
+        window.close();
+	}
+
 	jQuery(document).ready(function() {
 		$('#date').datepicker({
 			autoclose: true,
@@ -851,16 +859,19 @@ table.table-bordered > tfoot > tr > th{
 	});
 
     function deleteConfirmation(url, name, id, picture_id) {
+    	var session = '{{$session_training}}';
       $('#body-delete').html("Are you sure want to delete '" + name + "'?");
-      $('#modalDeleteButton').attr("href", url+'/'+id+'/'+picture_id);
+      $('#modalDeleteButton').attr("href", url+'/'+id+'/'+picture_id+'/'+session);
     }
     function deleteConfirmation2(url, name, id, participant_id) {
+    	var session = '{{$session_training}}';
       $('#body-delete').html("Are you sure want to delete '" + name + "'?");
-      $('#modalDeleteButton2').attr("href", url+'/'+id+'/'+participant_id);
+      $('#modalDeleteButton2').attr("href", url+'/'+id+'/'+participant_id+'/'+session);
     }
     function editpicture(url,urlimage, name, id, picture_id) {
+    	var session = '{{$session_training}}';
       $("#picture").attr("src",urlimage+'/'+name);
-      $('#formedit').attr("action", url+'/'+id+'/'+picture_id);
+      $('#formedit').attr("action", url+'/'+id+'/'+picture_id+'/'+session);
       // console.log($('#formedit').attr("action"));
     }
     function editparticipant(url, name, id, participant_id) {
@@ -875,7 +886,8 @@ table.table-bordered > tfoot > tr > th{
                   console.log(participant);
                 }
             });
-      jQuery('#formedit2').attr("action", url+'/'+id+'/'+participant_id);
+    	var session = '{{$session_training}}';
+      jQuery('#formedit2').attr("action", url+'/'+id+'/'+participant_id+'/'+session);
       // console.log($('#formedit2').attr("action"));
     }
 

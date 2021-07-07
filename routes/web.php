@@ -511,6 +511,7 @@ Route::get('fetch/injection/transactions', 'InjectionsController@fetchInjectionT
 
 Route::get('index/injection/ng_rate', 'InjectionsController@indexInjectionNgRate');
 Route::get('fetch/injection/ng_rate', 'InjectionsController@fetchInjectionNgRate');
+Route::get('input/injection/training_document', 'InjectionsController@inputInjectionDocument');
 Route::post('input/injection/counceling', 'InjectionsController@inputInjectionCounceling');
 Route::get('scan/injection/counceled_employee', 'InjectionsController@scanInjectionCounceledEmployee');
 Route::get('scan/injection/counceled_by', 'InjectionsController@scanInjectionCounceledBy');
@@ -3454,12 +3455,12 @@ Route::get('index/training_report/destroy/{id}/{training_id}', 'TrainingReportCo
 Route::get('index/training_report/edit/{id}/{training_id}', 'TrainingReportController@edit');
 Route::post('index/training_report/update/{id}/{training_id}', 'TrainingReportController@update');
 Route::get('index/training_report/details/{id}/{session_training}', 'TrainingReportController@details');
-Route::post('index/training_report/insertpicture/{id}', 'TrainingReportController@insertpicture');
+Route::post('index/training_report/insertpicture/{id}/{sessions}', 'TrainingReportController@insertpicture');
 Route::post('index/training_report/insertparticipant/{id}', 'TrainingReportController@insertparticipant');
-Route::get('index/training_report/destroypicture/{id}/{picture_id}', 'TrainingReportController@destroypicture');
-Route::get('index/training_report/destroyparticipant/{id}/{participant_id}', 'TrainingReportController@destroyparticipant');
-Route::post('index/training_report/editpicture/{id}/{picture_id}', 'TrainingReportController@editpicture');
-Route::post('index/training_report/editparticipant/{id}/{participant_id}', 'TrainingReportController@editparticipant');
+Route::get('index/training_report/destroypicture/{id}/{picture_id}/{sessions}', 'TrainingReportController@destroypicture');
+Route::get('index/training_report/destroyparticipant/{id}/{participant_id}/{sessions}', 'TrainingReportController@destroyparticipant');
+Route::post('index/training_report/editpicture/{id}/{picture_id}/{sessions}', 'TrainingReportController@editpicture');
+Route::post('index/training_report/editparticipant/{id}/{participant_id}/{sessions}', 'TrainingReportController@editparticipant');
 Route::get('index/training_report/report_training/{id}', 'TrainingReportController@report_training');
 Route::get('index/training_report/fetchReport/{id}', 'TrainingReportController@fetchReport');
 Route::get('fetch/training_report/detail_stat/{id}', 'TrainingReportController@detailTraining');
