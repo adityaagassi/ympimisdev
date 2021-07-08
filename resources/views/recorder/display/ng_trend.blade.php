@@ -743,7 +743,7 @@
 
 
 				tableTrendHead += '<tr>';
-				tableTrendHead += '<th style="border-bottom:2px solid red">Detail</th>';
+				tableTrendHead += '<th style="border-bottom:2px solid red;width:1%;">Detail</th>';
 				for (var i = 0; i < result.week_date.length; i++) {
 					tableTrendHead += '<th style="width:1%;border-bottom:2px solid red" id="'+result.week_date[i].week_date+'">'+result.week_date[i].week_date+'</th>';
 				}
