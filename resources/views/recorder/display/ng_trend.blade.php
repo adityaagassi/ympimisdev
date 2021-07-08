@@ -200,7 +200,7 @@
 		});
 		$('.select2').select2();
 		fetchChart();
-		// setInterval(fetchChart, 30000);
+		setInterval(fetchChart, 30000);
 	});
 
 	function topFunction() {
