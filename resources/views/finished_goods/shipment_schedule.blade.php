@@ -34,6 +34,7 @@
 		border:1px solid rgb(211,211,211);
 	}
 	#loading, #error { display: none; }
+	
 </style>
 @stop
 
@@ -91,10 +92,10 @@
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
-								<select class="form-control select2" data-placeholder="Select Location" name="hpl" id="hpl" style="width: 100%;">
+								<select class="form-control select2" data-placeholder="Select Work Center" name="hpl" id="hpl" style="width: 100%;">
 									<option></option>
 									@foreach($hpls as $hpl)
-									<option value="{{ $hpl->hpl }}">{{ $hpl->hpl }}</option>
+									<option value="{{ $hpl->hpl }}">{{ $hpl->category }} - {{ $hpl->hpl }}</option>
 									@endforeach
 								</select>
 							</div>

@@ -66,7 +66,7 @@ class FinishedGoodsController extends Controller
 		$origin_groups = DB::table('origin_groups')->get();
 		$categories = $this->category;
 		$hpls = DB::table('materials')->whereIn('materials.category', ['KD', 'FG'])
-		->select('hpl')
+		->select('category', 'hpl')
 		->distinct()
 		->get();
 
@@ -253,7 +253,8 @@ class FinishedGoodsController extends Controller
 		".$where2."
 		".$where3."
 		".$where4."
-		group by materials.category, shipment_schedules.id, date_format(shipment_schedules.st_month, '%b-%Y'), shipment_schedules.sales_order, destinations.destination_shortname, shipment_conditions.shipment_condition_name, shipment_schedules.material_number, materials.material_description, shipment_schedules.quantity, date_format(shipment_schedules.st_date, '%d-%b-%Y'), shipment_schedules.hpl, date_format(shipment_schedules.bl_date, '%d-%b-%Y')";
+		group by materials.category, shipment_schedules.id, date_format(shipment_schedules.st_month, '%b-%Y'), shipment_schedules.sales_order, destinations.destination_shortname, shipment_conditions.shipment_condition_name, shipment_schedules.material_number, materials.material_description, shipment_schedules.quantity, date_format(shipment_schedules.st_date, '%d-%b-%Y'), shipment_schedules.hpl, date_format(shipment_schedules.bl_date, '%d-%b-%Y')
+		order by shipment_schedules.st_date, destinations.destination_shortname, materials.material_description";
 
 		$shipment_schedules = DB::select($query);
 
