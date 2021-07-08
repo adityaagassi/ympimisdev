@@ -131,12 +131,12 @@
 							</div>
 
 							<div id='pemeriksaan-kesehatan'>
-								<div class="col-xs-12" id="family-menu" style="margin-top: 1%; margin-left: 1%;">
+								{{-- <div class="col-xs-12" id="family-menu" style="margin-top: 1%; margin-left: 1%;">
 									<label>
 										<input id="family-check-box" type="checkbox" onchange="familyChange()">
 										Family Check Up
 									</label>
-								</div>
+								</div> --}}
 								<div id="family-field">
 									<div class="col-xs-4" style="color: black;">
 										<span style="font-weight: bold; font-size: 16px;">Family:</span>
@@ -264,7 +264,7 @@
 		$('#pemeriksaan-kesehatan').hide();
 		$('#cek-suhu').hide();
 		$('#bed-field').hide();
-		document.getElementById("family-check-box").checked = false;
+		// document.getElementById("family-check-box").checked = false;
 
 		fillVisitor();
 		setInterval(fillVisitor, 10000);
@@ -291,7 +291,7 @@
 			$('#bed-field').show();
 			$('#cek-suhu').hide();
 		}else if(this.value == 'Istirahat Sakit'){
-			$('#pemeriksaan-kesehatan').hide();
+			$('#pemeriksaan-kesehatan').show();
 			$('#bed-field').show();
 			$('#cek-suhu').hide();
 		}else if(this.value == 'Pulang (Sakit)'){

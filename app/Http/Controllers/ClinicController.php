@@ -869,6 +869,30 @@ class ClinicController extends Controller{
 				]);
 			}
 
+			//Update IVMS temperatur
+			$include_purpose = [
+				'Pemeriksaan Kesehatan',
+				'Istirahat Sakit',
+				'Pulang (Sakit)'			
+			];
+
+			if(in_array($purpose, $include_purpose)){
+				$check_status;
+				if($purpose == 'Pemeriksaan Kesehatan'){
+					$check_status = 'Kembali Bekerja';
+				}else if($purpose == 'Istirahat Sakit'){
+					$check_status = 'Istirahat di Klinik';
+				}else if($purpose == 'Pulang (Sakit)'){
+					$check_status = 'Pulang';
+				}
+
+				$ivms = db::table('ivms_temperatures')
+				->where('employee_id', $employee_id)
+				->where('date', date('Y-m-d'))
+				->update([
+					'check_status' => $check_status
+				]);
+			}
 
 			$to = db::select("SELECT users.email FROM employee_syncs
 				LEFT JOIN users ON users.username = employee_syncs.employee_id
