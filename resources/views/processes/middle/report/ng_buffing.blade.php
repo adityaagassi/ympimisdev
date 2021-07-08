@@ -512,9 +512,6 @@
 							series:{
 								dataLabels: {
 									enabled: true,
-									formatter: function () {
-										return Highcharts.numberFormat(this.y);
-									},
 									style:{
 										textOutline: false,
 									}
@@ -606,9 +603,6 @@
 							series:{
 								dataLabels: {
 									enabled: true,
-									formatter: function () {
-										return Highcharts.numberFormat(this.y);
-									},
 									style:{
 										textOutline: false,
 									}

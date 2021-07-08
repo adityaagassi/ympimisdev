@@ -786,9 +786,6 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 					series:{
 						dataLabels: {
 							enabled: true,
-							formatter: function () {
-								return Highcharts.numberFormat(this.y);
-							},
 							style:{
 								textOutline: false,
 							}
@@ -888,15 +885,12 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 				},
 				tooltip: {
 					headerFormat: '<span>NG Name</span><br/>',
-					pointFormat: '<span style="color:{point.color}">{point.category}</span>: <b>{point.y}</b> <br/>'
+					pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b> <br/>',
 				},
 				plotOptions: {
 					series:{
 						dataLabels: {
 							enabled: true,
-							formatter: function () {
-								return Highcharts.numberFormat(this.y);
-							},
 							style:{
 								textOutline: false,
 							}
