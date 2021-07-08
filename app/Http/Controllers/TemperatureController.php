@@ -927,6 +927,7 @@ class TemperatureController extends Controller
                                         'temperature' => $temps[0],
                                         'shift' => $shiftdaily_code,
                                         'abnormal_status' => $rows[$i][5],
+                                        'check_status' => '-',
                                         'created_by' => $id_user,
                                    ]);
                                    if ($temps[0] >= '37.5') {
@@ -978,6 +979,7 @@ class TemperatureController extends Controller
                                         'temperature' => $temps[0],
                                         'shift' => $shiftdaily_code,
                                         'abnormal_status' => $rows[$i][5],
+                                        'check_status' => '-',
                                         'created_by' => $id_user,
                                    ]);
                                    if ($temps[0] >= '37.5') {
@@ -1052,6 +1054,7 @@ class TemperatureController extends Controller
                     $ivms->date = $val->answer_date;
                     $ivms->date_in = $val->date_in;
                     $ivms->point = "Mirai Mobile";
+                    $ivms->check_status = "-";
                     $tempmobile = floatval($val->answer);
                     $ivms->temperature = $tempmobile;
                     if ($tempmobile >= '37.5') {
@@ -1662,7 +1665,19 @@ public function fetchMinMoeMonitoring(Request $request)
                AND employee_syncs.end_date IS NULL ".$groupin."
                )";
            }
-          $datas = DB::SELECT("SELECT
+          $datas = DB::SELECT("SELECT DISTINCT
+               (
+               IF
+                    (
+                         sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                         ( SELECT MAX( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 22:00:00' AND '".$now." 23:59:59' ),
+                    IF
+                         (
+                              sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',
+                              ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 15:00:00' AND '".$now." 18:00:00' ),
+                              ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' ) 
+                         ) 
+                    )) AS time_in,
                employee_syncs.employee_id,
                employee_syncs.`name`,
                sunfish_shift_syncs.shiftdaily_code,
@@ -1671,50 +1686,42 @@ public function fetchMinMoeMonitoring(Request $request)
                COALESCE ( employee_syncs.`group`, '' ) AS groups,
                employees.remark,
                sunfish_shift_syncs.attend_code,
-          IF
-               (
-               sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
-               ( SELECT MAX( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 22:00:00' AND '".$now." 23:59:59' ),
-          IF
-               (
-               sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',
-               ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 15:00:00' AND '".$now." 18:00:00' ),
-               ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' ) 
-               ) 
-               ) AS time_in,
-               temperature.temp AS temperature 
+               temperature.temp AS temperature,
+               ympi_klinik.patient_list.employee_id AS klinik 
           FROM
                employee_syncs
                LEFT JOIN employees ON employees.employee_id = employee_syncs.employee_id
                LEFT JOIN sunfish_shift_syncs ON sunfish_shift_syncs.employee_id = employee_syncs.employee_id
                LEFT JOIN departments ON departments.department_name = employee_syncs.department
                LEFT JOIN (
-          SELECT
-               date_in,
-               employee_id,
-               GROUP_CONCAT( DISTINCT(date_in), '_', temperature, '_', point SEPARATOR ',' ) AS temp 
-          FROM
-               ivms_temperatures 
-          WHERE
-               date( date_in ) = '".$now."' 
-          GROUP BY
-               employee_id,
-               temperature,
-               date_in,
-               point 
+               SELECT DISTINCT
+                    ( date_in ),
+                    employee_id,
+                    GROUP_CONCAT( DISTINCT ( date_in ), '_', temperature, '_', point, '_', check_status SEPARATOR ',' ) AS temp 
+               FROM
+                    ivms_temperatures 
+               WHERE
+                    date( date_in ) = '".$now."' 
+               GROUP BY
+                    employee_id,
+                    temperature,
+                    date_in,
+                    point 
                ) AS temperature ON temperature.employee_id = employee_syncs.employee_id 
                AND temperature.date_in =
           IF
                (
-               sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
-               ( SELECT MAX( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 22:00:00' AND '".$now." 23:59:59' ),
-          IF
-               (
-               sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',
-               ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 15:00:00' AND '".$now." 18:00:00' ),
-               ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' ) 
-               ) 
-               ) 
+                    sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_3%',
+                    ( SELECT MAX( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 22:00:00' AND '".$now." 23:59:59' ),
+               IF
+                    (
+                         sunfish_shift_syncs.shiftdaily_code LIKE '%Shift_2%',
+                         ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' AND auth_datetime BETWEEN '".$now." 15:00:00' AND '".$now." 18:00:00' ),
+                         ( SELECT min( auth_datetime ) FROM ivms_attendance WHERE employee_id = employee_syncs.employee_id AND auth_date = '".$now."' ) 
+                    ) 
+               )
+               LEFT JOIN ympi_klinik.patient_list ON ympi_klinik.patient_list.employee_id = employee_syncs.employee_id 
+               AND DATE( ympi_klinik.patient_list.in_time ) = '".$now."' 
           ".$where."");
 
           $dateTitle = date("d M Y", strtotime($now));

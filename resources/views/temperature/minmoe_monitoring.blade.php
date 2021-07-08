@@ -211,6 +211,7 @@
 								<th style="width: 3%;">Shift</th>
 								<th style="width: 2%;">Time</th>
 								<th style="width: 2%;">Temp</th>
+								<th style="width: 2%;">Status</th>
 							</tr>			
 						</thead>
 						<tbody id="tableAbnormalBody">
@@ -410,17 +411,19 @@
 						if (value.temperature != null) {
 							var temps = value.temperature.split(',');
 							var tmps = 0;
+							var check_status = "";
 							var point = "";
 							for (var i = 0; i < temps.length; i++) {
 								if (temps[i].split('_')[0] == value.time_in) {
 									tmps = parseFloat(temps[i].split('_')[1]);
+									check_status = temps[i].split('_')[3];
 									point = temps[i].split('_')[2];
 									dataTemperature.push({temperature: tmps});
 									detail_all.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:tmps,point:point});
 								}
 							}
 							if (tmps >= 37.5) {
-								detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:tmps});
+								detail_abnormal.push({employee_id: value.employee_id,name:value.name, dept: value.department_shortname, shift: value.shiftdaily_code,attend_code:value.attend_code,time_in:value.time_in,section:value.section,group:value.groups,temp:tmps,check_status:check_status,klinik:value.klinik});
 							}
 						}
 						if (value.remark == 'OFC' || value.remark == 'Jps') {
@@ -636,13 +639,21 @@
 					$.each(detail_abnormal, function(key, value) {
 						if (value.temp >= 37.5) {
 							resultDataAbnormal += '<tr>';
-							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+index+'</td>';
-							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+value.employee_id+'</td>';
-							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.name +'</td>';
-							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.dept +'</td>';
-							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.shift +'</td>';
-							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.time_in +'</td>';
-							resultDataAbnormal += '<td class="sedang" style="font-size: 15px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.temp +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 13px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+index+'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 13px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+value.employee_id+'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 13px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.name.replace(/(.{14})..+/, "$1&hellip;") +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 13px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.dept +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 13px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.shift +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 13px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.time_in +'</td>';
+							resultDataAbnormal += '<td class="sedang" style="font-size: 13px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ value.temp +'</td>';
+							if (value.klinik == null && value.check_status == '-') {
+								var check_status = '-';
+							}else if(value.klinik != null && value.check_status == '-'){
+								var check_status = 'Di Klinik';
+							}else{
+								var check_status = value.check_status;
+							}
+							resultDataAbnormal += '<td class="sedang" style="font-size: 13px;vertical-align:middle; font-weight: bold; background-color: #ffccff">'+ check_status +'</td>';
 							resultDataAbnormal += '</tr>';
 							index++;
 						}
@@ -819,7 +830,7 @@ function fetchTemperatureDetail(temperature){
 					resultData += '<tr>';
 					resultData += '<td>'+ index +'</td>';
 					resultData += '<td>'+ value.employee_id +'</td>';
-					resultData += '<td>'+ value.name +'</td>';
+					resultData += '<td>'+ value.name.replace(/(.{14})..+/, "$1&hellip;") +'</td>';
 					resultData += '<td>'+ value.dept +' Dept</td>';
 					resultData += '<td>'+ value.section +'</td>';
 					resultData += '<td>'+ value.group +'</td>';
@@ -908,7 +919,7 @@ function checkDetails(checkParam) {
 		resultData += '<tr>';
 		resultData += '<td>'+ index +'</td>';
 		resultData += '<td>'+ value.employee_id +'</td>';
-		resultData += '<td>'+ value.name +'</td>';
+		resultData += '<td>'+ value.name.replace(/(.{14})..+/, "$1&hellip;") +'</td>';
 		resultData += '<td>'+ value.dept +' Dept</td>';
 		resultData += '<td>'+ value.section +'</td>';
 		resultData += '<td>'+ value.group +'</td>';
