@@ -769,9 +769,6 @@
 														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -787,9 +784,6 @@
 													for(var l = 0; l < mesin.length;l++){
 														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
 													}
-													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
 													tableTrend += '</td>';
 												}
 											}
@@ -807,9 +801,6 @@
 														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -825,9 +816,6 @@
 													for(var l = 0; l < mesin.length;l++){
 														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
 													}
-													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
 													tableTrend += '</td>';
 												}
 											}
@@ -845,9 +833,6 @@
 														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -864,9 +849,6 @@
 														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -882,9 +864,6 @@
 													for(var l = 0; l < mesin.length;l++){
 														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
 													}
-													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
 													tableTrend += '</td>';
 												}
 											}
@@ -920,9 +899,6 @@
 														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -938,9 +914,6 @@
 													for(var l = 0; l < molding.length;l++){
 														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
 													}
-													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
 													tableTrend += '</td>';
 												}
 											}
@@ -958,9 +931,6 @@
 														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -976,9 +946,6 @@
 													for(var l = 0; l < molding.length;l++){
 														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
 													}
-													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
 													tableTrend += '</td>';
 												}
 											}
@@ -996,9 +963,6 @@
 														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -1015,9 +979,6 @@
 														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -1033,9 +994,6 @@
 													for(var l = 0; l < molding.length;l++){
 														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
 													}
-													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
 													tableTrend += '</td>';
 												}
 											}
@@ -1078,9 +1036,6 @@
 														}
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -1103,9 +1058,6 @@
 															tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
 														}
 													}
-													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
 													tableTrend += '</td>';
 												}
 											}
@@ -1130,9 +1082,6 @@
 														}
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -1155,9 +1104,6 @@
 															tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
 														}
 													}
-													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
 													tableTrend += '</td>';
 												}
 											}
@@ -1182,9 +1128,6 @@
 														}
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -1208,9 +1151,6 @@
 														}
 													}
 													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													tableTrend += '</td>';
 												}
 											}
 										}
@@ -1233,9 +1173,6 @@
 															tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
 														}
 													}
-													tableTrend += '</td>';
-												}else{
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
 													tableTrend += '</td>';
 												}
 											}
