@@ -494,7 +494,7 @@
 						yAxis: {
 							type: 'logarithmic',
 							title: {
-								text: 'NG Rate (%)'
+								text: 'Total Not Good'
 							}
 						},
 						legend: {
@@ -585,7 +585,7 @@
 						yAxis: {
 							type: 'logarithmic',
 							title: {
-								text: 'NG Rate (%)'
+								text: 'Total Not Good'
 							}
 						},
 						legend: {

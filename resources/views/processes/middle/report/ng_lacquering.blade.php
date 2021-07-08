@@ -768,7 +768,7 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 				yAxis: {
 					type: 'logarithmic',
 					title: {
-						text: 'NG Rate (%)'
+						text: 'Total Not Good'
 					}
 				},
 				legend: {
@@ -873,7 +873,7 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 				yAxis: {
 					type: 'logarithmic',
 					title: {
-						text: 'NG Rate (%)'
+						text: 'Total Not Good'
 					}
 				},
 				legend: {
