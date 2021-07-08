@@ -1415,7 +1415,7 @@ class ProductionScheduleController extends Controller{
 
     public function updateAdjustmentSchedule(Request $request){
 
-        $date = $request->get("date(format)");
+        $date = $request->get("date");
 
         $query = "SELECT two.material_number, two.hpl, two.qty as two_qty, COALESCE(ps.qty,0) AS ps_qty, COALESCE(ps.qty,0) - two.qty AS diff FROM
         (SELECT two.material_number, m.hpl, SUM(two.quantity) AS qty FROM production_schedules_two_steps two
