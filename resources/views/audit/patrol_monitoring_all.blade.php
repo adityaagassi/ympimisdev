@@ -139,7 +139,7 @@
               <div class="input-group-addon bg-green" style="border: none;">
                 <i class="fa fa-calendar"></i>
               </div>
-              <input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From" required="">
+              <input type="text" class="form-control datepicker" id="date_from" name="date_from" placeholder="Select Date From" required="" onchange="drawChart()">
               <input type="hidden" value="{{ $category }}" id="category_export" name="category_export">
             </div>
           </div>
@@ -149,7 +149,7 @@
               <div class="input-group-addon bg-green" style="border: none;">
                 <i class="fa fa-calendar"></i>
               </div>
-              <input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To">
+              <input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To" onchange="drawChart()">
             </div>
           </div>
 
@@ -164,6 +164,34 @@
       </div>
       
       <div class="col-md-12" style="">
+        <div class="col-md-2" style="padding:0">
+          <div class="input-group">
+            <div class="input-group-addon bg-blue">
+              <i class="fa fa-search"></i>
+            </div>
+            <select class="form-control select2" onchange="fetchTable()" id="auditor" name="auditor" data-placeholder="Filter By Auditor" style="width: 100%">
+                <option value=""></option>
+                @foreach($auditors as $auditor)
+                <option value="{{$auditor->auditor_name}}">{{$auditor->auditor_name}}</option>
+                @endforeach
+            </select>
+          </div>
+        </div>
+
+        <div class="col-md-2" style="padding-right:0">
+          <div class="input-group">
+            <div class="input-group-addon bg-blue">
+              <i class="fa fa-search"></i>
+            </div>
+            <select class="form-control select2" onchange="fetchTable()" id="auditee" name="auditee" data-placeholder="Filter By PIC or Auditee" style="width: 100%">
+                <option value=""></option>
+                @foreach($auditees as $auditee)
+                <option value="{{$auditee->auditee_name}}">{{$auditee->auditee_name}}</option>
+                @endforeach
+            </select>
+          </div>
+        </div>
+        <br><br>
         <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
           <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
             <tr>
@@ -443,11 +471,16 @@
   });
 
   jQuery(document).ready(function() {
-    $('.select2').select2();
     drawChart();
     fetchTable();
     setInterval(fetchTable, 300000);
   });
+
+
+  $('.select2').select2({
+      dropdownAutoWidth : true,
+      allowClear: true
+    });
 
   $('.datepicker').datepicker({
     autoclose: true,
@@ -458,14 +491,14 @@
   function drawChart() {    
     fetchTable();
 
-    var datefrom = $('#datefrom').val();
-    var dateto = $('#dateto').val();
+    var date_from = $('#date_from').val();
+    var date_to = $('#date_to').val();
     var status = $('#status').val();
     var category = $('#category').val();
 
     var data = {
-      datefrom: datefrom,
-      dateto: dateto,
+      date_from: date_from,
+      date_to: date_to,
       status: status,
       category: category
     };
@@ -780,7 +813,7 @@
       "serverSide": true,
       "ajax": {
         "type" : "get",
-        "url" : "{{ url("index/audit_patrol_monitoring_detail") }}",
+        "url" : "{{ url('index/audit_patrol_monitoring_detail') }}",
         "data" : {
           tgl : tgl,
           status : status,
@@ -860,7 +893,7 @@
       "serverSide": true,
       "ajax": {
         "type" : "get",
-        "url" : "{{ url("index/audit_patrol_monitoring_detail_bulan") }}",
+        "url" : "{{ url('index/audit_patrol_monitoring_detail_bulan') }}",
         "data" : {
           bulan : bulan,
           status : status,
@@ -883,16 +916,20 @@
 
   function fetchTable(){
 
-    var datefrom = $('#datefrom').val();
-    var dateto = $('#dateto').val();
+    var date_from = $('#date_from').val();
+    var date_to = $('#date_to').val();
     var status = $('#status').val();
     var category = $('#category').val();
+    var auditor = $('#auditor').val();
+    var auditee = $('#auditee').val();
 
     var data = {
-      datefrom: datefrom,
-      dateto: dateto,
+      date_from: date_from,
+      date_to: date_to,
       status: status,
-      category: category
+      category: category,
+      auditor:auditor,
+      auditee:auditee
     };
 
     $.get('{{ url("index/audit_patrol_monitoring_table") }}', data, function(result, status, xhr){

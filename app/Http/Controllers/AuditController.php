@@ -1242,11 +1242,34 @@ public function detailPenanganan(Request $request){
 
     public function indexMonitoringAll($id){
 
+      if ($id == "monthly_patrol") {
+        $category = "EHS & 5S Patrol";
+      }
+      else if ($id == "daily_patrol") {
+        $category = "Patrol Daily";
+      }
+      else if ($id == "covid_patrol") {
+        $category = "Patrol Covid";
+      }
+      else if ($id == "stocktaking") {
+        $category = "Audit Stocktaking";
+      }
+      else if ($id == "mis") {
+        $category = "Audit MIS";
+      }
+
+
+      $auditor = db::select("SELECT DISTINCT auditor_name FROM audit_all_results WHERE deleted_at is null AND kategori IN ( '".$category."' ) AND point_judul != 'Positive Finding' and audit_all_results.status_ditangani is null");
+
+      $auditee = db::select("SELECT DISTINCT auditee_name FROM audit_all_results WHERE deleted_at is null AND kategori IN ( '".$category."' ) AND point_judul != 'Positive Finding' and audit_all_results.status_ditangani is null");
+
       return view('audit.patrol_monitoring_all',  
          array(
            'title' => 'Audit & Patrol Monitoring', 
            'title_jp' => '監査・パトロールの表示',
-           'category' => $id
+           'category' => $id,
+           'auditors' => $auditor,
+           'auditees' => $auditee
          )
        )->with('page', 'Audit Patrol Monitoring');
      }
@@ -1254,6 +1277,24 @@ public function detailPenanganan(Request $request){
     public function fetchMonitoringAll(Request $request){
 
       $first = date("Y-m-d", strtotime('-30 days'));
+
+      $tanggal = "";
+
+      if (strlen($request->get('date_from')) > 0)
+      {
+
+          $date_from = date('Y-m-d', strtotime($request->get('date_from')));
+          $tanggal = "and tanggal = '".$date_from."'";
+
+          if (strlen($request->get('date_to')) > 0) {
+
+              $date_from = date('Y-m-d', strtotime($request->get('date_from')));
+              $date_to = date('Y-m-d', strtotime($request->get('date_to')));
+    
+              $tanggal = "and tanggal >= '".$date_from."'";
+              $tanggal = $tanggal . "and tanggal  <= '" .$date_to."'";
+          }
+      }
 
       $check = AuditAllResult::where('status_ditangani', '=', 'close')
       ->orderBy('tanggal', 'asc')
@@ -1290,6 +1331,7 @@ public function detailPenanganan(Request $request){
         tanggal >= '".$first."'
         and kategori in ('".$category."')
         and point_judul != 'Positive Finding'
+        ".$tanggal."
         GROUP BY
         tanggal");
 
@@ -1304,6 +1346,7 @@ public function detailPenanganan(Request $request){
         WHERE
         kategori in ('".$category."')
         and point_judul != 'Positive Finding'
+        ".$tanggal." 
         GROUP BY
         tahun,monthname(tanggal)
         order by tahun, month(tanggal) ASC"
@@ -1321,8 +1364,33 @@ public function detailPenanganan(Request $request){
 
     public function fetchTableAuditAll(Request $request)
     {
-      $datefrom = date("Y-m-d",  strtotime('-30 days'));
-      $dateto = date("Y-m-d");
+      $tanggal = "";
+      $auditor = "";
+      $auditee = "";
+
+      if (strlen($request->get('date_from')) > 0)
+      {
+
+          $date_from = date('Y-m-d', strtotime($request->get('date_from')));
+          $tanggal = "and tanggal = '".$date_from."'";
+
+          if (strlen($request->get('date_to')) > 0) {
+
+              $date_from = date('Y-m-d', strtotime($request->get('date_from')));
+              $date_to = date('Y-m-d', strtotime($request->get('date_to')));
+    
+              $tanggal = "and tanggal >= '".$date_from."'";
+              $tanggal = $tanggal . "and tanggal  <= '" .$date_to."'";
+          }
+      }
+
+      if (strlen($request->get('auditor')) > 0) {
+        $auditor = "and auditor_name = '".$request->get('auditor')."'";
+      }
+
+      if (strlen($request->get('auditee')) > 0) {
+        $auditee = "and auditee_name = '".$request->get('auditee')."'";
+      }
 
       $last = AuditAllResult::whereNull('status_ditangani')
       ->orderBy('tanggal', 'asc')
@@ -1358,7 +1426,7 @@ public function detailPenanganan(Request $request){
       }
 
 
-      $data = db::select("select * from audit_all_results where audit_all_results.deleted_at is null and kategori in ('".$category."') ".$kate." and point_judul != 'Positive Finding' ");
+      $data = db::select("select * from audit_all_results where audit_all_results.deleted_at is null and kategori in ('".$category."') ".$kate." and point_judul != 'Positive Finding' ".$tanggal." ".$auditor." ".$auditee."");
 
       $response = array(
         'status' => true,
