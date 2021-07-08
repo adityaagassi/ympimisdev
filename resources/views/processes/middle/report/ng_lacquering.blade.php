@@ -819,33 +819,33 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 					color.push('#2b908f');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Aus, Nami, Buff Torinai, Buff tdk rata'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
-					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#90ee7e');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Kizu'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
-					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#f45b5b');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Sisa Lusterlime'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
-					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#7798BF');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Toke, Rohtare, gosong, Handatsuki'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
-					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#aaeeee');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Pesok,Kake,Bengkok'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
-					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#ff0066');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Lain-lain (Hakuri nokoru,material salah,bekas)'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
-					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#eeaaee');
 				}
 
