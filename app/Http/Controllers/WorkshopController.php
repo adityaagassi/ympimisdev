@@ -16,6 +16,7 @@ use App\WorkshopJobOrderLog;
 use App\WorkshopMaterial;
 use App\WorkshopProcess;
 use App\WorkshopOperator;
+use App\WorkshopProcessOperator;
 use App\WorkshopTempProcess;
 use App\WorkshopTagAvailability;
 use App\WorkshopFlowProcess;
@@ -186,6 +187,12 @@ class WorkshopController extends Controller{
 		->orderBy('workshop_flows.process_number', 'asc')
 		->get();
 
+		$machine_pic = WorkshopProcessOperator::leftJoin('employee_syncs', 'workshop_process_operators.operator_id', '=', 'employee_syncs.employee_id')
+		// ->leftJoin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_process_operators.process_id')
+		->select('workshop_process_operators.operator_id', 'employee_syncs.name', 'workshop_process_operators.process_id' )
+		->orderBy('id', 'asc')
+		->get();
+
 		return view('workshop.wjo_list', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
@@ -197,6 +204,7 @@ class WorkshopController extends Controller{
 			'machines' => $this->machine,
 			'processes' => $process,
 			'flows' => $flow,
+			'machine_pic' => $machine_pic
 		))->with('page', 'WJO List')->with('head', 'Workshop');	
 	}
 
@@ -2199,13 +2207,28 @@ class WorkshopController extends Controller{
 	public function detailWJOPerolehan(Request $request)
 	{
 		$datas = db::select("SELECT '".$request->get('mon')."' as mon, order_no, category, problem_description, `name`, process_name from workshop_job_orders 
-		left join (select * from processes where remark = 'workshop') processes on workshop_job_orders.remark = processes.process_code
-		left join employee_syncs on employee_syncs.employee_id = workshop_job_orders.created_by
-		where workshop_job_orders.deleted_at is null and workshop_job_orders.remark not in (5,6) and DATE_FORMAT(workshop_job_orders.created_at,'%Y %b') = '".$request->get('mon')."'");
+			left join (select * from processes where remark = 'workshop') processes on workshop_job_orders.remark = processes.process_code
+			left join employee_syncs on employee_syncs.employee_id = workshop_job_orders.created_by
+			where workshop_job_orders.deleted_at is null and workshop_job_orders.remark not in (5,6) and DATE_FORMAT(workshop_job_orders.created_at,'%Y %b') = '".$request->get('mon')."'");
 
 		$response = array(
 			'status' => true,
 			'detail_datas' => $datas
+		);
+		return Response::json($response);
+	}
+
+	public function fetchOperatorloadMinute(Request $request)
+	{
+		$datas = db::select("SELECT l.operator_id, e.name, SUM(TIMESTAMPDIFF(MINUTE,l.started_at,l.created_at)) as work_load  from workshop_logs l
+			left join employee_syncs e on e.employee_id = l.operator_id
+			where e.`group` = 'Workshop Group'
+			and date(l.started_at) = date(now())
+			group by l.operator_id, e.name");
+
+		$response = array(
+			'status' => true,
+			'operator_load' => $datas
 		);
 		return Response::json($response);
 	}
