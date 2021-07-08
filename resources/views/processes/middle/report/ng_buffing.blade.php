@@ -448,23 +448,28 @@
 					for (var i = 0; i < result.ng_alto.length; i++) {
 						if(result.ng_alto[i].ng_name == 'Buff Tarinai'){
 							ng.push(result.ng_alto[i].ng_name);
-							ng_rate_alto.push(result.ng_alto[i].ng/result.ng_alto[i].check*100);
+							// ng_rate_alto.push(result.ng_alto[i].ng/result.ng_alto[i].check*100);
+							ng_rate_alto.push(result.ng_alto[i].ng);
 							color.push('#00897B');
 						}else if(result.ng_alto[i].ng_name == 'NG Soldering'){
 							ng.push(result.ng_alto[i].ng_name);
-							ng_rate_alto.push(result.ng_alto[i].ng/result.ng_alto[i].check*100);
+							// ng_rate_alto.push(result.ng_alto[i].ng/result.ng_alto[i].check*100);
+							ng_rate_alto.push(result.ng_alto[i].ng);
 							color.push('#F9A825');
 						}else if(result.ng_alto[i].ng_name == 'Kizu'){
 							ng.push(result.ng_alto[i].ng_name);
-							ng_rate_alto.push(result.ng_alto[i].ng/result.ng_alto[i].check*100);
+							// ng_rate_alto.push(result.ng_alto[i].ng/result.ng_alto[i].check*100);
+							ng_rate_alto.push(result.ng_alto[i].ng);
 							color.push('#aaeeee');
 						}else if(result.ng_alto[i].ng_name == 'Buff Others (Aus, Nami, dll)'){
 							ng.push(result.ng_alto[i].ng_name);
-							ng_rate_alto.push(result.ng_alto[i].ng/result.ng_alto[i].check*100);
+							// ng_rate_alto.push(result.ng_alto[i].ng/result.ng_alto[i].check*100);
+							ng_rate_alto.push(result.ng_alto[i].ng);
 							color.push('#BCAAA4');
 						}else if(result.ng_alto[i].ng_name == 'Buff Nagare'){
 							ng.push(result.ng_alto[i].ng_name);
-							ng_rate_alto.push(result.ng_alto[i].ng/result.ng_alto[i].check*100);
+							// ng_rate_alto.push(result.ng_alto[i].ng/result.ng_alto[i].check*100);
+							ng_rate_alto.push(result.ng_alto[i].ng);
 							color.push('#7798BF');
 						}
 
@@ -538,23 +543,28 @@
 					for (var i = 0; i < result.ng_tenor.length; i++) {
 						if(result.ng_tenor[i].ng_name == 'Buff Tarinai'){
 							ng.push(result.ng_tenor[i].ng_name);
-							ng_rate_tenor.push(result.ng_tenor[i].ng/result.ng_tenor[i].check*100);
+							// ng_rate_tenor.push(result.ng_tenor[i].ng/result.ng_tenor[i].check*100);
+							ng_rate_tenor.push(result.ng_tenor[i].ng);
 							color.push('#00897B');
 						}else if(result.ng_tenor[i].ng_name == 'NG Soldering'){
 							ng.push(result.ng_tenor[i].ng_name);
-							ng_rate_tenor.push(result.ng_tenor[i].ng/result.ng_tenor[i].check*100);
+							// ng_rate_tenor.push(result.ng_tenor[i].ng/result.ng_tenor[i].check*100);
+							ng_rate_tenor.push(result.ng_tenor[i].ng);
 							color.push('#F9A825');
 						}else if(result.ng_tenor[i].ng_name == 'Kizu'){
 							ng.push(result.ng_tenor[i].ng_name);
-							ng_rate_tenor.push(result.ng_tenor[i].ng/result.ng_tenor[i].check*100);
+							// ng_rate_tenor.push(result.ng_tenor[i].ng/result.ng_tenor[i].check*100);
+							ng_rate_tenor.push(result.ng_tenor[i].ng);
 							color.push('#aaeeee');
 						}else if(result.ng_tenor[i].ng_name == 'Buff Others (Aus, Nami, dll)'){
 							ng.push(result.ng_tenor[i].ng_name);
-							ng_rate_tenor.push(result.ng_tenor[i].ng/result.ng_tenor[i].check*100);
+							// ng_rate_tenor.push(result.ng_tenor[i].ng/result.ng_tenor[i].check*100);
+							ng_rate_tenor.push(result.ng_tenor[i].ng);
 							color.push('#BCAAA4');
 						}else if(result.ng_tenor[i].ng_name == 'Buff Nagare'){
 							ng.push(result.ng_tenor[i].ng_name);
-							ng_rate_tenor.push(result.ng_tenor[i].ng/result.ng_tenor[i].check*100);
+							// ng_rate_tenor.push(result.ng_tenor[i].ng/result.ng_tenor[i].check*100);
+							ng_rate_tenor.push(result.ng_tenor[i].ng);
 							color.push('#7798BF');
 						}
 

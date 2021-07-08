@@ -709,31 +709,38 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 			for (var i = 0; i < result.ic_ng_alto.length; i++) {
 				if(result.ic_ng_alto[i].ng_name == 'Kizu Beret, Scrath, Butsu'){
 					ng.push(result.ic_ng_alto[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					// ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng);
 					color.push('#2b908f');
 				}else if(result.ic_ng_alto[i].ng_name == 'Aus, Nami, Buff Torinai, Buff tdk rata'){
 					ng.push(result.ic_ng_alto[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					// ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng);
 					color.push('#90ee7e');
 				}else if(result.ic_ng_alto[i].ng_name == 'Kizu'){
 					ng.push(result.ic_ng_alto[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					// ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng);
 					color.push('#f45b5b');
 				}else if(result.ic_ng_alto[i].ng_name == 'Sisa Lusterlime'){
 					ng.push(result.ic_ng_alto[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					// ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng);
 					color.push('#7798BF');
 				}else if(result.ic_ng_alto[i].ng_name == 'Toke, Rohtare, gosong, Handatsuki'){
 					ng.push(result.ic_ng_alto[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					// ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng);
 					color.push('#aaeeee');
 				}else if(result.ic_ng_alto[i].ng_name == 'Pesok,Kake,Bengkok'){
 					ng.push(result.ic_ng_alto[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					// ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng);
 					color.push('#ff0066');
 				}else if(result.ic_ng_alto[i].ng_name == 'Lain-lain (Hakuri nokoru,material salah,bekas)'){
 					ng.push(result.ic_ng_alto[i].ng_name);
-					ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					// ng_rate_alto.push(result.ic_ng_alto[i].ng/result.ic_ng_alto[i].check*100);
+					ng_rate_alto.push(result.ic_ng_alto[i].ng);
 					color.push('#eeaaee');
 				}
 
@@ -810,31 +817,38 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 			for (var i = 0; i < result.ic_ng_tenor.length; i++) {
 				if(result.ic_ng_tenor[i].ng_name == 'Kizu Beret, Scrath, Butsu'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
-					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#2b908f');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Aus, Nami, Buff Torinai, Buff tdk rata'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
 					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#90ee7e');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Kizu'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
 					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#f45b5b');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Sisa Lusterlime'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
 					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#7798BF');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Toke, Rohtare, gosong, Handatsuki'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
 					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#aaeeee');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Pesok,Kake,Bengkok'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
 					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#ff0066');
 				}else if(result.ic_ng_tenor[i].ng_name == 'Lain-lain (Hakuri nokoru,material salah,bekas)'){
 					ng.push(result.ic_ng_tenor[i].ng_name);
 					ng_rate_tenor.push(result.ic_ng_tenor[i].ng/result.ic_ng_tenor[i].check*100);
+					// ng_rate_tenor.push(result.ic_ng_tenor[i].ng);
 					color.push('#eeaaee');
 				}
 
@@ -1259,11 +1273,11 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 					type: 'column'
 				},
 				title: {
-					text: '<center><span style="font-size: 16pt;">Highest NG Kensa Lacquering Alto Sax Key</center></span>',
+					text: '<span style="font-size: 16pt;">Highest NG Kensa Lacquering Alto Sax Key</span>',
 					useHTML: true
 				},
 				subtitle: {
-					text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span>',
 					useHTML: true
 				},
 				xAxis: {
@@ -1419,11 +1433,11 @@ $.get('{{ url("fetch/middle/lcq_ng") }}', data, function(result, status, xhr) {
 					type: 'column'
 				},
 				title: {
-					text: '<center><span style="font-size: 16pt;">Highest NG Kensa Lacquering Tenor Sax Key</center></span>',
+					text: '<span style="font-size: 16pt;">Highest NG Kensa Lacquering Tenor Sax Key</span>',
 					useHTML: true
 				},
 				subtitle: {
-					text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span><br><center><span style="color: rgba(96, 92, 168);"></center></span>',
+					text: '<span style="font-size: 15pt; color: rgb(60, 60, 60);">on '+result.bulanText+'</span>',
 					useHTML: true
 				},
 				xAxis: {
