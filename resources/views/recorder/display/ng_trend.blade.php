@@ -111,6 +111,42 @@
 				</div> -->
 				<div class="col-xs-12">
 					<div id="container" class="container" style="width: 100%;"></div>
+					<table class="table table-hover table-bordered" id="tableTrend" style="padding-top: 10px">
+						<thead style="background-color: rgba(126,86,134,.7);color: white">
+							<tr>
+								<th style="width: 1%;">Date</th>
+								<!-- <th style="width: 1%;">Product</th>
+								<th style="width: 1%;">Part</th>
+								<th style="width: 1%;">Color</th>
+								<th style="width: 1%;">Cav</th> -->
+								<th style="width: 2%;">OP Molding</th>
+								<th style="width: 1%;">Molding</th>
+								<th style="width: 3%;">OP Injeksi</th>
+								<th style="width: 1%;">Mesin</th>
+								<th style="width: 3%;">OP Resin</th>
+								<th style="width: 1%;">Resin</th>
+								<th style="width: 1%;">Dryer</th>
+								<!-- <th style="width: 1%;">OP Kensa</th>
+								<th style="width: 1%;">NG Kensa</th> -->
+							</tr>
+						</thead>
+						<tbody id="tableTrendBody">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="modal fade" id="modalDetail">
+	<div class="modal-dialog modal-lg" style="width: 1200px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div style="background-color: #fcba03;text-align: center;">
+					<h4 class="modal-title" style="font-weight: bold;padding: 10px;font-size: 20px" id="modalDetailTitle"></h4>
+				</div>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<!-- <table class="table table-hover table-bordered" id="tableTrend" style="padding-top: 10px">
 						<thead style="background-color: rgba(126,86,134,.7);color: white">
 							<tr>
@@ -133,42 +169,6 @@
 						<tbody id="tableTrendBody">
 						</tbody>
 					</table> -->
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-<div class="modal fade" id="modalDetail">
-	<div class="modal-dialog modal-lg" style="width: 1200px">
-		<div class="modal-content">
-			<div class="modal-header">
-				<div style="background-color: #fcba03;text-align: center;">
-					<h4 class="modal-title" style="font-weight: bold;padding: 10px;font-size: 20px" id="modalDetailTitle"></h4>
-				</div>
-				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
-					<table class="table table-hover table-bordered" id="tableTrend" style="padding-top: 10px">
-						<thead style="background-color: rgba(126,86,134,.7);color: white">
-							<tr>
-								<th style="width: 1%;">Date</th>
-								<th style="width: 1%;">Product</th>
-								<th style="width: 1%;">Part</th>
-								<th style="width: 1%;">Color</th>
-								<th style="width: 1%;">Cav</th>
-								<th style="width: 1%;">OP Molding</th>
-								<th style="width: 1%;">Molding</th>
-								<th style="width: 1%;">OP Injeksi</th>
-								<th style="width: 1%;">Mesin</th>
-								<th style="width: 1%;">OP Resin</th>
-								<th style="width: 1%;">Resin</th>
-								<th style="width: 1%;">Dryer</th>
-								<th style="width: 1%;">OP Kensa</th>
-								<th style="width: 1%;">NG Kensa</th>
-							</tr>
-						</thead>
-						<tbody id="tableTrendBody">
-						</tbody>
-					</table>
 				</div>
 			</div>
 		</div>
@@ -198,7 +198,7 @@
 		});
 		$('.select2').select2();
 		fetchChart();
-		setInterval(fetchChart, 20000);
+		setInterval(fetchChart, 30000);
 	});
 
 	function topFunction() {
@@ -770,30 +770,62 @@
 											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
 											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
 
-											for(var l = 0; l < product.length;l++){
-												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-												tableTrend += '<td>'+product[l]+'</td>';
-												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
-												tableTrend += '<td>'+colors[l]+'</td>';
-												tableTrend += '<td>'+cavity[l]+'</td>';
-												tableTrend += '<td>'+operator_molding[l]+'</td>';
-												tableTrend += '<td>'+molding[l]+'</td>';
-												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+mesin[l]+'</td>';
-												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+resin[l]+'</td>';
-												tableTrend += '<td>'+dryer[l]+'</td>';
-												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												var ng_name_kensas = ng_name_kensa[l].split(',');
-												var ng_count_kensas = ng_count_kensa[l].split(',');
-												tableTrend += '<td>';
-												for(var m = 0; m < ng_name_kensas.length;m++){
-													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
-												}
-												tableTrend += '</td>';
-												tableTrend += '</tr>';
+											tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+											tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+											// tableTrend += '<td>'+product[l]+'</td>';
+											// tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+											// tableTrend += '<td>'+colors[l]+'</td>';
+											// tableTrend += '<td>'+cavity[l]+'</td>';
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_molding.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_molding[l]+'</span><br>';
 											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < molding.length;l++){
+												tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_injeksi.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < mesin.length;l++){
+												tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_resin.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < resin.length;l++){
+												tableTrend += '<span class="label label-success">'+resin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < dryer.length;l++){
+												tableTrend += '<span class="label label-success">'+dryer[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+											// tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+											// var ng_name_kensas = ng_name_kensa[l].split(',');
+											// var ng_count_kensas = ng_count_kensa[l].split(',');
+											// tableTrend += '<td>';
+											// for(var m = 0; m < ng_name_kensas.length;m++){
+											// 	tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+											// }
+											tableTrend += '</td>';
+											tableTrend += '</tr>';
 										}
 									}
 
@@ -819,30 +851,62 @@
 											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
 											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
 
-											for(var l = 0; l < product.length;l++){
-												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-												tableTrend += '<td>'+product[l]+'</td>';
-												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
-												tableTrend += '<td>'+colors[l]+'</td>';
-												tableTrend += '<td>'+cavity[l]+'</td>';
-												tableTrend += '<td>'+operator_molding[l]+'</td>';
-												tableTrend += '<td>'+molding[l]+'</td>';
-												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+mesin[l]+'</td>';
-												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+resin[l]+'</td>';
-												tableTrend += '<td>'+dryer[l]+'</td>';
-												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												var ng_name_kensas = ng_name_kensa[l].split(',');
-												var ng_count_kensas = ng_count_kensa[l].split(',');
-												tableTrend += '<td>';
-												for(var m = 0; m < ng_name_kensas.length;m++){
-													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
-												}
-												tableTrend += '</td>';
-												tableTrend += '</tr>';
+											tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+											tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+											// tableTrend += '<td>'+product[l]+'</td>';
+											// tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+											// tableTrend += '<td>'+colors[l]+'</td>';
+											// tableTrend += '<td>'+cavity[l]+'</td>';
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_molding.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_molding[l]+'</span><br>';
 											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < molding.length;l++){
+												tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_injeksi.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < mesin.length;l++){
+												tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_resin.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < resin.length;l++){
+												tableTrend += '<span class="label label-success">'+resin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < dryer.length;l++){
+												tableTrend += '<span class="label label-success">'+dryer[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+											// tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+											// var ng_name_kensas = ng_name_kensa[l].split(',');
+											// var ng_count_kensas = ng_count_kensa[l].split(',');
+											// tableTrend += '<td>';
+											// for(var m = 0; m < ng_name_kensas.length;m++){
+											// 	tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+											// }
+											tableTrend += '</td>';
+											tableTrend += '</tr>';
 										}
 									}
 
@@ -868,30 +932,62 @@
 											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
 											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
 
-											for(var l = 0; l < product.length;l++){
-												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-												tableTrend += '<td>'+product[l]+'</td>';
-												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
-												tableTrend += '<td>'+colors[l]+'</td>';
-												tableTrend += '<td>'+cavity[l]+'</td>';
-												tableTrend += '<td>'+operator_molding[l]+'</td>';
-												tableTrend += '<td>'+molding[l]+'</td>';
-												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+mesin[l]+'</td>';
-												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+resin[l]+'</td>';
-												tableTrend += '<td>'+dryer[l]+'</td>';
-												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												var ng_name_kensas = ng_name_kensa[l].split(',');
-												var ng_count_kensas = ng_count_kensa[l].split(',');
-												tableTrend += '<td>';
-												for(var m = 0; m < ng_name_kensas.length;m++){
-													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
-												}
-												tableTrend += '</td>';
-												tableTrend += '</tr>';
+											tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+											tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+											// tableTrend += '<td>'+product[l]+'</td>';
+											// tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+											// tableTrend += '<td>'+colors[l]+'</td>';
+											// tableTrend += '<td>'+cavity[l]+'</td>';
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_molding.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_molding[l]+'</span><br>';
 											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < molding.length;l++){
+												tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_injeksi.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < mesin.length;l++){
+												tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_resin.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < resin.length;l++){
+												tableTrend += '<span class="label label-success">'+resin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < dryer.length;l++){
+												tableTrend += '<span class="label label-success">'+dryer[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+											// tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+											// var ng_name_kensas = ng_name_kensa[l].split(',');
+											// var ng_count_kensas = ng_count_kensa[l].split(',');
+											// tableTrend += '<td>';
+											// for(var m = 0; m < ng_name_kensas.length;m++){
+											// 	tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+											// }
+											tableTrend += '</td>';
+											tableTrend += '</tr>';
 										}
 									}
 
@@ -917,30 +1013,62 @@
 											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
 											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
 
-											for(var l = 0; l < product.length;l++){
-												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-												tableTrend += '<td>'+product[l]+'</td>';
-												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
-												tableTrend += '<td>'+colors[l]+'</td>';
-												tableTrend += '<td>'+cavity[l]+'</td>';
-												tableTrend += '<td>'+operator_molding[l]+'</td>';
-												tableTrend += '<td>'+molding[l]+'</td>';
-												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+mesin[l]+'</td>';
-												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+resin[l]+'</td>';
-												tableTrend += '<td>'+dryer[l]+'</td>';
-												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												var ng_name_kensas = ng_name_kensa[l].split(',');
-												var ng_count_kensas = ng_count_kensa[l].split(',');
-												tableTrend += '<td>';
-												for(var m = 0; m < ng_name_kensas.length;m++){
-													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
-												}
-												tableTrend += '</td>';
-												tableTrend += '</tr>';
+											tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+											tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+											// tableTrend += '<td>'+product[l]+'</td>';
+											// tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+											// tableTrend += '<td>'+colors[l]+'</td>';
+											// tableTrend += '<td>'+cavity[l]+'</td>';
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_molding.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_molding[l]+'</span><br>';
 											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < molding.length;l++){
+												tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_injeksi.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < mesin.length;l++){
+												tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_resin.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < resin.length;l++){
+												tableTrend += '<span class="label label-success">'+resin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < dryer.length;l++){
+												tableTrend += '<span class="label label-success">'+dryer[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+											// tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+											// var ng_name_kensas = ng_name_kensa[l].split(',');
+											// var ng_count_kensas = ng_count_kensa[l].split(',');
+											// tableTrend += '<td>';
+											// for(var m = 0; m < ng_name_kensas.length;m++){
+											// 	tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+											// }
+											tableTrend += '</td>';
+											tableTrend += '</tr>';
 										}
 									}
 
@@ -966,30 +1094,62 @@
 											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
 											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
 
-											for(var l = 0; l < product.length;l++){
-												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-												tableTrend += '<td>'+product[l]+'</td>';
-												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
-												tableTrend += '<td>'+colors[l]+'</td>';
-												tableTrend += '<td>'+cavity[l]+'</td>';
-												tableTrend += '<td>'+operator_molding[l]+'</td>';
-												tableTrend += '<td>'+molding[l]+'</td>';
-												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+mesin[l]+'</td>';
-												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+resin[l]+'</td>';
-												tableTrend += '<td>'+dryer[l]+'</td>';
-												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												var ng_name_kensas = ng_name_kensa[l].split(',');
-												var ng_count_kensas = ng_count_kensa[l].split(',');
-												tableTrend += '<td>';
-												for(var m = 0; m < ng_name_kensas.length;m++){
-													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
-												}
-												tableTrend += '</td>';
-												tableTrend += '</tr>';
+											tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+											tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+											// tableTrend += '<td>'+product[l]+'</td>';
+											// tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+											// tableTrend += '<td>'+colors[l]+'</td>';
+											// tableTrend += '<td>'+cavity[l]+'</td>';
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_molding.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_molding[l]+'</span><br>';
 											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < molding.length;l++){
+												tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_injeksi.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < mesin.length;l++){
+												tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_resin.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < resin.length;l++){
+												tableTrend += '<span class="label label-success">'+resin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < dryer.length;l++){
+												tableTrend += '<span class="label label-success">'+dryer[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+											// tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+											// var ng_name_kensas = ng_name_kensa[l].split(',');
+											// var ng_count_kensas = ng_count_kensa[l].split(',');
+											// tableTrend += '<td>';
+											// for(var m = 0; m < ng_name_kensas.length;m++){
+											// 	tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+											// }
+											tableTrend += '</td>';
+											tableTrend += '</tr>';
 										}
 									}
 
@@ -1015,30 +1175,62 @@
 											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
 											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
 
-											for(var l = 0; l < product.length;l++){
-												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-												tableTrend += '<td>'+product[l]+'</td>';
-												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
-												tableTrend += '<td>'+colors[l]+'</td>';
-												tableTrend += '<td>'+cavity[l]+'</td>';
-												tableTrend += '<td>'+operator_molding[l]+'</td>';
-												tableTrend += '<td>'+molding[l]+'</td>';
-												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+mesin[l]+'</td>';
-												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+resin[l]+'</td>';
-												tableTrend += '<td>'+dryer[l]+'</td>';
-												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												var ng_name_kensas = ng_name_kensa[l].split(',');
-												var ng_count_kensas = ng_count_kensa[l].split(',');
-												tableTrend += '<td>';
-												for(var m = 0; m < ng_name_kensas.length;m++){
-													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
-												}
-												tableTrend += '</td>';
-												tableTrend += '</tr>';
+											tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+											tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+											// tableTrend += '<td>'+product[l]+'</td>';
+											// tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+											// tableTrend += '<td>'+colors[l]+'</td>';
+											// tableTrend += '<td>'+cavity[l]+'</td>';
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_molding.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_molding[l]+'</span><br>';
 											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < molding.length;l++){
+												tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_injeksi.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < mesin.length;l++){
+												tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_resin.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < resin.length;l++){
+												tableTrend += '<span class="label label-success">'+resin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < dryer.length;l++){
+												tableTrend += '<span class="label label-success">'+dryer[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+											// tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+											// var ng_name_kensas = ng_name_kensa[l].split(',');
+											// var ng_count_kensas = ng_count_kensa[l].split(',');
+											// tableTrend += '<td>';
+											// for(var m = 0; m < ng_name_kensas.length;m++){
+											// 	tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+											// }
+											tableTrend += '</td>';
+											tableTrend += '</tr>';
 										}
 									}
 
@@ -1064,30 +1256,62 @@
 											var operator_kensa = result.resume_trend[j][k].operator_kensa.split('_');
 											var kensa_name = result.resume_trend[j][k].kensa_name.split('_');
 
-											for(var l = 0; l < product.length;l++){
-												tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
-												tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
-												tableTrend += '<td>'+product[l]+'</td>';
-												tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
-												tableTrend += '<td>'+colors[l]+'</td>';
-												tableTrend += '<td>'+cavity[l]+'</td>';
-												tableTrend += '<td>'+operator_molding[l]+'</td>';
-												tableTrend += '<td>'+molding[l]+'</td>';
-												tableTrend += '<td>'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+mesin[l]+'</td>';
-												tableTrend += '<td>'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												tableTrend += '<td>'+resin[l]+'</td>';
-												tableTrend += '<td>'+dryer[l]+'</td>';
-												tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
-												var ng_name_kensas = ng_name_kensa[l].split(',');
-												var ng_count_kensas = ng_count_kensa[l].split(',');
-												tableTrend += '<td>';
-												for(var m = 0; m < ng_name_kensas.length;m++){
-													tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
-												}
-												tableTrend += '</td>';
-												tableTrend += '</tr>';
+											tableTrend += '<tr style="background-color:'+color+';" id="'+result.week_date[i].week_date+'">';
+											tableTrend += '<td>'+result.week_date[i].week_date+'</td>';
+											// tableTrend += '<td>'+product[l]+'</td>';
+											// tableTrend += '<td>'+result.resume_trend[j][k].material_number+'<br>'+part_name[l]+' '+part_type[l]+'</td>';
+											// tableTrend += '<td>'+colors[l]+'</td>';
+											// tableTrend += '<td>'+cavity[l]+'</td>';
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_molding.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_molding[l]+'</span><br>';
 											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < molding.length;l++){
+												tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_injeksi.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_injeksi[l]+'<br>'+injeksi_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < mesin.length;l++){
+												tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < operator_resin.length;l++){
+												tableTrend += '<span class="label label-success">'+operator_resin[l]+'<br>'+resin_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < resin.length;l++){
+												tableTrend += '<span class="label label-success">'+resin[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+
+											tableTrend += '<td>';
+											for(var l = 0; l < dryer.length;l++){
+												tableTrend += '<span class="label label-success">'+dryer[l]+'</span><br>';
+											}
+											tableTrend += '</td>';
+											// tableTrend += '<td>'+operator_kensa[l]+'<br>'+kensa_name[l].replace(/(.{14})..+/, "$1&hellip;")+'</td>';
+											// var ng_name_kensas = ng_name_kensa[l].split(',');
+											// var ng_count_kensas = ng_count_kensa[l].split(',');
+											// tableTrend += '<td>';
+											// for(var m = 0; m < ng_name_kensas.length;m++){
+											// 	tableTrend += ng_name_kensas[m]+' = '+ng_count_kensas[m]+'<br>';
+											// }
+											tableTrend += '</td>';
+											tableTrend += '</tr>';
 										}
 									}
 								}
@@ -1109,23 +1333,23 @@ function showHighlight(name,date) {
 		if (document.getElementById(date_all[i]) != null) {
 			var elms = document.querySelectorAll("[id='"+date_all[i]+"']");
 			for(var j = 0; j < elms.length; j++){
-				// elms[j].style.backgroundColor = '#fff';
-				elms[j].style.display = 'none';
+				elms[j].style.backgroundColor = '#fff';
+				// elms[j].style.display = 'none';
 			}
 		}
 	}
 	var elms = document.querySelectorAll("[id='"+date+"']");
 	for(var i = 0; i < elms.length; i++){
-		// elms[i].scrollIntoView({
-		//   behavior: 'smooth'
-		// });
-		// elms[i].style.backgroundColor = '#9ccaff';
-		elms[i].style.display = '';
+		elms[i].scrollIntoView({
+		  behavior: 'smooth'
+		});
+		elms[i].style.backgroundColor = '#9ccaff';
+		// elms[i].style.display = '';
 	}
 
-	$('#modalDetailTitle').html('DETAIL HIGHEST NG ON '+date);
+	// $('#modalDetailTitle').html('DETAIL HIGHEST NG ON '+date);
 
-	$('#modalDetail').modal('show');
+	// $('#modalDetail').modal('show');
   		
 	// document.getElementById(date).scrollIntoView({
 	//   behavior: 'smooth'
