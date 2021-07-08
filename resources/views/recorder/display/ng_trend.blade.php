@@ -111,6 +111,8 @@
 				</div> -->
 				<div class="col-xs-12">
 					<div id="container" class="container" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-12" style="overflow-x: scroll;">
 					<table class="table table-hover table-bordered" id="tableTrend" style="padding-top: 10px">
 						<thead style="background-color: #605ca8;color: white" id="tableTrendHead">
 							<!-- <tr> -->
@@ -198,7 +200,7 @@
 		});
 		$('.select2').select2();
 		fetchChart();
-		setInterval(fetchChart, 30000);
+		// setInterval(fetchChart, 30000);
 	});
 
 	function topFunction() {
@@ -1212,7 +1214,7 @@ function showHighlight(name,date) {
 		  behavior: 'smooth'
 		});
 		elms[i].style.backgroundColor = '#9ccaff';
-		elms[j].style.color = '#000';
+		elms[i].style.color = '#000';
 		// elms[i].style.display = '';
 	}
 
