@@ -8262,7 +8262,7 @@ class RecorderProcessController extends Controller
           array_push($resumes, $resume);
 
           $trend_detail = DB::SELECT("SELECT DISTINCT
-            ( rc_kensas.material_number ),
+            ( rc_kensa_initials.part_type),
             '".$week_date[$i]->week_date."' AS week_date,
             GROUP_CONCAT( rc_kensas.ng_name SEPARATOR '_' ) AS ng_name_kensa,
             GROUP_CONCAT( rc_kensas.ng_count SEPARATOR '_' ) AS ng_count_kensa,
@@ -8292,7 +8292,7 @@ class RecorderProcessController extends Controller
             rc_kensas.ng_name IS NOT NULL 
             AND DATE( rc_kensas.created_at ) = '".$week_date[$i]->week_date."' 
           GROUP BY
-            material_number");
+            part_type");
 
           array_push($resume_trend, $trend_detail);
         }
