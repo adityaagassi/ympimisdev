@@ -62,7 +62,7 @@ Route::post('xml_parser_upload', 'TrialController@xmlParserUpload');
 Route::get('trialmail', 'TrialController@trialmail');
 
 Route::get('/trial', function () {
-	return view('trial');
+	return view('human_resource.recruitment.mail_request_manpower_approval');
 });
 
 Route::get('/trialPrint', function () {
@@ -158,7 +158,7 @@ Route::get('fetch/general/omi_visitor', 'GeneralController@fetchOmiVisitor');
 
 //SMART RECRUITMENT
 Route::get('index/hr/request_manpower', 'HumanResourceController@indexRequestManpower');
-
+Route::get('input/hr/request_manpower', 'HumanResourceController@inputRequestManpower');
 
 //MCU
 Route::get('index/general/queue/{remark}', 'GeneralController@indexQueue');
@@ -1150,6 +1150,7 @@ Route::group(['nav' => 'S39', 'middleware' => 'permission'], function(){
 	Route::post('create/ga_control/driver_duty', 'GeneralAffairController@createDriverDuty');
 	// Route::get('approve/ga_control/bento/{id}', 'GeneralAffairController@approveBento');
 	Route::post('approve/ga_control/bento', 'GeneralAffairController@approveBento');
+	Route::post('approve/ga_control/bento_japanese', 'GeneralAffairController@approveBentoJapanese');
 	Route::get('index/ga_control/bento_approve', 'GeneralAffairController@indexBentoApprove');
 	Route::post('input/ga_control/bento_menu', 'GeneralAffairController@inputBentoMenu');
 });
@@ -1172,6 +1173,9 @@ Route::get('fetch/ga_control/bento_order_log', 'GeneralAffairController@fetchBen
 Route::get('fetch/ga_control/bento_order_count', 'GeneralAffairController@fetchBentoOrderCount');
 Route::post('input/ga_control/bento_order', 'GeneralAffairController@inputBentoOrder');
 Route::post('edit/ga_control/bento_order', 'GeneralAffairController@editBentoOrder');
+Route::get('index/ga_control/bento_japanese/{id}', 'GeneralAffairController@indexBentoJapanese');
+Route::get('fetch/ga_control/bento_japanese', 'GeneralAffairController@fetchBentoJapanese');
+Route::post('input/ga_control/bento_japanese', 'GeneralAffairController@inputBentoJapanese');
 
 //LIVE COOKING
 Route::get('index/ga_control/live_cooking', 'GeneralAffairController@indexLiveCooking');
@@ -1985,19 +1989,21 @@ Route::get('payment_request/receiveacc/{id}', 'AccountingController@paymentrecei
 Route::get('payment_request/reject/{id}', 'AccountingController@paymentreject');
 
 //Cash Payment
-Route::get('index/cash_payment', 'AccountingController@IndexCashPayment');
-Route::get('fetch/cash_payment', 'AccountingController@fetchCashPayment');
-Route::post('create/cash_payment', 'AccountingController@createCashPayment');
-Route::get('detail/cash_payment', 'AccountingController@fetchCashPaymentDetail');
-Route::post('edit/cash_payment', 'AccountingController@editCashPayment');
-Route::get('report/cash_payment/{id}', 'AccountingController@reportCashPayment');
-Route::get('email/cash_payment', 'AccountingController@emailCashPayment');
-//Approval Cash Payment
-Route::get('cash_payment/approvemanager/{id}', 'AccountingController@cashapprovalmanager');
-Route::get('cash_payment/approvedirekur/{id}', 'AccountingController@cashapprovaldirektur');
-Route::get('cash_payment/approvepresdir/{id}', 'AccountingController@cashapprovalpresdir');
-Route::get('cash_payment/receiveacc/{id}', 'AccountingController@cashreceiveacc');
-Route::get('cash_payment/reject/{id}', 'AccountingController@paymentreject');
+
+//Request Suspend
+Route::get('index/suspend', 'AccountingController@IndexSuspend');
+Route::get('fetch/suspend', 'AccountingController@fetchSuspend');
+Route::post('create/suspend', 'AccountingController@createSuspend');
+Route::get('detail/suspend', 'AccountingController@fetchSuspendDetail');
+Route::post('edit/suspend', 'AccountingController@editSuspend');
+Route::get('report/suspend/{id}', 'AccountingController@reportSuspend');
+Route::get('email/suspend', 'AccountingController@emailSuspend');
+//Approval Suspend
+Route::get('suspend/approvemanager/{id}', 'AccountingController@suspendapprovalmanager');
+Route::get('suspend/approvedirekur/{id}', 'AccountingController@suspendapprovaldirektur');
+Route::get('suspend/approvepresdir/{id}', 'AccountingController@suspendapprovalpresdir');
+Route::get('suspend/receiveacc/{id}', 'AccountingController@suspendreceiveacc');
+Route::get('suspend/reject/{id}', 'AccountingController@suspendreject');
 
 
 
@@ -2283,6 +2289,8 @@ Route::get('fetch/workshop/drawingMaterial', 'WorkshopController@fetchDrawingMat
 Route::get('index/workshop/perolehan', 'WorkshopController@indexWJOPerolehan');
 Route::get('fetch/workshop/perolehan', 'WorkshopController@fetchWJOPerolehan');
 Route::get('detail/workshop/perolehan', 'WorkshopController@detailWJOPerolehan');
+
+Route::get('fetch/workshop/operator/load_hour', 'WorkshopController@fetchOperatorloadMinute');
 
 Route::get('index/middle/op_analysis', 'MiddleProcessController@indexOpAnalysis');
 Route::get('fetch/middle/op_analysis', 'MiddleProcessController@fetchOpAnalysis');
@@ -4335,6 +4343,8 @@ Route::get('index/maintenance/machine/log', 'MaintenanceController@indexMachineH
 Route::get('fetch/maintenance/machine/history', 'MaintenanceController@fetchMachineHistory');
 Route::post('post/maintenance/machine/history', 'MaintenanceController@postMachineHistory');
 
+Route::post('index/maintenance/machine/part_list', 'MaintenanceController@indexMachinePartList');
+
 Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/spk/operator', 'MaintenanceController@indexOperatorMonitoring');
 
@@ -4963,7 +4973,6 @@ Route::get('fetch/detail/request', 'WarehouseNewController@fetchDetailPelayanan'
 Route::post('post/pelayanan', 'WarehouseNewController@savepelayanan');
 Route::post('update/permintaan', 'WarehouseNewController@updatePermintaan');
 Route::get('fetch/history/request', 'WarehouseNewController@fetchRequest');
-Route::post('update/pelayanan', 'WarehouseNewController@updatePelayanan');
 Route::get('index/pengantaran/request', 'WarehouseNewController@index_pengantaran');
 Route::get('fetch/pengantaran', 'WarehouseNewController@fetchPengantaran');
 Route::get('fetch/history/pelayanan', 'WarehouseNewController@fetchHistoryPelayanan');
@@ -5002,7 +5011,12 @@ Route::get('fetch/scan/Qrcode', 'WarehouseNewController@ScanQrMaterial');
 Route::post('confirm/request/produksi', 'WarehouseNewController@ConfirmRequestPrd');
 Route::get('fetch/history/request/prod', 'WarehouseNewController@fetchRequestProduksi');
 Route::get('fetch/count/request', 'WarehouseNewController@fetchCountPel');
+Route::get('fetch/detail/job', 'WarehouseNewController@fetchDetailJob');
+Route::get('fetch/detail/request/prd', 'WarehouseNewController@fetchDetailRequest');
+Route::post('update/pelayanan/proses1', 'WarehouseNewController@updatePelayananJob');
+Route::post('update/pelayanan', 'WarehouseNewController@updatePelayanan');
 
+Route::get('internal/verifikasi/{id}', 'WarehouseNewController@verifikasi_packinglist');
 
 //Sanding
 
@@ -5277,29 +5291,40 @@ Route::group(['nav' => 'M33', 'middleware' => 'permission'], function(){
 
 Route::get('winds', 'WindsController@index');
 Route::get('winds/fetch/process_list', 'WindsController@fetchProcess');
+Route::get('winds/fetch/process_list/antrian', 'WindsController@fetchProcessAntrian');
 Route::get('winds/index/description_item/{gmc}/{id_process}', 'WindsController@IndexItemDetails');
 Route::get('winds/master/fetch', 'WindsController@masterfetch');
+Route::get('winds/index/cdm/{gmc}/{id_process}/{proc}', 'WindsController@indexCDM');
+Route::post('winds/index/cdm/input', 'WindsController@InsertCDM');
+Route::get('winds/index/cdm/detail', 'WindsController@DetailCDM');
+Route::get('winds/export/cdm/{gmc}/{proses}', 'WindsController@exportCDM');
+Route::get('winds/index/grafik_trendline/{gmc}/{proses}', 'WindsController@indexGrafikTrendline');
+Route::get('winds/fetch/grafik_trendline/{gmc}/{proses}', 'WindsController@fetchGrafikTrendline');
 
 //-------------------------- HR ---------------------------
 Route::get('human_resource', 'HumanResourceController@IndexHr');
 Route::get('human_resource/get_employee', 'HumanResourceController@GetEmployee');
 Route::get('human_resource/get_section', 'HumanResourceController@GetSection');
-
 Route::post('human_resource/add/uang_pekerjaan', 'HumanResourceController@AddUangPekerjaan');
 Route::post('human_resource/add/uang_simpati', 'HumanResourceController@AddUangSimpati');
 Route::post('human_resource/add/uang_keluarga', 'HumanResourceController@AddUangKeluarga');
-
 Route::get('human_resource/resume_uang_pekerjaan', 'HumanResourceController@ResumeUangPekerjaan');
 Route::get('human_resource/resume_uang_simpati', 'HumanResourceController@ResumeUangSimpati');
 Route::get('human_resource/resume_uang_keluarga', 'HumanResourceController@ResumeUangKeluarga');
-
+Route::get('human_resource/detail_pekerjaan/{department}/{bulan}', 'HumanResourceController@DetailUangPekerjaan');
+Route::get('human_resource/resume_detail_uang_pekerjaan', 'HumanResourceController@ResumeDetailUangPekerjaan');
 Route::get('human_resource/detail_simpati/{id}', 'HumanResourceController@DetailUangSimpati');
 Route::get('human_resource/detail_keluarga/{id}', 'HumanResourceController@DetailUangKeluarga');
-
 Route::get('human_resource/approve_simpati_1/{id}', 'HumanResourceController@App_Simpati_1');
 Route::get('human_resource/approve_simpati_2/{id}', 'HumanResourceController@App_Simpati_2');
-
 Route::get('human_resource/approve_keluarga_1/{id}', 'HumanResourceController@App_Keluarga_1');
 Route::get('human_resource/approve_keluarga_2/{id}', 'HumanResourceController@App_Keluarga_2');
+Route::get('human_resource/download/pekerjaan/{department}/{bulan}', 'HumanResourceController@DownloadPekerjaan');
+Route::get('human_resource/download/simpati', 'HumanResourceController@DownloadSimpati');
+Route::get('human_resource/download/keluarga', 'HumanResourceController@DownloadKeluarga');
+
+Route::get('human_resource/all_approve', 'HumanResourceController@AllApprove');
 
 
+//LEAVE PEMRIT
+Route::get('index/human_resource/leave_permit', 'HumanResourceController@indexLeavePermit');

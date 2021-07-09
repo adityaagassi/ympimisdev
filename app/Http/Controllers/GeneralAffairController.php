@@ -394,65 +394,259 @@ public function approveBento(Request $request){
 	}
 }
 
+public function indexBentoJapanese($id){
+	$title = "Japanese Food Order";
+	$title_jp = "和食弁当の予約";
+
+	$month = date('Y-m');
+	if($id != ""){
+		$month = $id;
+	}
+
+	return view('general_affairs.bento_japanese', array(
+		'title' => $title,
+		'title_jp' => $title_jp,
+		'mon' => $month
+	))->with('head', 'GA Control')->with('page', 'Japanese Food Order Japanese');
+}
+
+public function approveBentoJapanese(Request $request){
+	try{
+		$month = date('Y-m', strtotime($request->get('month')));
+
+		$mails = Bento::where('grade_code', '=', 'J0-')
+		->where('status', '=', 'Waiting')
+		->where(db::raw('date_format(due_date, "%Y-%m")'), '=', $month)
+		->select('email')
+		->distinct()
+		->get();
+
+		$mail_to = array();
+		foreach($mails as $mail){
+			array_push($mail_to, $mail->email);
+		}
+
+		$bento = Bento::where('grade_code', '=', 'J0-')
+		->where('status', '=', 'Waiting')
+		->where(db::raw('date_format(due_date, "%Y-%m")'), '=', $month)
+		->update([
+			'status' => 'Approved',
+			'approver_id' => Auth::user()->username,
+			'approver_name' => Auth::user()->name
+		]);
+
+		if(count($bento) <= 0){
+			$response = array(
+				'status' => false,
+				'message' => 'Tidak ada pesanan yang harus dikonfirmasi.',
+			);
+			return Response::json($response);
+		}
+
+		$calendars = BentoQuota::where(db::raw('date_format(due_date, "%Y-%m")'), '=', $month)
+		->select('due_date', db::raw('date_format(due_date, "%d") as header'), 'menu', 'remark')
+		->get();
+
+		$japaneses = db::select("SELECT
+			* 
+			FROM
+			japaneses
+			ORDER BY
+			employee_name ASC");
+
+		$bento_lists = db::select("SELECT
+			j.employee_id,
+			j.employee_name,
+			b.due_date,
+			b.revise,
+			b.status,
+			b.location
+			FROM
+			japaneses AS j
+			LEFT JOIN ( SELECT * FROM bentos WHERE date_format(due_date, '%Y-%m') = '".$month."' ) AS b ON b.employee_id = j.employee_id");
+
+		$datas = [
+			'bento_lists' => $bento_lists,
+			'calendars' => $calendars,
+			'month' => $month,
+			'japaneses' => $japaneses
+		];
+
+		Mail::to(
+			// 'hiroshi.ura@music.yamaha.com'
+			$mail_to
+		)
+		->cc([
+			'budhi.apriyanto@music.yamaha.com',
+			'aditya.agassi@music.yamaha.com'
+				// 'rianita.widiastuti@music.yamaha.com', 
+				// 'putri.sukma.riyanti@music.yamaha.com', 
+				// 'prawoto@music.yamaha.com',
+				// 'budhi.apriyanto@music.yamaha.com', 
+				// 'helmi.helmi@music.yamaha.com',
+				// 'merlinda.dyah@music.yamaha.com', 
+				// 'novita.siswindarti@music.yamaha.com'
+		])
+		->bcc([
+			'aditya.agassi@music.yamaha.com', 
+			'anton.budi.santoso@music.yamaha.com',
+			'agus.yulianto@music.yamaha.com'
+		])
+		->send(new SendEmail($datas, 'bento_information'));
+
+		$response = array(
+			'status' => true,
+			'message' => 'Semua pesanan berhasil dikonfirmasi.',
+		);
+		return Response::json($response);
+	}
+	catch(\Exception $e){
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage(),
+		);
+		return Response::json($response);
+	}
+}
+
+public function fetchBentoJapanese(Request $request){
+	try{
+		$month = date('Y-m', strtotime($request->get('month')));
+		$m = date('m', strtotime($request->get('month')));
+		$y = date('Y', strtotime($request->get('month')));
+		$japaneses = db::select("SELECT
+			* 
+			FROM
+			japaneses
+			ORDER BY
+			employee_name ASC");
+
+		$calendars = BentoQuota::where(db::raw('date_format(due_date, "%Y-%m")'), '=', $month)
+		->select('due_date', db::raw('date_format(due_date, "%d") as header'), 'menu', 'remark')
+		->get();
+
+		$bento_lists = db::select("SELECT
+			j.employee_id,
+			j.employee_name,
+			b.due_date,
+			b.revise,
+			b.status,
+			b.location
+			FROM
+			japaneses AS j
+			LEFT JOIN ( SELECT * FROM bentos WHERE date_format(due_date, '%Y-%m') = '".$month."' ) AS b ON b.employee_id = j.employee_id");
+
+		$response = array(
+			'status' => true,
+			'japaneses' => $japaneses,
+			'calendars' => $calendars,
+			'bento_lists' => $bento_lists,
+			'm' => $m,
+			'y' => $y
+		);
+		return Response::json($response);
+	}
+	catch(\Exception $e){
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage(),
+		);
+		return Response::json($response);
+	}
+}
+
+public function inputBentoJapanese(Request $request){
+	try{	
+		$code_generator = CodeGenerator::where('note','=','bento')->first();
+		if($code_generator->prefix != date('ym')){
+			$code_generator->prefix = date('ym');
+			$code_generator->index = '0';
+			$code_generator->save();
+		}
+		$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
+		$order_id = $code_generator->prefix . $number;
+
+		if($request->get('order') == 'false'){
+			$order = 'Cancelled';
+		}
+		else{
+			$order = 'Waiting';
+		}
+
+		$bento = Bento::where('employee_id', '=', $request->get('employee_id'))
+		->where('due_date', '=', $request->get('due_date'))
+		->first();
+
+		if($bento == null){
+			$bento = New Bento([
+				'order_id' => $order_id,
+				'order_by' => $request->get('employee_id'),
+				'order_by_name' => $request->get('employee_name'),
+				'charge_to' => $request->get('employee_id'),
+				'charge_to_name' => $request->get('employee_name'),
+				'due_date' => $request->get('due_date'),
+				'employee_id' => $request->get('employee_id'),
+				'employee_name' => $request->get('employee_name'),
+				'grade_code' => 'J0-',
+				'email' => $request->get('email'),
+				'department' => '',
+				'section' => '',
+				'status' => $order,
+				'location' => $request->get('location'),
+				'created_by' => Auth::id()
+			]);
+		}
+		else{
+			$bento->status = $order;
+			$bento->location = $request->get('location');
+			$bento->revise = $bento->revise+1;
+		}
+
+		$code_generator->index = $code_generator->index+1;
+		$code_generator->save();
+		$bento->save();
+
+		$response = array(
+			'status' => true,
+			'message' => '',
+		);
+		return Response::json($response);
+	}
+	catch(\Exception $e){
+		$response = array(
+			'status' => false,
+			'message' => $e->getMessage(),
+		);
+		return Response::json($response);
+	}
+}
+
 public function indexBento(){
 
 	$title = "Japanese Food Order";
 	$title_jp = "和食弁当の予約";
 
-	if(Auth::user()->role_code == 'YEMI'){
-		$employees = User::where('role_code', '=', 'YEMI')
-		->orderBy('name', 'asc')
-		->select(db::raw('username as employee_id'), 'name', db::raw('"J0-" as grade_code'))
-		->get();
 
-		$location = 'YEMI';
+	if(Auth::user()->role_code == 'GA' || Auth::user()->role_code == 'MIS'){
+		$yemi = User::where('role_code', '=', 'YEMI')
+		->orderBy('name', 'asc')
+		->select(db::raw('username as employee_id'), 'name', db::raw('"J0-" as grade_code'));
+
+		$employees = EmployeeSync::orderBy('name', 'asc')
+		->whereNull('end_date')
+		->select('employee_id', 'name', 'grade_code')
+		->union($yemi)
+		->get();
 	}
 	else{
-		if(Auth::user()->role_code == 'GA' || Auth::user()->role_code == 'MIS'){
-			$yemi = User::where('role_code', '=', 'YEMI')
-			->orderBy('name', 'asc')
-			->select(db::raw('username as employee_id'), 'name', db::raw('"J0-" as grade_code'));
-
-			$employees = EmployeeSync::orderBy('name', 'asc')
-			->whereNull('end_date')
-			->select('employee_id', 'name', 'grade_code')
-			->union($yemi)
-			->get();
-		}
-		else{
-			$employees = EmployeeSync::orderBy('name', 'asc')
-			->whereNull('end_date')
-			->where('grade_code', '!=', 'J0-')
-			->select('employee_id', 'name', 'grade_code')
-			->get();
-		}
-
-		// $employees = db::select("SELECT
-		// 	* 
-		// 	FROM
-		// 	(
-		// 	SELECT
-		// 	employee_id,
-		// 	name,
-		// 	grade_code 
-		// 	FROM
-		// 	`employee_syncs` 
-		// 	WHERE
-		// 	end_date IS NULL UNION ALL
-		// 	SELECT
-		// 	username AS employee_id,
-		// 	name,
-		// 	'J0-' AS grade_code 
-		// 	FROM
-		// 	users 
-		// 	WHERE
-		// 	role_code = 'YEMI' 
-		// 	ORDER BY
-		// 	employee_id ASC 
-		// ) AS e");
-
-		$location = 'YMPI';		
+		$employees = EmployeeSync::orderBy('name', 'asc')
+		->whereNull('end_date')
+		->where('grade_code', '!=', 'J0-')
+		->select('employee_id', 'name', 'grade_code')
+		->get();
 	}
+
+	$location = 'YMPI';	
 
 	$bentos = BentoMenu::orderBy('due_date', 'desc')
 	->select(db::raw('date_format(due_date, "%b %Y") as period'), 'menu_image')
@@ -553,10 +747,36 @@ public function fetchBentoOrderCount(){
 }
 
 public function fetchBentoOrderEdit(Request $request){
-	$bento = Bento::where('due_date', '=', $request->get('due_date'))
-	->where('employee_name', '=', $request->get('employee_name'))
-	->where('status', '!=', 'Cancelled')
-	->first();
+	if($request->get('color') == 'black'){
+		$bento = Bento::where('due_date', '=', $request->get('due_date'))
+		->where('employee_name', '=', $request->get('employee_name'))
+		->where('status', '=', 'Cancelled')
+		->first();
+	}
+	else if($request->get('color') == '#ff6090'){
+		$bento = Bento::where('due_date', '=', $request->get('due_date'))
+		->where('employee_name', '=', $request->get('employee_name'))
+		->where('status', '=', 'Rejected')
+		->first();		
+	}
+	else if($request->get('color') == '#ff6090'){
+		$bento = Bento::where('due_date', '=', $request->get('due_date'))
+		->where('employee_name', '=', $request->get('employee_name'))
+		->where('status', '=', 'Approved')
+		->first();		
+	}
+	else if($request->get('color') == 'yellow'){
+		$bento = Bento::where('due_date', '=', $request->get('due_date'))
+		->where('employee_name', '=', $request->get('employee_name'))
+		->where('status', '=', 'Waiting')
+		->first();		
+	}
+	else{
+		$bento = Bento::where('due_date', '=', $request->get('due_date'))
+		->where('employee_name', '=', $request->get('employee_name'))
+		->where('status', '<>', 'Cancelled')
+		->first();		
+	}
 
 	$response = array(
 		'status' => true,
@@ -793,16 +1013,15 @@ public function editBentoOrder(Request $request){
 				return Response::json($response);
 			}
 
-			if($request->get('location') != 'YEMI'){
-				$bento_quota = BentoQuota::where('due_date', '=', $bento->due_date)->first();
-				$bento_quota->serving_ordered = $bento_quota->serving_ordered-1;
-				$bento_quota->save();
-				if($bento->status == 'Approved'){
-					$attendance = GeneralAttendance::where('due_date', '=', $bento->due_date)
-					->where('employee_id', '=', $bento->employee_id)
-					->first();
-					$attendance->forceDelete();
-				}
+			$bento_quota = BentoQuota::where('due_date', '=', $bento->due_date)->first();
+			$bento_quota->serving_ordered = $bento_quota->serving_ordered-1;
+			$bento_quota->save();
+
+			if($bento->status == 'Approved'){
+				$attendance = GeneralAttendance::where('due_date', '=', $bento->due_date)
+				->where('employee_id', '=', $bento->employee_id)
+				->first();
+				$attendance->forceDelete();
 			}
 
 			$bento->status = 'Cancelled';
@@ -937,6 +1156,7 @@ public function inputBentoOrder(Request $request){
 						'department' => $employee->department,
 						'section' => $employee->section,
 						'status' => 'Waiting',
+						'location' => 'YMPI',
 						'created_by' => Auth::id()
 					]);
 				}
@@ -955,6 +1175,7 @@ public function inputBentoOrder(Request $request){
 						'department' => $employee->department,
 						'section' => $employee->section,
 						'status' => 'Waiting',
+						'location' => 'YMPI',
 						'created_by' => Auth::id()
 					]);
 					$bento_quota->serving_ordered = $bento_quota->serving_ordered+1;
@@ -1172,15 +1393,15 @@ public function acceptDriverRequest(Request $request){
 			}
 
 			$start_time = date('d F Y H:i',strtotime($request->get('start_time')));
-            $start_time_replace = str_replace(" ","%20",$start_time);
+			$start_time_replace = str_replace(" ","%20",$start_time);
 
-            $end_time = date('d F Y H:i',strtotime($request->get('end_time')));
-            $end_time_replace = str_replace(" ","%20",$end_time);
+			$end_time = date('d F Y H:i',strtotime($request->get('end_time')));
+			$end_time_replace = str_replace(" ","%20",$end_time);
 
-            $destination = str_replace(" ", "%20", $request->get('destination_city'));
-            $name = str_replace(" ", "%20", $emp->name);
+			$destination = str_replace(" ", "%20", $request->get('destination_city'));
+			$name = str_replace(" ", "%20", $emp->name);
 
-            $curl = curl_init();
+			$curl = curl_init();
 
 			curl_setopt_array($curl, array(
 				CURLOPT_URL => 'https://app.whatspie.com/api/messages',
@@ -1236,7 +1457,7 @@ public function acceptDriverRequest(Request $request){
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_CUSTOMREQUEST => 'POST',
 				// CURLOPT_POSTFIELDS => 'receiver=6282244167224&device=628113669871&message=Order%20bento%20anda%20tanggal%202021-05-06.%20Telah%20dikonfirmasi.%0ASilahkan%20cek%20pada%20MIRAI.%0A%0AYMPI%20GA%20Dept.&type=chat',
-				CURLOPT_POSTFIELDS => 'receiver=6281333128147&device=628113669871&message='.$name.'%20ditugaskan%20mengantar%20ke%20'.$destination.'%20pada%0A%0A'.$start_time_replace.'%0Asampai%20dengan%0A'.$end_time_replace.'%0A%0A-YMPI%20GA%20Dept.-&type=chat',
+				CURLOPT_POSTFIELDS => 'receiver=628113669869&device=628113669871&message='.$name.'%20ditugaskan%20mengantar%20ke%20'.$destination.'%20pada%0A%0A'.$start_time_replace.'%0Asampai%20dengan%0A'.$end_time_replace.'%0A%0A-YMPI%20GA%20Dept.-&type=chat',
 				CURLOPT_HTTPHEADER => array(
 					'Accept: application/json',
 					'Content-Type: application/x-www-form-urlencoded',
