@@ -39,10 +39,10 @@
 			<a href="{{ url("index/mirai_mobile/report_indication") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Health Indication Data</a>
 			<hr style="border: 1px solid red">
 			<a href="{{ url('index/survey_covid/report') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Survey Covid Report</a>
-			<a href="" class="btn btn-default btn-block" style="font-size: 2vw;">&nbsp;</a>
+			<!-- <a href="" class="btn btn-default btn-block" style="font-size: 2vw;">&nbsp;</a> -->
 			<a href="{{ url('index/guest_assessment/report') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Guest Assessment Report</a>
+			<a href="{{ url('index/vendor_assessment/report') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Vendor Assessment Report</a>
 		</div>
-
 	</div>
 </section>
 @endsection

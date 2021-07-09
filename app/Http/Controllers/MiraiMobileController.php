@@ -712,5 +712,35 @@ public function fetchGuestAssessmentReportDetail(Request $request)
   }
 }
 
+public function indexVendorAssessmentReport()
+{
+  $title = 'Report Vendor Assessment Covid-19';
+  $title_jp = '';
+
+  return view('mirai_mobile.vendor_assessment', array(
+    'title' => $title,
+    'title_jp' => $title_jp
+  ))->with('page', 'Report Vendor Assessment')->with('head','Report Vendor Assessment');
+}
+
+public function fetchVendorAssessmentReport()
+{
+  try {
+    $vendor = DB::SELECT("SELECT * from miraimobile.vendor_logs order by created_at desc");
+
+    $response = array(
+      'status' => true,
+      'vendor' => $vendor
+    );
+    return Response::json($response);
+  } catch (\Exception $e) {
+    $response = array(
+      'status' => false,
+      'message' => $e->getMessage()
+    );
+    return Response::json($response);
+  }
+}
+
 
 }

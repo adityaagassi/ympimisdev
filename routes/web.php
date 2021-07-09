@@ -4683,6 +4683,10 @@ Route::group(['nav' => 'M32', 'middleware' => 'permission'], function(){
 	Route::get('index/guest_assessment/report', 'MiraiMobileController@indexGuestAssessmentReport');
 	Route::get('fetch/guest_assessment/report', 'MiraiMobileController@fetchGuestAssessmentReport');
 	Route::get('fetch/guest_assessment/report/detail', 'MiraiMobileController@fetchGuestAssessmentReportDetail');
+
+	//Vendor Assessment Covid
+	Route::get('index/vendor_assessment/report', 'MiraiMobileController@indexVendorAssessmentReport');
+	Route::get('fetch/vendor_assessment/report', 'MiraiMobileController@fetchVendorAssessmentReport');
 });
 
 //Survey Covid
