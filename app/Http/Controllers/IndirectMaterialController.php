@@ -30,6 +30,7 @@ use App\ChemicalSolution;
 use App\ChemicalSolutionComposer;
 use App\ChemicalControlLog;
 use App\ChemicalConvertion;
+use App\WeeklyCalendar;
 use DataTables;
 use DateTime;
 use Response;
@@ -1756,7 +1757,7 @@ class IndirectMaterialController extends Controller{
 			$datefrom = date('Y-m-01');
 		}
 
-		if(strlen($request->get('datefrom')) > 0 ){
+		if(strlen($request->get('dateto')) > 0 ){
 			$dateto = $request->get('dateto');
 		}else{
 			$dateto = date('Y-m-d');
@@ -1784,9 +1785,26 @@ class IndirectMaterialController extends Controller{
 				ON date.week_date = chm.date
 				ORDER BY date.week_date ASC");
 
+			$date = db::select("SELECT week_date, DAY(week_date) AS date, MONTHNAME(week_date) AS `month`, remark FROM weekly_calendars
+				WHERE week_date BETWEEN '".$datefrom."' AND '".$dateto."'
+				ORDER BY week_date ASC");
+
+			$material = ChemicalConvertion::where('solution_id', $larutan->id)->get();
+
+			$detail = db::select("SELECT date, note, SUM(quantity) AS quantity, MAX(accumulative) AS accumulative from chemical_control_logs
+				WHERE date >= '".$datefrom."'
+				AND date <= '".$dateto."'
+				AND solution_name = '".$larutan->solution_name."'
+				AND cost_center_id = ".$larutan->cost_center_id."
+				GROUP BY date, note
+				ORDER BY date ASC ");
+
 			$response = array(
 				'status' => true,
 				'data' => $data,
+				'date' => $date,
+				'material' => $material,
+				'detail' => $detail,
 				'location' => $larutan
 			);
 			return Response::json($response);

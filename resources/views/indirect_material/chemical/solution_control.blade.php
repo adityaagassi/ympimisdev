@@ -8,16 +8,6 @@
 		padding: 3px;
 		box-sizing: border-box;
 	}
-	table {
-		table-layout:fixed;
-	}
-	td{
-		overflow:hidden;
-		text-overflow: ellipsis;
-	}
-	td:hover {
-		overflow: visible;
-	}
 	thead>tr>th{
 		text-align:center;
 	}
@@ -35,31 +25,28 @@
 	}
 	table.table-bordered > thead > tr > th{
 		border:1px solid black;
+		vertical-align: middle;
 	}
 	table.table-bordered > tbody > tr > td{
 		border:1px solid rgb(211,211,211);
 		padding-top: 0;
 		padding-bottom: 0;
+		vertical-align: middle;
 	}
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
-	}
-	.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-		background-color: #FFD700;
+		vertical-align: middle;
 	}
 	#loading, #error { display: none; }
 
 	.selected {
 		background: gold !important;
 	}
-	/* Chrome, Safari, Edge, Opera */
 	input::-webkit-outer-spin-button,
 	input::-webkit-inner-spin-button {
 		-webkit-appearance: none;
 		margin: 0;
 	}
-
-	/* Firefox */
 	input[type=number] {
 		-moz-appearance: textfield;
 	}
@@ -135,6 +122,17 @@
 				</div>
 			</div>
 		</div>
+		<div class="col-xs-12" id="table">
+			<div class="nav-tabs-custom">
+				<div class="tab-content" style="overflow-x: auto;">
+					<table id="table-control" class="table table-bordered" style="width: 100%; font-size: 12px;">
+						<thead id="head-table-control" style="background-color: rgba(126,86,134,.7); text-align: center;"></thead>
+						<tbody id="body-table-control" style=""></tbody>
+						<tfoot id="foot-table-control" style="background-color: rgb(252, 248, 227); text-align: center;"></tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div class="modal modal-default fade" id="add_result">
@@ -207,8 +205,8 @@
 									<table class="table table-hover table-bordered table-striped" id="tableAdd">
 										<thead style="background-color: rgba(126,86,134,.7);">
 											<tr>
-												<th style="width: 50%;">material</th>
-												<th style="width: 30%;">qty</th>
+												<th style="width: 50%;">Material</th>
+												<th style="width: 30%;">Qty</th>
 												<th style="width: 20%;">#</th>
 
 											</tr>
@@ -238,17 +236,7 @@
 
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
-<script src="{{ url("js/buttons.flash.min.js")}}"></script>
-<script src="{{ url("js/jszip.min.js")}}"></script>
-<script src="{{ url("js/vfs_fonts.js")}}"></script>
-<script src="{{ url("js/buttons.html5.min.js")}}"></script>
-<script src="{{ url("js/buttons.print.min.js")}}"></script>
-<script src="{{ url("js/jquery.tagsinput.min.js") }}"></script>
-<script src="{{ url("js/icheck.min.js")}}"></script>
 <script src="{{ url("js/highstock.js")}}"></script>
-<script src="{{ url("js/exporting.js")}}"></script>
-<script src="{{ url("js/export-data.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -275,6 +263,7 @@
 		});
 
 		$('#chart').hide();
+		$('#table').hide();
 		
 	});
 
@@ -446,6 +435,132 @@
 		$.get('{{ url("fetch/chm_solution_control") }}', data, function(result, status, xhr) {
 			if(result.status){
 				$('#chart').show();
+				$('#table').show();
+
+				$('#head-table-control').html("");
+				$('#body-table-control').html("");
+				$('#foot-table-control').html("");
+
+				var css = '';
+				var head = '';
+				head += '<tr>';
+				head += '<td style="font-weight: bold;">ACTUAL CHECKED</td>';
+				for (var i = 0; i < result.date.length; i++) {
+					if(result.date[i].remark == 'H'){
+						css = 'style="background-color: #d6d4d4;"';
+					}else{
+						css = '';
+					}
+					head += '<td '+css+'>'+result.date[i].date+'-'+result.date[i].month.substr(0,3)+'</td>';
+				}
+				head += '</tr>';
+				$('#head-table-control').append(head);
+
+				var body = '';
+				for (var i = 0; i < result.material.length; i++) {
+					body += '<tr>';
+					body += '<td style="font-weight: bold;">'+result.material[i].material+'</td>';
+					for (var j = 0; j < result.date.length; j++) {
+						var is_fill = false;
+						for (var k = 0; k < result.detail.length; k++) {
+							if(result.material[i].material == result.detail[k].note && result.date[j].week_date == result.detail[k].date){
+								body += '<td>'+result.detail[k].quantity+'</td>';
+								is_fill = true;
+							}
+						}
+						if(!is_fill){
+							body += '<td>0</td>';
+						}
+					}
+					body += '</tr>';
+				}
+				$('#body-table-control').append(body);
+
+
+
+				var jumlah = [];
+				for (var i = 0; i < result.detail.length; i++) {
+					var index = 0;
+					var plus;
+					var push;
+					for (var j = 0; j < jumlah.length; j++) {
+						if(jumlah[j].date == result.detail[i].date){
+							index = j;
+							plus = true;
+							push = false;
+							break;
+						}
+						plus = false;
+						push = true;
+					}
+
+					if(plus){
+						jumlah[index].quantity = jumlah[index].quantity + result.detail[i].quantity;
+					}
+
+					if(push || jumlah.length == 0){
+						jumlah.push({
+							'date' : result.detail[i].date,
+							'quantity' : result.detail[i].quantity
+						});
+					}
+				}
+
+				var foot = '';
+				foot += '<tr>';
+				foot += '<td style="font-weight: bold;">JUMLAH</td>';
+				for (var i = 0; i < result.date.length; i++) {
+					var is_fill = false;
+					for (var j = 0; j < jumlah.length; j++) {
+						if(jumlah[j].date == result.date[i].week_date){
+							foot += '<td style="text-align: ceter;">'+jumlah[j].quantity+'</td>';
+							is_fill = true;
+						}
+					}
+					if(!is_fill){
+						foot += '<td style="text-align: ceter;">0</td>';
+					}
+				}
+				foot += '</tr>';
+
+
+				foot += '<tr>';
+				foot += '<td style="font-weight: bold;">KUMULATIF</td>';
+				var accumulative;
+				for (var i = 0; i < result.date.length; i++) {
+					for (var j = 0; j < result.data.length; j++) {
+						if(result.data[j].date == result.date[i].week_date){
+							if(result.data[j].accumulative){
+								foot += '<td style="text-align: ceter;">'+result.data[j].accumulative+'</td>';
+								accumulative = result.data[j].accumulative;
+							}else{
+								if(i > 0){
+									foot += '<td style="text-align: ceter;">'+accumulative+'</td>';
+								}
+							}
+						}
+					}
+
+					if(accumulative == null){
+						for (var k = 0; k < result.data.length; k++) {
+							if(result.data[k].accumulative){
+								accumulative = result.data[k].accumulative;
+								break;
+							}
+						}
+						console.log(accumulative);
+						console.log(jumlah[0].quantity);
+						foot += '<td style="text-align: ceter;">'+(accumulative - jumlah[0].quantity)+'</td>';
+					}
+				}
+				foot += '</tr>';
+
+
+				$('#foot-table-control').append(foot);
+
+
+
+
 
 				var date = [];
 				var accumulative = [];
@@ -568,31 +683,31 @@
 			}
 
 		});
-	}
+}
 
-	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-	function openSuccessGritter(title, message){
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-success',
-			image: '{{ url("images/image-screen.png") }}',
-			sticky: false,
-			time: '4000'
-		});
-	}
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '4000'
+	});
+}
 
-	function openErrorGritter(title, message) {
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-danger',
-			image: '{{ url("images/image-stop.png") }}',
-			sticky: false,
-			time: '4000'
-		});
-	}
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '4000'
+	});
+}
 
 </script>
 @endsection
