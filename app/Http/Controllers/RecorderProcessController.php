@@ -8262,26 +8262,12 @@ class RecorderProcessController extends Controller
           array_push($resumes, $resume);
 
           $trend_detail = DB::SELECT("SELECT DISTINCT
-            ( rc_kensa_initials.part_type),
+            ( rc_kensa_initials.mesin_injection ) AS mesin,
+            part_type,
             '".$week_date[$i]->week_date."' AS week_date,
-            GROUP_CONCAT( rc_kensas.ng_name SEPARATOR '_' ) AS ng_name_kensa,
-            GROUP_CONCAT( rc_kensas.ng_count SEPARATOR '_' ) AS ng_count_kensa,
-            GROUP_CONCAT( DISTINCT ( rc_kensa_initials.operator_molding ) SEPARATOR '_' ) AS operator_molding,
-            GROUP_CONCAT( rc_kensa_initials.cavity SEPARATOR '_' ) AS cavity,
-            GROUP_CONCAT( rc_kensas.product SEPARATOR '_' ) AS product,
-            GROUP_CONCAT( rc_kensa_initials.part_name SEPARATOR '_' ) AS part_name,
-            GROUP_CONCAT( rc_kensa_initials.part_type SEPARATOR '_' ) AS part_type,
-            GROUP_CONCAT( rc_kensa_initials.color SEPARATOR '_' ) AS color,
-            GROUP_CONCAT( DISTINCT ( rc_kensa_initials.molding ) SEPARATOR '_' ) AS molding,
-            GROUP_CONCAT( DISTINCT ( rc_kensa_initials.operator_injection ) SEPARATOR '_' ) AS operator_injeksi,
-            GROUP_CONCAT( DISTINCT ( rc_kensa_initials.mesin_injection ) SEPARATOR '_' ) AS mesin,
-            GROUP_CONCAT( DISTINCT ( empinjeksi.`name` ) SEPARATOR '_' ) AS injeksi_name,
-            GROUP_CONCAT( DISTINCT ( rc_kensa_initials.operator_resin ) SEPARATOR '_' ) AS operator_resin,
-            GROUP_CONCAT( DISTINCT ( empresin.`name` ) SEPARATOR '_' ) AS resin_name,
-            GROUP_CONCAT( DISTINCT ( rc_kensa_initials.lot_number_resin ) SEPARATOR '_' ) AS resin,
-            GROUP_CONCAT( DISTINCT ( rc_kensa_initials.dryer_resin ) SEPARATOR '_' ) AS dryer,
-            GROUP_CONCAT( rc_kensas.operator_kensa SEPARATOR '_' ) AS operator_kensa,
-            GROUP_CONCAT( empkensa.`name` SEPARATOR '_' ) AS kensa_name 
+            SUM_OF_LIST ( rc_kensas.ng_count ) AS ng_count,
+            operator_molding,
+            molding 
           FROM
             rc_kensas
             LEFT JOIN rc_kensa_initials ON rc_kensa_initials.kensa_initial_code = rc_kensas.kensa_initial_code
@@ -8292,6 +8278,12 @@ class RecorderProcessController extends Controller
             rc_kensas.ng_name IS NOT NULL 
             AND DATE( rc_kensas.created_at ) = '".$week_date[$i]->week_date."' 
           GROUP BY
+            mesin_injection,
+            operator_molding,
+            molding,
+            part_type 
+          ORDER BY
+            ng_count,
             part_type");
 
           array_push($resume_trend, $trend_detail);

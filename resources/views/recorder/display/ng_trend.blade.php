@@ -754,6 +754,9 @@
 				tableTrend += '<tr>';
 				tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">Mesin</td>';
 				for (var i = 0; i < result.week_date.length; i++) {
+					var mesin = "";
+					var molding = "";
+					var operator_molding = "";
 					if (result.resume_trend[i].length > 0) {
 						for(var j = 0; j < result.resume_trend.length;j++){
 							if (result.resume_trend[j].length > 0) {
@@ -761,129 +764,62 @@
 									for(var k = 0; k < result.resume_trend[j].length;k++){
 										if (totalbyday[i] == 'head') {
 											if (result.resume_trend[j][k].part_type.match(/HJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (mesin.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < mesin.length;l++){
-														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
+												mesin = result.resume_trend[j][k].mesin;
 											}
 										}
-
-										if (totalbyday[i] == 'middle') {
-											if (result.resume_trend[j][k].part_type.match(/MJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (mesin.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < mesin.length;l++){
-														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
-											}
-										}
-
-										if (totalbyday[i] == 'foot') {
-											if (result.resume_trend[j][k].part_type.match(/FJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (mesin.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < mesin.length;l++){
-														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
-											}
-										}
-
 										if (totalbyday[i] == 'block') {
 											if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (mesin.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < mesin.length;l++){
-														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
+												mesin = result.resume_trend[j][k].mesin;
 											}
 										}
-
+										if (totalbyday[i] == 'middle') {
+											if (result.resume_trend[j][k].part_type.match(/MJ/gi)) {
+												mesin = result.resume_trend[j][k].mesin;
+											}
+										}
+										if (totalbyday[i] == 'block') {
+											if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
+												mesin = result.resume_trend[j][k].mesin;
+											}
+										}
+										if (totalbyday[i] == 'foot') {
+											if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
+												mesin = result.resume_trend[j][k].mesin;
+											}
+										}
 										if (totalbyday[i] == 'headyrf') {
 											if (result.resume_trend[j][k].part_type.match(/A YRF H/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (mesin.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < mesin.length;l++){
-														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
+												mesin = result.resume_trend[j][k].mesin;
 											}
 										}
-
 										if (totalbyday[i] == 'bodyyrf') {
 											if (result.resume_trend[j][k].part_type.match(/A YRF B/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (mesin.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < mesin.length;l++){
-														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
+												mesin = result.resume_trend[j][k].mesin;
 											}
 										}
-
 										if (totalbyday[i] == 'stopperyrf') {
 											if (result.resume_trend[j][k].part_type.match(/A YRF S/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (mesin.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < mesin.length;l++){
-														tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
+												mesin = result.resume_trend[j][k].mesin;
 											}
 										}
 									}
 								}
 							}
 						}
+						tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+						tableTrend += '<span class="label label-success">'+mesin+'</span>';
+						tableTrend += '</td>';
 					}else{
-						tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red"></td>';
+						tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+						tableTrend += '</td>';
 					}
 				}
-
 				tableTrend += '</tr>';
 
 				tableTrend += '<tr>';
 				tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">Molding</td>';
 				for (var i = 0; i < result.week_date.length; i++) {
+					var molding = "";
 					if (result.resume_trend[i].length > 0) {
 						for(var j = 0; j < result.resume_trend.length;j++){
 							if (result.resume_trend[j].length > 0) {
@@ -891,129 +827,62 @@
 									for(var k = 0; k < result.resume_trend[j].length;k++){
 										if (totalbyday[i] == 'head') {
 											if (result.resume_trend[j][k].part_type.match(/HJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < molding.length;l++){
-														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
+												molding = result.resume_trend[j][k].molding;
 											}
 										}
-
-										if (totalbyday[i] == 'middle') {
-											if (result.resume_trend[j][k].part_type.match(/MJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < molding.length;l++){
-														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
-											}
-										}
-
-										if (totalbyday[i] == 'foot') {
-											if (result.resume_trend[j][k].part_type.match(/FJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < molding.length;l++){
-														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
-											}
-										}
-
 										if (totalbyday[i] == 'block') {
 											if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < molding.length;l++){
-														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
+												molding = result.resume_trend[j][k].molding;
 											}
 										}
-
+										if (totalbyday[i] == 'middle') {
+											if (result.resume_trend[j][k].part_type.match(/MJ/gi)) {
+												molding = result.resume_trend[j][k].molding;
+											}
+										}
+										if (totalbyday[i] == 'block') {
+											if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
+												molding = result.resume_trend[j][k].molding;
+											}
+										}
+										if (totalbyday[i] == 'foot') {
+											if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
+												molding = result.resume_trend[j][k].molding;
+											}
+										}
 										if (totalbyday[i] == 'headyrf') {
 											if (result.resume_trend[j][k].part_type.match(/A YRF H/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < molding.length;l++){
-														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
+												molding = result.resume_trend[j][k].molding;
 											}
 										}
-
 										if (totalbyday[i] == 'bodyyrf') {
 											if (result.resume_trend[j][k].part_type.match(/A YRF B/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < molding.length;l++){
-														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
+												molding = result.resume_trend[j][k].molding;
 											}
 										}
-
 										if (totalbyday[i] == 'stopperyrf') {
 											if (result.resume_trend[j][k].part_type.match(/A YRF S/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < molding.length;l++){
-														tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
-													}
-													tableTrend += '</td>';
-												}
+												molding = result.resume_trend[j][k].molding;
 											}
 										}
 									}
 								}
 							}
 						}
+						tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+						tableTrend += '<span class="label label-success">'+molding+'</span>';
+						tableTrend += '</td>';
 					}else{
-						tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red"></td>';
+						tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+						tableTrend += '</td>';
 					}
 				}
-
 				tableTrend += '</tr>';
 
 				tableTrend += '<tr>';
-				tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">OP Molding</td>';
+				tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">Molding</td>';
 				for (var i = 0; i < result.week_date.length; i++) {
+					var operator_molding = "";
 					if (result.resume_trend[i].length > 0) {
 						for(var j = 0; j < result.resume_trend.length;j++){
 							if (result.resume_trend[j].length > 0) {
@@ -1021,173 +890,502 @@
 									for(var k = 0; k < result.resume_trend[j].length;k++){
 										if (totalbyday[i] == 'head') {
 											if (result.resume_trend[j][k].part_type.match(/HJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (operator_molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < operator_molding.length;l++){
-														var opmol = operator_molding[l].split(',');
-														if (opmol.length > 1) {
-															for(var m = 0; m < opmol.length;m++){
-																tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-															}
-														}else{
-															tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-														}
-													}
-													tableTrend += '</td>';
-												}
+												operator_molding = result.resume_trend[j][k].operator_molding;
 											}
 										}
-
-										if (totalbyday[i] == 'middle') {
-											if (result.resume_trend[j][k].part_type.match(/MJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (operator_molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < operator_molding.length;l++){
-														var opmol = operator_molding[l].split(',');
-														if (opmol.length > 1) {
-															for(var m = 0; m < opmol.length;m++){
-																tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-															}
-														}else{
-															tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-														}
-													}
-													tableTrend += '</td>';
-												}
-											}
-										}
-
-										if (totalbyday[i] == 'foot') {
-											if (result.resume_trend[j][k].part_type.match(/FJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (operator_molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < operator_molding.length;l++){
-														var opmol = operator_molding[l].split(',');
-														if (opmol.length > 1) {
-															for(var m = 0; m < opmol.length;m++){
-																tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-															}
-														}else{
-															tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-														}
-													}
-													tableTrend += '</td>';
-												}
-											}
-										}
-
 										if (totalbyday[i] == 'block') {
 											if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (operator_molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < operator_molding.length;l++){
-														var opmol = operator_molding[l].split(',');
-														if (opmol.length > 1) {
-															for(var m = 0; m < opmol.length;m++){
-																tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-															}
-														}else{
-															tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-														}
-													}
-													tableTrend += '</td>';
-												}
+												operator_molding = result.resume_trend[j][k].operator_molding;
 											}
 										}
-
+										if (totalbyday[i] == 'middle') {
+											if (result.resume_trend[j][k].part_type.match(/MJ/gi)) {
+												operator_molding = result.resume_trend[j][k].operator_molding;
+											}
+										}
+										if (totalbyday[i] == 'block') {
+											if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
+												operator_molding = result.resume_trend[j][k].operator_molding;
+											}
+										}
+										if (totalbyday[i] == 'foot') {
+											if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
+												operator_molding = result.resume_trend[j][k].operator_molding;
+											}
+										}
 										if (totalbyday[i] == 'headyrf') {
 											if (result.resume_trend[j][k].part_type.match(/A YRF H/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (operator_molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < operator_molding.length;l++){
-														var opmol = operator_molding[l].split(',');
-														if (opmol.length > 1) {
-															for(var m = 0; m < opmol.length;m++){
-																tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-															}
-														}else{
-															tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-														}
-													}
-													tableTrend += '</td>';
-												}
+												operator_molding = result.resume_trend[j][k].operator_molding;
 											}
 										}
-
 										if (totalbyday[i] == 'bodyyrf') {
 											if (result.resume_trend[j][k].part_type.match(/A YRF B/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (operator_molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < operator_molding.length;l++){
-														var opmol = operator_molding[l].split(',');
-														if (opmol.length > 1) {
-															for(var m = 0; m < opmol.length;m++){
-																tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-															}
-														}else{
-															tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-														}
-													}
-													tableTrend += '</td>';
-												}
+												operator_molding = result.resume_trend[j][k].operator_molding;
 											}
 										}
-
 										if (totalbyday[i] == 'stopperyrf') {
 											if (result.resume_trend[j][k].part_type.match(/A YRF S/gi)) {
-												var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
-												var molding = result.resume_trend[j][k].molding.split('_');
-												var mesin = result.resume_trend[j][k].mesin.split('_');
-
-												if (operator_molding.length > 0) {
-													tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
-													for(var l = 0; l < operator_molding.length;l++){
-														var opmol = operator_molding[l].split(',');
-														if (opmol.length > 1) {
-															for(var m = 0; m < opmol.length;m++){
-																tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-															}
-														}else{
-															tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
-														}
-													}
-													tableTrend += '</td>';
-												}
+												operator_molding = result.resume_trend[j][k].operator_molding;
 											}
 										}
 									}
 								}
 							}
 						}
+						tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+						var opmol = operator_molding.split(',');
+						if (opmol.length > 1) {
+							for(var m = 0; m < opmol.length;m++){
+								tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+							}
+						}else{
+							tableTrend += '<span class="label label-success">'+operator_molding.replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+						}
+						tableTrend += '</td>';
 					}else{
-						tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red"></td>';
+						tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+						tableTrend += '</td>';
 					}
 				}
 				tableTrend += '</tr>';
+
+				// tableTrend += '<tr>';
+				// tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">Mesin</td>';
+				// for (var i = 0; i < result.week_date.length; i++) {
+				// 	if (result.resume_trend[i].length > 0) {
+				// 		for(var j = 0; j < result.resume_trend.length;j++){
+				// 			if (result.resume_trend[j].length > 0) {
+				// 				if (result.week_date[i].week_date == result.resume_trend[j][0].week_date) {
+				// 					for(var k = 0; k < result.resume_trend[j].length;k++){
+				// 						if (totalbyday[i] == 'head') {
+				// 							if (result.resume_trend[j][k].part_type.match(/HJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (mesin.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < mesin.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'middle') {
+				// 							if (result.resume_trend[j][k].part_type.match(/MJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (mesin.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < mesin.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'foot') {
+				// 							if (result.resume_trend[j][k].part_type.match(/FJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (mesin.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < mesin.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'block') {
+				// 							if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (mesin.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < mesin.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'headyrf') {
+				// 							if (result.resume_trend[j][k].part_type.match(/A YRF H/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (mesin.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < mesin.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'bodyyrf') {
+				// 							if (result.resume_trend[j][k].part_type.match(/A YRF B/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (mesin.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < mesin.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'stopperyrf') {
+				// 							if (result.resume_trend[j][k].part_type.match(/A YRF S/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (mesin.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < mesin.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+mesin[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+				// 					}
+				// 				}
+				// 			}
+				// 		}
+				// 	}else{
+				// 		tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red"></td>';
+				// 	}
+				// }
+
+				// tableTrend += '</tr>';
+
+				// tableTrend += '<tr>';
+				// tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">Molding</td>';
+				// for (var i = 0; i < result.week_date.length; i++) {
+				// 	if (result.resume_trend[i].length > 0) {
+				// 		for(var j = 0; j < result.resume_trend.length;j++){
+				// 			if (result.resume_trend[j].length > 0) {
+				// 				if (result.week_date[i].week_date == result.resume_trend[j][0].week_date) {
+				// 					for(var k = 0; k < result.resume_trend[j].length;k++){
+				// 						if (totalbyday[i] == 'head') {
+				// 							if (result.resume_trend[j][k].part_type.match(/HJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < molding.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'middle') {
+				// 							if (result.resume_trend[j][k].part_type.match(/MJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < molding.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'foot') {
+				// 							if (result.resume_trend[j][k].part_type.match(/FJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < molding.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'block') {
+				// 							if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < molding.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'headyrf') {
+				// 							if (result.resume_trend[j][k].part_type.match(/A YRF H/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < molding.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'bodyyrf') {
+				// 							if (result.resume_trend[j][k].part_type.match(/A YRF B/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < molding.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'stopperyrf') {
+				// 							if (result.resume_trend[j][k].part_type.match(/A YRF S/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < molding.length;l++){
+				// 										tableTrend += '<span class="label label-success">'+molding[l]+'</span><br>';
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+				// 					}
+				// 				}
+				// 			}
+				// 		}
+				// 	}else{
+				// 		tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red"></td>';
+				// 	}
+				// }
+
+				// tableTrend += '</tr>';
+
+				// tableTrend += '<tr>';
+				// tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">OP Molding</td>';
+				// for (var i = 0; i < result.week_date.length; i++) {
+				// 	if (result.resume_trend[i].length > 0) {
+				// 		for(var j = 0; j < result.resume_trend.length;j++){
+				// 			if (result.resume_trend[j].length > 0) {
+				// 				if (result.week_date[i].week_date == result.resume_trend[j][0].week_date) {
+				// 					for(var k = 0; k < result.resume_trend[j].length;k++){
+				// 						if (totalbyday[i] == 'head') {
+				// 							if (result.resume_trend[j][k].part_type.match(/HJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (operator_molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < operator_molding.length;l++){
+				// 										var opmol = operator_molding[l].split(',');
+				// 										if (opmol.length > 1) {
+				// 											for(var m = 0; m < opmol.length;m++){
+				// 												tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 											}
+				// 										}else{
+				// 											tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 										}
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'middle') {
+				// 							if (result.resume_trend[j][k].part_type.match(/MJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (operator_molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < operator_molding.length;l++){
+				// 										var opmol = operator_molding[l].split(',');
+				// 										if (opmol.length > 1) {
+				// 											for(var m = 0; m < opmol.length;m++){
+				// 												tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 											}
+				// 										}else{
+				// 											tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 										}
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'foot') {
+				// 							if (result.resume_trend[j][k].part_type.match(/FJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (operator_molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < operator_molding.length;l++){
+				// 										var opmol = operator_molding[l].split(',');
+				// 										if (opmol.length > 1) {
+				// 											for(var m = 0; m < opmol.length;m++){
+				// 												tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 											}
+				// 										}else{
+				// 											tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 										}
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'block') {
+				// 							if (result.resume_trend[j][k].part_type.match(/BJ/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (operator_molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < operator_molding.length;l++){
+				// 										var opmol = operator_molding[l].split(',');
+				// 										if (opmol.length > 1) {
+				// 											for(var m = 0; m < opmol.length;m++){
+				// 												tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 											}
+				// 										}else{
+				// 											tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 										}
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'headyrf') {
+				// 							if (result.resume_trend[j][k].part_type.match(/A YRF H/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (operator_molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < operator_molding.length;l++){
+				// 										var opmol = operator_molding[l].split(',');
+				// 										if (opmol.length > 1) {
+				// 											for(var m = 0; m < opmol.length;m++){
+				// 												tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 											}
+				// 										}else{
+				// 											tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 										}
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'bodyyrf') {
+				// 							if (result.resume_trend[j][k].part_type.match(/A YRF B/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (operator_molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < operator_molding.length;l++){
+				// 										var opmol = operator_molding[l].split(',');
+				// 										if (opmol.length > 1) {
+				// 											for(var m = 0; m < opmol.length;m++){
+				// 												tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 											}
+				// 										}else{
+				// 											tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 										}
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+
+				// 						if (totalbyday[i] == 'stopperyrf') {
+				// 							if (result.resume_trend[j][k].part_type.match(/A YRF S/gi)) {
+				// 								var operator_molding = result.resume_trend[j][k].operator_molding.split('_');
+				// 								var molding = result.resume_trend[j][k].molding.split('_');
+				// 								var mesin = result.resume_trend[j][k].mesin.split('_');
+
+				// 								if (operator_molding.length > 0) {
+				// 									tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">';
+				// 									for(var l = 0; l < operator_molding.length;l++){
+				// 										var opmol = operator_molding[l].split(',');
+				// 										if (opmol.length > 1) {
+				// 											for(var m = 0; m < opmol.length;m++){
+				// 												tableTrend += '<span class="label label-success">'+opmol[m].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 											}
+				// 										}else{
+				// 											tableTrend += '<span class="label label-success">'+operator_molding[l].replace(/(.{14})..+/, "$1&hellip;")+'</span><br>';
+				// 										}
+				// 									}
+				// 									tableTrend += '</td>';
+				// 								}
+				// 							}
+				// 						}
+				// 					}
+				// 				}
+				// 			}
+				// 		}
+				// 	}else{
+				// 		tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red"></td>';
+				// 	}
+				// }
+				// tableTrend += '</tr>';
 
 				$('#tableTrendHead').append(tableTrendHead);
 				$('#tableTrendBody').append(tableTrend);
