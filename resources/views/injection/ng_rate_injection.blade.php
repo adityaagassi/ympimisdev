@@ -1220,10 +1220,17 @@
 					product_highest = newObjectsMerged[i].product.split(' ').slice(0,2).join(' ');
 				}
 
-				var low = ngcountkensa[0].key.split('_');
-				var lowest_emp = low[0];
-				var lowest_name = low[1];
-				var lowest_ng = ngcountkensa[0].y;
+				if (ngcountkensa.length > 0) {
+					var low = ngcountkensa[0].key.split('_');
+					var lowest_emp = low[0];
+					var lowest_name = low[1];
+					var lowest_ng = ngcountkensa[0].y;
+				}else{
+					var low = "";
+					var lowest_emp = "";
+					var lowest_name = "";
+					var lowest_ng = "";
+				}
 
 				$('#highest_name_daily').html(highest_emp+' - '+highest_name.split(' ').slice(0,2).join(' '));
 				$('#highest_ng_daily').html('Jumlah NG = '+highest_ng);

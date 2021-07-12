@@ -7332,6 +7332,16 @@ class InjectionsController extends Controller
               $yesterday = date('Y-m-d',strtotime("-1 days",strtotime($now)));
             }
 
+            $j = 1;
+            $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
+            foreach ($weekly_calendars as $key) {
+                if ($key->week_date == $yesterday) {
+                    if ($key->remark == 'H') {
+                        $yesterday = date('Y-m-d',strtotime("-".++$j." days",strtotime($yesterday)));
+                    }
+                }
+            }
+            
             $emp = DB::SELECT("SELECT DISTINCT
                     ( rc_kensa_initials.operator_injection ) AS employee_id,
                     employee_syncs.`name` 
