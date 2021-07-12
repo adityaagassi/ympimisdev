@@ -64,7 +64,7 @@ public function handle()
 
         $insert = GreatdayAttendance::updateOrCreate(
             [
-                'date_in' => date('Y-m-d', strtotime($attendance->dateMonthYear)),
+                'date_in' => date('Y-m-d', strtotime($attendance->dateTime)),
                 'employee_id' => $attendance->emp_no
             ],
             [
