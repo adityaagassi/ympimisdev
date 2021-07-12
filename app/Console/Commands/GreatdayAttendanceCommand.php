@@ -48,7 +48,7 @@ public function handle()
     $attendances = db::connection('sunfish')->select("SELECT * 
         FROM
         VIEW_AR_YMPI
-        WHERE dateMonthYear = '".$now."'
+        WHERE format(dateTime, 'yyyy-MM-dd') = '".$now."'
         ");
 
     foreach ($attendances as $attendance) {
