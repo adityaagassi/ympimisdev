@@ -8265,7 +8265,7 @@ class RecorderProcessController extends Controller
             ( rc_kensa_initials.mesin_injection ) AS mesin,
             part_type,
             '".$week_date[$i]->week_date."' AS week_date,
-            SUM_OF_LIST ( rc_kensas.ng_count ) AS ng_count,
+            SUM_OF_LIST ( GROUP_CONCAT(rc_kensas.ng_count) ) AS ng_count,
             operator_molding,
             molding 
           FROM
