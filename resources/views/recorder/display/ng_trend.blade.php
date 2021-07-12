@@ -880,7 +880,7 @@
 				tableTrend += '</tr>';
 
 				tableTrend += '<tr>';
-				tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">Molding</td>';
+				tableTrend += '<td style="padding-top:2px;padding-bottom:2px;border-bottom:2px solid red">OP Molding</td>';
 				for (var i = 0; i < result.week_date.length; i++) {
 					var operator_molding = "";
 					if (result.resume_trend[i].length > 0) {
