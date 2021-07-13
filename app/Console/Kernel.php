@@ -188,8 +188,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('update:operator_internal')->dailyAt('16:00');
         // $schedule->command('update:operator_internal')->dailyAt('16:00');
 
-        $schedule->command('sync:greatday_attendance')->dailyAt('08:00');
-        $schedule->command('update:geocode')->dailyAt('08:30');
+        $schedule->command('sync:greatday_attendance')->dailyAt('07:30');
+        $schedule->command('update:geocode')->dailyAt('07:50');
         $schedule->command('sync:greatday_attendance')->dailyAt('17:00');
         $schedule->command('update:geocode')->dailyAt('18:00');
 
